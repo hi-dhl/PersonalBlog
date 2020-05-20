@@ -10872,10 +10872,8 @@ article.article .content .message.message-immersive .message-body {
 .navbar-logo img {
   max-height: 1.75rem;
 }
-@media screen and (max-width: 768px) {
-  footer.footer .level-start {
-    text-align: center;
-  }
+footer.footer .level-start {
+  text-align: center;
 }
 footer.footer .level-end .field {
   flex-wrap: wrap;
