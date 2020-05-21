@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="generator" content="Hexo 4.2.1"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>10分钟入门Shell脚本编程 - 奔跑吧前中后浪</title><meta description="Shell是指一种应用程序，这个应用程序提供了一个界面，用户通过这个界面访问操作系统内核的服务, Shell脚本（shell script），是一种为Shell编写的脚本程序。我们经常说的shell通常都是指shell脚本。"><meta property="og:type" content="blog"><meta property="og:title" content="10分钟入门Shell脚本编程"><meta property="og:url" content="http://yoursite.com/2020/05/21/10%E5%88%86%E9%92%9F%E5%85%A5%E9%97%A8Shell%E8%84%9A%E6%9C%AC%E7%BC%96%E7%A8%8B/"><meta property="og:site_name" content="奔跑吧前中后浪"><meta property="og:description" content="Shell是指一种应用程序，这个应用程序提供了一个界面，用户通过这个界面访问操作系统内核的服务, Shell脚本（shell script），是一种为Shell编写的脚本程序。我们经常说的shell通常都是指shell脚本。"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="http://cdn.51git.cn/2020-05-21-15900751602627.jpg"><meta property="article:published_time" content="2020-05-21T15:30:13.305Z"><meta property="article:modified_time" content="2020-05-21T15:44:27.043Z"><meta property="article:author" content="Hi Dhl"><meta property="article:tag" content="Linux"><meta property="article:tag" content="Shell"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="http://cdn.51git.cn/2020-05-21-15900751602627.jpg"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://yoursite.com/2020/05/21/10%E5%88%86%E9%92%9F%E5%85%A5%E9%97%A8Shell%E8%84%9A%E6%9C%AC%E7%BC%96%E7%A8%8B/"},"headline":"奔跑吧前中后浪","image":["http://cdn.51git.cn/2020-05-21-15900751602627.jpg"],"datePublished":"2020-05-21T15:30:13.305Z","dateModified":"2020-05-21T15:44:27.043Z","author":{"@type":"Person","name":"Hi Dhl"},"description":"Shell是指一种应用程序，这个应用程序提供了一个界面，用户通过这个界面访问操作系统内核的服务, Shell脚本（shell script），是一种为Shell编写的脚本程序。我们经常说的shell通常都是指shell脚本。"}</script><link rel="canonical" href="http://yoursite.com/2020/05/21/10%E5%88%86%E9%92%9F%E5%85%A5%E9%97%A8Shell%E8%84%9A%E6%9C%AC%E7%BC%96%E7%A8%8B/"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" defer></script><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script></head><body class="is-2-column"><script type="text/javascript" src="/js/imaegoo/night.js"></script><canvas id="universe"></canvas><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img class="logo-img" src="/img/logo.png" alt="奔跑吧前中后浪" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="奔跑吧前中后浪" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">首页</a><a class="navbar-item" href="/archives">归档</a><a class="navbar-item" href="/categories">分类</a><a class="navbar-item" href="/categories">wiki</a><a class="navbar-item" href="/tags">标签</a><a class="navbar-item" href="http://site.51git.cn/">国内外书签</a><a class="navbar-item" href="/about">关于</a></div><div class="navbar-end"><a class="navbar-item night" id="night-nav" title="Night Mode" href="javascript:;"><i class="fas fa-moon" id="night-icon"></i></a><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/hi-dhl"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><div class="card-image"><span class="image is-7by3"><img class="thumbnail" src="http://cdn.51git.cn/2020-05-21-15900751602627.jpg" alt="10分钟入门Shell脚本编程"></span></div><article class="card-content article" role="article"><div class="article-meta size-small is-uppercase level is-mobile"><div class="level-left"><time class="level-item" dateTime="2020-05-21T15:30:13.305Z" title="2020-05-21T15:30:13.305Z">2020-05-21</time><span class="level-item"><a class="link-muted" href="/categories/Linux/">Linux</a></span><span class="level-item">18 分钟 读完 (大约 2697 个字)</span></div></div><h1 class="title is-3 is-size-4-mobile">10分钟入门Shell脚本编程</h1><div class="content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>写下这篇文章，是对自己在学习和使用过程中的总结，文笔不是很好，如果有什么问题欢迎沟通交流</p>
+<p><a href="https://github.com/hi-dhl/fast_guides">Github地址：https://github.com/hi-dhl/fast_guides</a></p>
+<h2 id="Shell是什么"><a href="#Shell是什么" class="headerlink" title="Shell是什么"></a>Shell是什么</h2><p>Shell是指一种应用程序，这个应用程序提供了一个界面，用户通过这个界面访问操作系统内核的服务, Shell脚本（shell script），是一种为Shell编写的脚本程序。我们经常说的shell通常都是指shell脚本。</p>
+<h2 id="环境和工具"><a href="#环境和工具" class="headerlink" title="环境和工具"></a>环境和工具</h2><p>Shell跟java、php、Python编程一样，只要有一个能编写代码的文本编辑器和一个能解释执行的脚本解释器就可以了。</p>
+<p>Mac OS，Linux 自带了shell解释器，Windows比较麻烦，因为Win7专业版和旗舰版默认安装PowerShell，标准版和家庭版中就没有安装的，为了方便建议安装cygwin</p>
+<h2 id="PHP、Python-也可以作为Shell编程"><a href="#PHP、Python-也可以作为Shell编程" class="headerlink" title="PHP、Python 也可以作为Shell编程"></a>PHP、Python 也可以作为Shell编程</h2><p>PHP、Python是属于高级编程语言，但是也可以做Shell编程，因为只要有解释器，也可以用作脚本编程</p>
+<p>如下是一个Python Shell Script示例（假设文件名叫op_python_base.py）：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#!&#x2F;usr&#x2F;bin&#x2F;env python3 &#x2F;&#x2F;告诉Python从系统环境中找python</span><br><span class="line"># -*- coding: utf-8 -*- &#x2F;&#x2F;设置为UTF-8编码</span><br><span class="line"></span><br><span class="line">for index in range(10):</span><br><span class="line">    print(index);</span><br></pre></td></tr></table></figure>
+
+<p>源码：<a href="https://github.com/dpm100/fast_guides/blob/master/fast-shell/op_python_base.py">op_python_base</a></p>
+<p>如下是一个PHP Shell Script示例（假设文件名叫op_php_base.php）：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#!&#x2F;usr&#x2F;bin&#x2F;php</span><br><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line">for($i&#x3D;0 ;$i&lt;10; $i++)&#123;</span><br><span class="line">    echo $i;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
+<p>源码：<a href="https://github.com/dpm100/fast_guides/blob/master/fast-shell/op_php_base.php">op_php_base</a></p>
+<h2 id="为什么要学习Shell"><a href="#为什么要学习Shell" class="headerlink" title="为什么要学习Shell"></a>为什么要学习Shell</h2><p>既然PHP、Python都可以用来写脚本编程，那为什么还要学习陌生、晦涩难懂的Shell，主要有一下几个原因</p>
+<ul>
+<li><p>环境兼容性，Win7专业版和旗舰版默认安装PowerShell，标准版和家庭版中就没有安装的，其他主流的操作系统都预制了Shell解释器，所以使用sh、bash编写，提供给其他人使用是非常方便的，但是PHP、Python 等等需要安装相应的环境</p>
+</li>
+<li><p>如果你想做一些定时任务比如说检测进程是否存在，自动备份，或者说自动部署环境、服务器之间的数据同步等等sh、bash会是你最好的选择</p>
+</li>
+</ul>
+<h2 id="sh与bash"><a href="#sh与bash" class="headerlink" title="sh与bash"></a>sh与bash</h2><p>sh: Bourne shell，POSIX（Portable Operating System Interface）标准的shell解释器，它的二进制文件路径通常是/bin/sh</p>
+<p>bash: Bash是Bourne shell的替代品，属GNU Project，二进制文件路径通常是/bin/bash</p>
+<h2 id="第一个shell脚本"><a href="#第一个shell脚本" class="headerlink" title="第一个shell脚本"></a>第一个shell脚本</h2><h3 id="我们先来看一个例子"><a href="#我们先来看一个例子" class="headerlink" title="我们先来看一个例子"></a>我们先来看一个例子</h3><p>我相信写过代码的童鞋，应该对下面的代码很熟悉并不陌生，（假设文件名叫op_base.sh）：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#!&#x2F;usr&#x2F;bin&#x2F;env bash</span><br><span class="line">mkdir code</span><br><span class="line">cd  code</span><br><span class="line">for ((i&#x3D;0; i&lt;3; i++)); do</span><br><span class="line">    touch test_$&#123;i&#125;.txt</span><br><span class="line">    echo &quot;shell很简单&quot; &gt;&gt; test_$&#123;i&#125;.txt</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
+<p>第一行：从系统path中寻找指定脚本的解释程序<br>第二行：创建 名叫code文件夹<br>第三行：进入创建的文件夹<br>第四行：for循环3次<br>第四行：创建文件<br>第五行：往创建的文件中写入信息<br>第六行：结束循环</p>
+<p>mkdir, touch，cd，touch，echo都是系统命令，在命令行下可以直接执行<br>for, do, done 是shell脚本语言 for循环的语法</p>
+<p>源码：<a href="https://github.com/dpm100/fast_guides/blob/master/fast-shell/op_base.sh">op_base.sh</a></p>
+<h3 id="编写Shell"><a href="#编写Shell" class="headerlink" title="编写Shell"></a>编写Shell</h3><p>新建一个文件，扩展名为sh（sh代表shell），扩展名并不影响脚本执行，见名知意就好，如果你用php，扩展名为php，如果你用Python，扩展名为python</p>
+<p>第一行一般是这样：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#!&#x2F;usr&#x2F;bin&#x2F;php</span><br><span class="line">#!&#x2F;usr&#x2F;bin&#x2F;env python3</span><br><span class="line">#!&#x2F;usr&#x2F;bin&#x2F;env bash</span><br></pre></td></tr></table></figure>
+
+<p> #!”是一个约定的标记，它告诉系统这个脚本需要什么解释器来执行<br>    /env 是系统的PATH目录中查找</p>
+<h3 id="运行-Shell-脚本有两种方法："><a href="#运行-Shell-脚本有两种方法：" class="headerlink" title="运行 Shell 脚本有两种方法："></a>运行 Shell 脚本有两种方法：</h3><h4 id="作为可执行程序"><a href="#作为可执行程序" class="headerlink" title="作为可执行程序"></a>作为可执行程序</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">chmod +x op_base.sh</span><br><span class="line">.&#x2F;op_base.sh</span><br></pre></td></tr></table></figure>
+
+<p>第一行设置 op_base.sh可执行权限<br>第二行执行op_base.sh</p>
+<h4 id="作为参数"><a href="#作为参数" class="headerlink" title="作为参数"></a>作为参数</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;bin&#x2F;sh op_base.sh</span><br></pre></td></tr></table></figure>
+
+<h3 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h3><p>定义变量时，变量名前不需要加符号和Python一样但是在PHP语言中变量需要加$，如：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">my_name&#x3D;&quot;jack&quot;</span><br><span class="line">my_name&#x3D;&#39;jack&#39;;</span><br></pre></td></tr></table></figure>
+
+<p>ps: 变量名和等号之间不能有空格,变量后面不能有;</p>
+<p>Shell中的引号和PHP类似，字符串可以用单引号，也可以用双引号</p>
+<p>单引号字符串的限制：</p>
+<ul>
+<li>单引号里的任何字符都会原样输出，单引号字符串中的变量是无效的</li>
+<li>单引号字串中不能出现单引号（对单引号使用转义符后也不行</li>
+</ul>
+<p>双引号：</p>
+<ul>
+<li>双引号里可以有变量</li>
+<li>双引号里可以出现转义字符</li>
+</ul>
+<p>但是在Python中单引号和双引号是没有区别，但是Python 还有三个引号，在三个引号内字符都不会被转义</p>
+<h3 id="使用变量"><a href="#使用变量" class="headerlink" title="使用变量"></a>使用变量</h3><p>对于已经定义过的变量，使用的适合在前面添加$</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">echo $my_name</span><br><span class="line">echo $&#123;my_name&#125;</span><br></pre></td></tr></table></figure>
+
+<p>变量名外面的花括号是可选的，加不加都行,建议使用第二种形式</p>
+<h3 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h3><p>以“#”开头的行就是注释，会被解释器忽略。</p>
+<h4 id="多行注释"><a href="#多行注释" class="headerlink" title="多行注释"></a>多行注释</h4><p>sh里没有多行注释，只能每一行加一个#号。就像这样：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#--------------------------------------------</span><br><span class="line"># Author:  jack </span><br><span class="line">#</span><br><span class="line"># Notes: 10分钟入门Shell脚本编程</span><br><span class="line">#</span><br><span class="line"># Project home page:</span><br><span class="line">#       https:&#x2F;&#x2F;github.com&#x2F;hi-dhl&#x2F;fast_guides</span><br><span class="line">#--------------------------------------------</span><br></pre></td></tr></table></figure>
+
+<h3 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h3><p>字符串可以用单引号，也可以用双引号，也可以不用引号。单双引号的区别跟PHP类似</p>
+<p>Shell不像其他语言有php、python 有很多数据类型，在Shell中常用的数据类型字符串数字和字符串（ps: 除了数字和字符串，也没啥其它类型好用了，哈哈）</p>
+<p>单引号字符串的限制：</p>
+<ul>
+<li>单引号里的任何字符都会原样输出，单引号字符串中的变量是无效的</li>
+<li>单引号字串中不能出现单引号（对单引号使用转义符后也不行</li>
+</ul>
+<p>双引号：</p>
+<ul>
+<li>双引号里可以有变量</li>
+<li>双引号里可以出现转义字符</li>
+</ul>
+<h3 id="字符串操作"><a href="#字符串操作" class="headerlink" title="字符串操作"></a>字符串操作</h3><h4 id="拼接字符串"><a href="#拼接字符串" class="headerlink" title="拼接字符串"></a>拼接字符串</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">my_name&#x3D;&quot;jack&quot;;</span><br><span class="line">my_age&#x3D;&quot;20岁&quot;</span><br><span class="line">echo $my_name $my_age</span><br><span class="line">echo $my_name$my_age</span><br></pre></td></tr></table></figure>
+
+<h4 id="获取字符串长度"><a href="#获取字符串长度" class="headerlink" title="获取字符串长度"></a>获取字符串长度</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">echo $&#123;#my_name&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="截取字符串"><a href="#截取字符串" class="headerlink" title="截取字符串"></a>截取字符串</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">echo $&#123;my_name:0:2&#125;</span><br></pre></td></tr></table></figure>
+
+<p>源码：<a href="https://github.com/dpm100/fast_guides/blob/master/fast-shell/op_str.sh">op_str.sh</a></p>
+<h3 id="Shell-数组"><a href="#Shell-数组" class="headerlink" title="Shell 数组"></a>Shell 数组</h3><h4 id="定义数组"><a href="#定义数组" class="headerlink" title="定义数组"></a>定义数组</h4><p>在Shell中，用括号来表示数组，数组元素用”空格”符号分割开。定义数组的一般形式为：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">name&#x3D;(name1 name2 name3)</span><br></pre></td></tr></table></figure>
+
+<p>还可以单独定义数组的各个分量：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ary[0]&#x3D;name1</span><br><span class="line">ary[1]&#x3D;name2</span><br><span class="line">ary[3]&#x3D;name3</span><br></pre></td></tr></table></figure>
+
+<p>ps: 可以不使用连续的下标，而且下标的范围没有限制</p>
+<h4 id="读取数组"><a href="#读取数组" class="headerlink" title="读取数组"></a>读取数组</h4><p>读取数组元素值的一般格式是：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$&#123;数组名[下标]&#125;</span><br></pre></td></tr></table></figure>
+
+<p>例如：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">echo $&#123;name[0]&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用@符号可以获取数组中的所有元素，例如：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">echo $&#123;name[@]&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="获取数组的长度"><a href="#获取数组的长度" class="headerlink" title="获取数组的长度"></a>获取数组的长度</h4><p>获取数组长度的方法与获取字符串长度的方法相同，例如：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 取得数组元素的个数</span><br><span class="line">length&#x3D;$&#123;#name[@]&#125;</span><br><span class="line">echo $length</span><br><span class="line"></span><br><span class="line"># 或者</span><br><span class="line">length&#x3D;$&#123;#name[*]&#125;</span><br><span class="line">echo $length</span><br><span class="line"></span><br><span class="line"># 取得数组单个元素的长度</span><br><span class="line">lengthn&#x3D;$&#123;#name[n]&#125;</span><br><span class="line">echo $length</span><br></pre></td></tr></table></figure>
+
+<p>源码：<a href="https://github.com/dpm100/fast_guides/blob/master/fast-shell/op_arry.sh">op_arry.sh</a></p>
+<h3 id="Shell-流程控制"><a href="#Shell-流程控制" class="headerlink" title="Shell 流程控制"></a>Shell 流程控制</h3><p>和Java、PHP、Python等语言不一样，sh的流程控制不可为空，如(以下为PHP流程控制写法)：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">if (isset($_GET[&quot;q&quot;])) &#123;</span><br><span class="line">    search(q);</span><br><span class="line">&#125;</span><br><span class="line">else &#123;</span><br><span class="line">    &#x2F;&#x2F; 不做任何事情</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在sh/bash里可不能这么写，如果else分支没有语句执行，就不要写这个else</p>
+<h4 id="if"><a href="#if" class="headerlink" title="if"></a>if</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">if condition1</span><br><span class="line">then</span><br><span class="line">    command1</span><br><span class="line">elif condition2 </span><br><span class="line">then </span><br><span class="line">    command2</span><br><span class="line">else</span><br><span class="line">    commandN</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+<p>例子：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#!&#x2F;usr&#x2F;bin&#x2F;env bash</span><br><span class="line"></span><br><span class="line">a&#x3D;1</span><br><span class="line">b&#x3D;2</span><br><span class="line">if [ $a &#x3D;&#x3D; $b ]</span><br><span class="line">    then</span><br><span class="line">        echo &quot;a 等于 b&quot;</span><br><span class="line"> elif [ $a -gt $b ]</span><br><span class="line">    then</span><br><span class="line">        echo &quot;a 大于 b&quot;</span><br><span class="line"> elif [ $a -lt $b ]</span><br><span class="line">    then</span><br><span class="line">        echo &quot;a 小于 b&quot;</span><br><span class="line"> else</span><br><span class="line">    echo &quot;没有符合的条件&quot;</span><br><span class="line"></span><br><span class="line"> fi</span><br></pre></td></tr></table></figure>
+
+<p>源码：<a href="https://github.com/dpm100/fast_guides/blob/master/fast-shell/op_if.sh">op_if.sh</a></p>
+<h4 id="for-循环"><a href="#for-循环" class="headerlink" title="for 循环"></a>for 循环</h4><p>Shell的for循环和Python 有点类似</p>
+<h5 id="Python的for循环"><a href="#Python的for循环" class="headerlink" title="Python的for循环"></a>Python的for循环</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">for index in 1,2,3,4,5:</span><br><span class="line">    print(index);</span><br></pre></td></tr></table></figure>
+
+<h5 id="Shell的for循环，第一种写法"><a href="#Shell的for循环，第一种写法" class="headerlink" title="Shell的for循环，第一种写法"></a>Shell的for循环，第一种写法</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">for index in 1 2 3 4 5; do</span><br><span class="line">    echo &quot;index&#x3D;&quot;$index</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
+<h5 id="Shell的for循环，第二种写法"><a href="#Shell的for循环，第二种写法" class="headerlink" title="Shell的for循环，第二种写法"></a>Shell的for循环，第二种写法</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">for ((i&#x3D;0; i&lt;5; i++)); do</span><br><span class="line">    echo &quot;i&#x3D;&quot;$i</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
+<p>源码：<a href="https://github.com/dpm100/fast_guides/blob/master/fast-shell/op_for.sh">op_for.sh</a></p>
+<h4 id="while-语句"><a href="#while-语句" class="headerlink" title="while 语句"></a>while 语句</h4><p>while循环用于不断执行一系列命令，也用于从输入文件中读取数据；命令通常为测试条件。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">int&#x3D;1</span><br><span class="line">while(( $int&lt;&#x3D;5 ))</span><br><span class="line">do</span><br><span class="line">    echo $int</span><br><span class="line">    let &quot;int++&quot;</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
+<p>源码：<a href="https://github.com/dpm100/fast_guides/blob/master/fast-shell/op_while.sh">op_while.sh</a></p>
+<h3 id="Shell结合系统命令"><a href="#Shell结合系统命令" class="headerlink" title="Shell结合系统命令"></a>Shell结合系统命令</h3><p>sh脚本结合系统命令便有了强大的威力，在字符处理领域，有grep、awk、sed三剑客，grep负责找出特定的行，awk能将行拆分成多个字段，sed则可以实现更新插入删除等写操作。</p>
+<h4 id="例如定时检测nginx、mysql是否被关闭"><a href="#例如定时检测nginx、mysql是否被关闭" class="headerlink" title="例如定时检测nginx、mysql是否被关闭"></a>例如定时检测nginx、mysql是否被关闭</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">path&#x3D;&#x2F;var&#x2F;log</span><br><span class="line">log&#x3D;$&#123;path&#125;&#x2F;httpd-mysql.log</span><br><span class="line"></span><br><span class="line">name&#x3D;(apache mysql)</span><br><span class="line"></span><br><span class="line">exs_init[0]&#x3D;&quot;service httpd start&quot;</span><br><span class="line">exs_init[1]&#x3D;&quot;&#x2F;etc&#x2F;init.d&#x2F;mysqld restart&quot;</span><br><span class="line"></span><br><span class="line">for ((i&#x3D;0; i&lt;2; i++)); do</span><br><span class="line">    echo &quot;检查$&#123;name[i]&#125;进程是否存在&quot;</span><br><span class="line">    ps -ef|grep $&#123;name[i]&#125; |grep -v grep</span><br><span class="line">    if [ $? -eq 0 ]; then</span><br><span class="line">        pid&#x3D;$(pgrep -f $&#123;name[i]&#125;)</span><br><span class="line">        echo &quot;&#96;date +&quot;%Y-%m-%d %H:%M:%S&quot;&#96; $&#123;name[$i]&#125; is running with pid $pid&quot; &gt;&gt; $&#123;log&#125;</span><br><span class="line">     else</span><br><span class="line">        $($&#123;exs_init[i]&#125;)</span><br><span class="line">        echo &quot;&#96;date +&quot;%Y-%m-%d %H:%M:%S&quot;&#96; $&#123;name[$i]&#125; start success&quot; &gt;&gt; $&#123;log&#125;</span><br><span class="line">    fi</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
+<p>解释：检测 nginx、mysql进程是否存在，如果不存在了会自动重新启动。<br>脚本每次运行会写日志的，没事可以去看看该日志文件，如果进程是不是真的经常性不存在，恐怕就要排查一下深层原因了。</p>
+<p>源码：<a href="https://github.com/dpm100/fast_guides/blob/master/fast-shell/check_apache_mysql.sh">check_nginx.sh</a></p>
+<h4 id="编辑-etc-crontab-文件"><a href="#编辑-etc-crontab-文件" class="headerlink" title="编辑 /etc/crontab 文件"></a>编辑 /etc/crontab 文件</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">crontab -e</span><br></pre></td></tr></table></figure>
+
+<p>在文件最后添加一行：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">*&#x2F;5 * * * * &#x2F;xxx&#x2F;check_nginx.sh &gt; &#x2F;dev&#x2F;null 2&gt;&amp;1</span><br></pre></td></tr></table></figure>
+
+<p>上表示每 5 分钟，执行一下脚本 /xxx/check_nginx.sh，其中xxx代表路径</p>
+<p>/dev/null 2&gt;&amp;1 的意思是该条shell命令将不会输出任何信息到控制台，也不会有任何信息输出到文件中。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># For details see man 4 crontabs</span><br><span class="line"></span><br><span class="line"># Example of job definition:</span><br><span class="line"># .---------------- minute (0 - 59)</span><br><span class="line"># |  .------------- hour (0 - 23)</span><br><span class="line"># |  |  .---------- day of month (1 - 31)</span><br><span class="line"># |  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...</span><br><span class="line"># |  |  |  |  .---- day of week (0 - 6) (Sunday&#x3D;0 or 7) OR sun,mon,tue,wed,thu,fri,sat</span><br><span class="line"># |  |  |  |  |</span><br><span class="line"># *  *  *  *  * command to be executed</span><br></pre></td></tr></table></figure>
+
+<h3 id="添加完配置，需要重启才能生效"><a href="#添加完配置，需要重启才能生效" class="headerlink" title="添加完配置，需要重启才能生效"></a>添加完配置，需要重启才能生效</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">service crond restart</span><br></pre></td></tr></table></figure>
+
+
+</div><div class="article-tags size-small is-uppercase mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/Linux/">Linux</a><a class="link-muted mr-2" rel="tag" href="/tags/Shell/">Shell</a></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css"><div class="social-share"></div><script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script></article></div><!--!--><div class="card"><div class="card-content"><h3 class="title is-5">评论</h3><div class="content" id="valine-thread"></div><script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script><script src="https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js"></script><script>new Valine({
+            el: '#valine-thread' ,
+            notify: false,
+            verify: undefined,
+            appId: 'EKgWqoEDJybnumAH4PLUHtXo-MdYXbMMI',
+            appKey: '2AFPaqLshAsYOP9gvKA5OrDN',
+            placeholder: '说点什么',
+            avatar: 'mm',
+            avatarForce: false,
+            meta: ["nick","mail","link"],
+            pageSize: 10,
+            visitor: false,
+            highlight: true,
+            recordIP: false
+        });</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1 is-sticky"><div class="card widget" id="toc" style="max-height: 400px;overflow: auto;"><div class="card-content"><div class="menu"><h3 class="menu-label">目录</h3><ul class="menu-list"><li><a class="is-flex" href="#前言"><span>前言</span></a></li><li><a class="is-flex" href="#Shell是什么"><span>Shell是什么</span></a></li><li><a class="is-flex" href="#环境和工具"><span>环境和工具</span></a></li><li><a class="is-flex" href="#PHP、Python-也可以作为Shell编程"><span>PHP、Python 也可以作为Shell编程</span></a></li><li><a class="is-flex" href="#为什么要学习Shell"><span>为什么要学习Shell</span></a></li><li><a class="is-flex" href="#sh与bash"><span>sh与bash</span></a></li><li><a class="is-flex" href="#第一个shell脚本"><span>第一个shell脚本</span></a><ul class="menu-list"><li><a class="is-flex" href="#我们先来看一个例子"><span>我们先来看一个例子</span></a></li><li><a class="is-flex" href="#编写Shell"><span>编写Shell</span></a></li><li><a class="is-flex" href="#运行-Shell-脚本有两种方法："><span>运行 Shell 脚本有两种方法：</span></a><ul class="menu-list"><li><a class="is-flex" href="#作为可执行程序"><span>作为可执行程序</span></a></li><li><a class="is-flex" href="#作为参数"><span>作为参数</span></a></li></ul></li><li><a class="is-flex" href="#变量"><span>变量</span></a></li><li><a class="is-flex" href="#使用变量"><span>使用变量</span></a></li><li><a class="is-flex" href="#注释"><span>注释</span></a><ul class="menu-list"><li><a class="is-flex" href="#多行注释"><span>多行注释</span></a></li></ul></li><li><a class="is-flex" href="#字符串"><span>字符串</span></a></li><li><a class="is-flex" href="#字符串操作"><span>字符串操作</span></a><ul class="menu-list"><li><a class="is-flex" href="#拼接字符串"><span>拼接字符串</span></a></li><li><a class="is-flex" href="#获取字符串长度"><span>获取字符串长度</span></a></li><li><a class="is-flex" href="#截取字符串"><span>截取字符串</span></a></li></ul></li><li><a class="is-flex" href="#Shell-数组"><span>Shell 数组</span></a><ul class="menu-list"><li><a class="is-flex" href="#定义数组"><span>定义数组</span></a></li><li><a class="is-flex" href="#读取数组"><span>读取数组</span></a></li><li><a class="is-flex" href="#获取数组的长度"><span>获取数组的长度</span></a></li></ul></li><li><a class="is-flex" href="#Shell-流程控制"><span>Shell 流程控制</span></a><ul class="menu-list"><li><a class="is-flex" href="#if"><span>if</span></a></li><li><a class="is-flex" href="#Shell的for循环，第二种写法"><span>Shell的for循环，第二种写法</span></a></li><li><a class="is-flex" href="#while-语句"><span>while 语句</span></a></li></ul></li><li><a class="is-flex" href="#Shell结合系统命令"><span>Shell结合系统命令</span></a><ul class="menu-list"><li><a class="is-flex" href="#例如定时检测nginx、mysql是否被关闭"><span>例如定时检测nginx、mysql是否被关闭</span></a></li><li><a class="is-flex" href="#编辑-etc-crontab-文件"><span>编辑 /etc/crontab 文件</span></a></li></ul></li><li><a class="is-flex" href="#添加完配置，需要重启才能生效"><span>添加完配置，需要重启才能生效</span></a></li></ul></li></ul></div></div></div><div class="card widget"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><a class="media-left" href="/2020/05/21/10%E5%88%86%E9%92%9F%E5%85%A5%E9%97%A8Shell%E8%84%9A%E6%9C%AC%E7%BC%96%E7%A8%8B/"><p class="image is-64x64"><img class="thumbnail" src="http://cdn.51git.cn/2020-05-21-15900751602627.jpg" alt="10分钟入门Shell脚本编程"></p></a><div class="media-content size-small"><p><time dateTime="2020-05-21T15:30:13.305Z">2020-05-21</time></p><p class="title is-6"><a class="link-muted" href="/2020/05/21/10%E5%88%86%E9%92%9F%E5%85%A5%E9%97%A8Shell%E8%84%9A%E6%9C%AC%E7%BC%96%E7%A8%8B/">10分钟入门Shell脚本编程</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Linux/">Linux</a></p></div></article></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile is-marginless" href="/categories/Linux/"><span class="level-start"><span class="level-item">Linux</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/Linux/"><span class="tag">Linux</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Shell/"><span class="tag">Shell</span><span class="tag is-grey-lightest">1</span></a></div></div></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level-item"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img class="logo-img" src="/img/logo.png" alt="奔跑吧前中后浪" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="奔跑吧前中后浪" height="28"></a><p class="size-small"><span>&copy; 2020 Hi Dhl</span>  <a href="http://www.beian.miit.gov.cn/" target="_blank"></a>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            site: {
+                url: 'http://yoursite.com',
+                external_link: {"enable":true,"exclude":[]}
+            },
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><script src="https://s9.cnzz.com/z_stat.php?id=1278919895&amp;web_id=1278919895" async></script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><script src="/js/imaegoo/universe.js"></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>
