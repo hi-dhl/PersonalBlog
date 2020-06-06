@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="generator" content="Hexo 4.2.1"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>0xA04 Android 10 源码分析：Apk加载流程之资源加载（二） - 奔跑吧前中后浪</title><meta description="LayoutInflater 创建流程，以及系统是如何处理 merge、include、ViewStub标签"><meta property="og:type" content="blog"><meta property="og:title" content="0xA04 Android 10 源码分析：Apk加载流程之资源加载（二）"><meta property="og:url" content="http://yoursite.com/2020/06/07/android10/resource-manager/04-APK-resource2/"><meta property="og:site_name" content="奔跑吧前中后浪"><meta property="og:description" content="LayoutInflater 创建流程，以及系统是如何处理 merge、include、ViewStub标签"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="http://cdn.51git.cn/2020-06-03-1_enjGzlIFq8vgKB0la0EoUg.jpeg"><meta property="article:published_time" content="2020-06-06T16:34:23.363Z"><meta property="article:modified_time" content="2020-06-06T16:42:18.986Z"><meta property="article:author" content="Hi Dhl"><meta property="article:tag" content="源码"><meta property="article:tag" content="Android10"><meta property="article:tag" content="APK生成"><meta property="article:tag" content="APK打包"><meta property="article:tag" content="资源加载"><meta property="article:tag" content="资源解析"><meta property="article:tag" content="资源管理系统"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="http://cdn.51git.cn/2020-06-03-1_enjGzlIFq8vgKB0la0EoUg.jpeg"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://yoursite.com/2020/06/07/android10/resource-manager/04-APK-resource2/"},"headline":"奔跑吧前中后浪","image":[],"datePublished":"2020-06-06T16:34:23.363Z","dateModified":"2020-06-06T16:42:18.986Z","author":{"@type":"Person","name":"Hi Dhl"},"description":"LayoutInflater 创建流程，以及系统是如何处理 merge、include、ViewStub标签"}</script><link rel="canonical" href="http://yoursite.com/2020/06/07/android10/resource-manager/04-APK-resource2/"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" defer></script><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script></head><body class="is-2-column"><script type="text/javascript" src="/js/imaegoo/night.js"></script><canvas id="universe"></canvas><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img class="logo-img" src="/img/logo.png" alt="奔跑吧前中后浪" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="奔跑吧前中后浪" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">首页</a><a class="navbar-item" href="/archives">时间轴</a><a class="navbar-item" href="/categories">分类</a><a class="navbar-item" href="/tags">标签</a><a class="navbar-item" href="/categories/LeetCode/">LeetCode</a><a class="navbar-item" href="http://site.51git.cn/">国内外书签</a></div><div class="navbar-end"><a class="navbar-item night" id="night-nav" title="Night Mode" href="javascript:;"><i class="fas fa-moon" id="night-icon"></i></a><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/hi-dhl"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><div class="card-image"><span class="image is-7by3"><img class="thumbnail" src="http://cdn.51git.cn/2020-06-03-1_enjGzlIFq8vgKB0la0EoUg.jpeg" alt="0xA04 Android 10 源码分析：Apk加载流程之资源加载（二）"></span></div><article class="card-content article" role="article"><h1 class="title is-3 is-size-4-mobile"></h1><h1 class="title is-3 is-size-4-mobile">0xA04 Android 10 源码分析：Apk加载流程之资源加载（二）</h1><div class="article-meta size-small level is-mobile"><div class="level-left"><span class="mr-2"><i class="fa fa-calendar"></i></span><time class="level-item" dateTime="2020-06-06T16:34:23.363Z" title="2020-06-06T16:34:23.363Z">2020-06-07</time><span class="mr-2"> <i class="fa fa-folder"></i></span><span class="level-item"><a class="link-muted" href="/categories/Android10/">Android10</a></span><span class="mr-2"> <i class="fa fa-tag"></i></span><span class="level-item"><a class="link-muted" href="/tags/Android%E6%BA%90%E7%A0%81/">Android源码</a><span> , </span><a class="link-muted" href="/tags/Android10-%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/">Android10-资源管理系统</a></span></div></div><div class="level-left article-meta size-small is-mobile"><span class="mr-2"> <i class="fa fa-eye" aria-hidden="true"></i></span><span>30 分钟 读完 (大约 4459 个字)</span></div><h1 class="title is-3 is-size-4-mobile"></h1><div class="content"><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><blockquote>
+<ul>
+<li>这是 Android 10 源码分析系列的第 4 篇</li>
+<li>分支：android-10.0.0_r14</li>
+<li>全文阅读大概 10 分钟</li>
+</ul>
+</blockquote>
+<p><strong>通过这篇文章你将学习到以下内容，将在文末会给出相应的答案</strong></p>
+<ul>
+<li>View中的INVISIBLE、VISIBLE、GONE都有什么作用？</li>
+<li>为什么ViewStub是大小为0的视图</li>
+<li>ViewStub有什么作用？</li>
+<li>ViewStub是如何创建的？</li>
+<li>为什么ViewStub能做到延迟加载？</li>
+<li>ViewStub指定的Layout布局文件是什么时候被加载的？</li>
+<li>LayoutInflater是一个抽象类它如何被创建的？</li>
+<li>系统服务存储在哪里？如何获取和添加系统服务？</li>
+</ul>
+<p>在上一篇文章 <a href="https://juejin.im/post/5e6c8c14f265da574b792a1a">0xA02 Android 10 源码分析：Apk加载流程之资源加载</a> 中通过LayoutInflater.inflate方法解析xml文件，了解到了系统如何对merge、include标签是如何处理的，本文主要围绕以下两方面内容</p>
+<ul>
+<li>系统对ViewStub如何处理？</li>
+<li>LayoutInflater是如何被创建的？</li>
+</ul>
+<p><strong>系统对merge、include是如何处理的</strong></p>
+<ul>
+<li>使用merge标签必须有父布局，且依赖于父布局加载</li>
+<li>merge并不是一个ViewGroup，也不是一个View，它相当于声明了一些视图，等待被添加，解析过程中遇到merge标签会将merge标签下面的所有子view添加到根布局中</li>
+<li>merge标签在 XML 中必须是根元素</li>
+<li>相反的include不能作为根元素，需要放在一个ViewGroup中</li>
+<li>使用 include 标签必须指定有效的 layout 属性</li>
+<li>使用 include 标签不写宽高是没有关系的，会去解析被 include 的 layout</li>
+</ul>
+<p><strong>merge标签为什么可以起到优化布局的效果？</strong></p>
+<p>解析过程中遇到merge标签，会调用rInflate方法，部分代码如下</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; 根据元素名解析，生成对应的view</span><br><span class="line">final View view &#x3D; createViewFromTag(parent, name, context, attrs);</span><br><span class="line">final ViewGroup viewGroup &#x3D; (ViewGroup) parent;</span><br><span class="line">final ViewGroup.LayoutParams params &#x3D; viewGroup.generateLayoutParams(attrs);</span><br><span class="line">&#x2F;&#x2F; rInflateChildren方法内部调用的rInflate方法，深度优先遍历解析所有的子view</span><br><span class="line">rInflateChildren(parser, view, attrs, true);</span><br><span class="line">&#x2F;&#x2F; 添加解析的view</span><br><span class="line">viewGroup.addView(view, params);</span><br></pre></td></tr></table></figure>
+
+<p>解析merge标签下面的所有子view，然后添加到根布局中<br/><br>更多信息查看<a href="https://juejin.im/post/5e6c8c14f265da574b792a1a">0xA02 Android 10 源码分析：Apk加载流程之资源加载</a>，接下来看一下系统对ViewStub如何处理</p>
+<h2 id="1-ViewStub是什么"><a href="#1-ViewStub是什么" class="headerlink" title="1. ViewStub是什么"></a>1. ViewStub是什么</h2><p><strong>关于ViewStub的介绍，可以点击下方官网链接查看</strong><br><a href="https://developer.android.google.cn/reference/android/view/ViewStub/">官网链接https://developer.android.google.cn/reference/android…ViewStub</a></p>
+<p><strong>ViewStub的继承结构</strong><br><img src="http://cdn.51git.cn/2020-03-28-15848875296387.jpg" alt=""></p>
+<p><img src="http://cdn.51git.cn/2020-03-28-15848860166670.jpg" alt=""></p>
+<p><strong>简单来说主要以下几点：</strong></p>
+<ul>
+<li>ViewStub控件是一个不可见，</li>
+<li>大小为0的视图</li>
+<li>当ViewStub控件设置可见，或者调用inflate()方法，ViewStub所指定的layout资源就会被加载</li>
+<li>ViewStub也会从其父控件中移除，ViewStub会被新加载的layout文件代替</li>
+</ul>
+<p><strong>为什么ViewStub是大小为0的视图</strong><br><strong>frameworks/base/core/java/android/view/ViewStub.java</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) &#123;</span><br><span class="line">    &#x2F;&#x2F; 设置视图大小为0</span><br><span class="line">    setMeasuredDimension(0, 0);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p><strong>ViewStub的作用</strong></p>
+<p>主要用来延迟布局的加载，例如：在Android中非常常见的布局，用ListView来展示列表信息，当没有数据或者网络加载失败时, 加载空的 ListView 会占用一些资源，如果用ViewStub包裹ListView，当有数据时，才会调用inflate()方法显示ListView，起到延迟加载了布局效果</p>
+<h3 id="1-1-ViewStub-是如何被创建的"><a href="#1-1-ViewStub-是如何被创建的" class="headerlink" title="1.1 ViewStub 是如何被创建的"></a>1.1 ViewStub 是如何被创建的</h3><p>在上篇文章<a href="https://juejin.im/post/5e6c8c14f265da574b792a1a">0xA02 Android 10 源码分析：Apk加载流程之资源加载</a>中，介绍了view的创建是通过调用了LayoutInflater.createView方法根据完整的类的路径名利用反射机制构建View对象，因为ViewStub是继承View，所以ViewStub的创建和View的创建是相同的，来看一下LayoutInflater.createView方法<br><strong>frameworks/base/core/java/android/view/LayoutInflater.java</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">...</span><br><span class="line"></span><br><span class="line">try &#123;</span><br><span class="line">    &#x2F;&#x2F; 利用构造函数，创建View</span><br><span class="line">    final View view &#x3D; constructor.newInstance(args);</span><br><span class="line">    if (view instanceof ViewStub) &#123;</span><br><span class="line">        &#x2F;&#x2F; 如果是ViewStub，则设置LayoutInflater</span><br><span class="line">        final ViewStub viewStub &#x3D; (ViewStub) view;</span><br><span class="line">        viewStub.setLayoutInflater(cloneInContext((Context) args[0]));</span><br><span class="line">    &#125;</span><br><span class="line">    return view;</span><br><span class="line">&#125; finally &#123;</span><br><span class="line">    mConstructorArgs[0] &#x3D; lastContext;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>根据完整的类的路径名利用反射机制构建View对象，如果遇到ViewStub将当前LayoutInflater设置给ViewStub，当ViewStub控件设置可见，或者调用inflate()，会调用LayoutInflater的inflate方法完成布局加载，接下来分析ViewStub的构造方法</p>
+<h3 id="1-2-ViewStub的构造方法"><a href="#1-2-ViewStub的构造方法" class="headerlink" title="1.2 ViewStub的构造方法"></a>1.2 ViewStub的构造方法</h3><p>在上面提到了根据完整的类的路径名利用反射机制构建View对象，当view对象被创建的时候，会调用它的构造函数，来看一下ViewStub的构造方法</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public ViewStub(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) &#123;</span><br><span class="line">    super(context);</span><br><span class="line"></span><br><span class="line">    final TypedArray a &#x3D; context.obtainStyledAttributes(attrs,</span><br><span class="line">            R.styleable.ViewStub, defStyleAttr, defStyleRes);</span><br><span class="line">    saveAttributeDataForStyleable(context, R.styleable.ViewStub, attrs, a, defStyleAttr,</span><br><span class="line">            defStyleRes);</span><br><span class="line">    &#x2F;&#x2F; 解析xml中设置的 android:inflatedId 的属性</span><br><span class="line">    mInflatedId &#x3D; a.getResourceId(R.styleable.ViewStub_inflatedId, NO_ID);</span><br><span class="line">    &#x2F;&#x2F; 解析xml中设置的 android:layout 属性</span><br><span class="line">    mLayoutResource &#x3D; a.getResourceId(R.styleable.ViewStub_layout, 0);</span><br><span class="line">    &#x2F;&#x2F; 解析xml中设置的 android:id 属性</span><br><span class="line">    mID &#x3D; a.getResourceId(R.styleable.ViewStub_id, NO_ID);</span><br><span class="line">    a.recycle();</span><br><span class="line">    &#x2F;&#x2F; view不可见</span><br><span class="line">    setVisibility(GONE);</span><br><span class="line">    &#x2F;&#x2F; 不会调用 onDraw 方法绘制内容</span><br><span class="line">    setWillNotDraw(true);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>获取android:inflatedId、android:layout、android:id的值</li>
+<li>调用setVisibility方法，设置View不可见</li>
+<li>调用setWillNotDraw方法，不会调用 onDraw 方法绘制内容</li>
+</ol>
+<p>在上面提到了如果想要加载ViewStub所指定的layout资源，需要设置ViewStub控件设置可见，或者调用inflate()方法，来看一下ViewStub的setVisibility方法</p>
+<h3 id="1-3-ViewStub的setVisibility方法"><a href="#1-3-ViewStub的setVisibility方法" class="headerlink" title="1.3 ViewStub的setVisibility方法"></a>1.3 ViewStub的setVisibility方法</h3><p>setVisibility(int visibility)方法，参数visibility对应三个值分别是INVISIBLE、VISIBLE、GONE</p>
+<ul>
+<li>VISIBLE：视图可见</li>
+<li>INVISIBLE：视图不可见的，它仍然占用布局的空间</li>
+<li>GONE：视图不可见，它不占用布局的空间</li>
+</ul>
+<p>接下里查看一下ViewStub的setVisibility方法<br><strong>frameworks/base/core/java/android/view/ViewStub.java</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@Override</span><br><span class="line">public void setVisibility(int visibility) &#123;</span><br><span class="line">    if (mInflatedViewRef !&#x3D; null) &#123;</span><br><span class="line">        &#x2F;&#x2F; mInflatedViewRef 是 WeakReference的实例，调用inflate方法时候初始化</span><br><span class="line">        View view &#x3D; mInflatedViewRef.get();</span><br><span class="line">        if (view !&#x3D; null) &#123;</span><br><span class="line">            &#x2F;&#x2F; 设置View可见</span><br><span class="line">            view.setVisibility(visibility);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            throw new IllegalStateException(&quot;setVisibility called on un-referenced view&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        super.setVisibility(visibility);</span><br><span class="line">        &#x2F;&#x2F; 当View为空且设置视图可见(VISIBLE、INVISIBLE)，调用inflate方法</span><br><span class="line">        if (visibility &#x3D;&#x3D; VISIBLE || visibility &#x3D;&#x3D; INVISIBLE) &#123;</span><br><span class="line">            inflate();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>mInflatedViewRef 是 WeakReference的实例，调用inflate方法时候初始化</li>
+<li>从 mInflatedViewRef 缓存中获取View，并且设置View可见</li>
+<li>当View为空且设置视图可见(VISIBLE、INVISIBLE)，会调用inflate方法</li>
+</ol>
+<h3 id="1-4-ViewStub-inflate方法"><a href="#1-4-ViewStub-inflate方法" class="headerlink" title="1.4 ViewStub.inflate方法"></a>1.4 ViewStub.inflate方法</h3><p>调用了ViewStub的setVisibility方法，最后都会调用ViewStub.inflate方法，来查看一下<br><strong>frameworks/base/core/java/android/view/ViewStub.java</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public View inflate() &#123;</span><br><span class="line">    final ViewParent viewParent &#x3D; getParent();</span><br><span class="line"></span><br><span class="line">    if (viewParent !&#x3D; null &amp;&amp; viewParent instanceof ViewGroup) &#123;</span><br><span class="line">        if (mLayoutResource !&#x3D; 0) &#123;</span><br><span class="line">            final ViewGroup parent &#x3D; (ViewGroup) viewParent;</span><br><span class="line">            &#x2F;&#x2F; 解析布局视图</span><br><span class="line">            &#x2F;&#x2F; 返回的view是android:layout指定的布局文件最顶层的view</span><br><span class="line">            final View view &#x3D; inflateViewNoAdd(parent);</span><br><span class="line">            </span><br><span class="line">            &#x2F;&#x2F; 移除ViewStub</span><br><span class="line">            &#x2F;&#x2F; 添加view到被移除的ViewStub的位置</span><br><span class="line">            replaceSelfWithView(view, parent);</span><br><span class="line"></span><br><span class="line">            &#x2F;&#x2F; 添加view到 mInflatedViewRef 中</span><br><span class="line">            mInflatedViewRef &#x3D; new WeakReference&lt;&gt;(view);</span><br><span class="line">            if (mInflateListener !&#x3D; null) &#123;</span><br><span class="line">                &#x2F;&#x2F; 加载完成之后，回调onInflate 方法</span><br><span class="line">                mInflateListener.onInflate(this, view);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            return view;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            &#x2F;&#x2F; 需要在xml中设置android:layout，不是layout，否则会抛出异常</span><br><span class="line">            throw new IllegalArgumentException(&quot;ViewStub must have a valid layoutResource&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        &#x2F;&#x2F; ViewStub不能作为根布局，它需要放在ViewGroup中, 否则会抛出异常</span><br><span class="line">        throw new IllegalStateException(&quot;ViewStub must have a non-null ViewGroup viewParent&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>调用inflateViewNoAdd方法返回android:layout指定的布局文件最顶层的view</li>
+<li>调用replaceSelfWithView方法, 移除ViewStub, 添加view到被移除的ViewStub的位置</li>
+<li>添加view到 mInflatedViewRef 中</li>
+<li>加载完成之后，回调onInflate 方法</li>
+</ol>
+<p><strong>需要注意以下两点：</strong></p>
+<ul>
+<li>使用ViewStub需要在xml中设置android:layout，不是layout，否则会抛出异常</li>
+<li>ViewStub不能作为根布局，它需要放在ViewGroup中, 否则会抛出异常</li>
+</ul>
+<p>来查看一下inflateViewNoAdd方法和replaceSelfWithView方法</p>
+<h3 id="1-5-ViewStub-inflateViewNoAdd方法"><a href="#1-5-ViewStub-inflateViewNoAdd方法" class="headerlink" title="1.5 ViewStub.inflateViewNoAdd方法"></a>1.5 ViewStub.inflateViewNoAdd方法</h3><p>调用inflateViewNoAdd方法返回android:layout指定的布局文件最顶层的view<br><strong>frameworks/base/core/java/android/view/ViewStub.java</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">private View inflateViewNoAdd(ViewGroup parent) &#123;</span><br><span class="line">    final LayoutInflater factory;</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; mInflater 是View被创建的时候，如果是ViewStub, 将LayoutInflater赋值给mInflater</span><br><span class="line">    if (mInflater !&#x3D; null) &#123;</span><br><span class="line">        factory &#x3D; mInflater;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        &#x2F;&#x2F; 如果mInflater为空，则创建LayoutInflater</span><br><span class="line">        factory &#x3D; LayoutInflater.from(mContext);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; 从指定的 mLayoutResource 资源中解析布局视图</span><br><span class="line">    &#x2F;&#x2F; mLayoutResource 是在xml设置的 Android:layout 指定的布局文件</span><br><span class="line">    final View view &#x3D; factory.inflate(mLayoutResource, parent, false);</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; mInflatedId 是在xml设置的 inflateId</span><br><span class="line">    if (mInflatedId !&#x3D; NO_ID) &#123;</span><br><span class="line">        &#x2F;&#x2F; 将id复制给view</span><br><span class="line">        view.setId(mInflatedId);</span><br><span class="line">        &#x2F;&#x2F;注意：如果指定了mInflatedId , 被inflate的layoutView的id就是mInflatedId</span><br><span class="line">    &#125;</span><br><span class="line">    return view;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>mInflater是View被创建的时候，如果是ViewStub, 将LayoutInflater赋值给mInflater</li>
+<li>如果mInflater为空则通过LayoutInflater.from(mContext)构建LayoutInflater</li>
+<li>调用LayoutInflater的inflate方法解析布局视图</li>
+<li>将mInflatedId设置View</li>
+</ul>
+<h3 id="1-6-ViewStub-replaceSelfWithView方法"><a href="#1-6-ViewStub-replaceSelfWithView方法" class="headerlink" title="1.6 ViewStub.replaceSelfWithView方法"></a>1.6 ViewStub.replaceSelfWithView方法</h3><p>调用replaceSelfWithView方法, 移除ViewStub, 添加view到被移除的ViewStub的位置<br><strong>frameworks/base/core/java/android/view/ViewStub.java</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">private void replaceSelfWithView(View view, ViewGroup parent) &#123;</span><br><span class="line">    &#x2F;&#x2F; 获取ViewStub在视图中的位置</span><br><span class="line">    final int index &#x3D; parent.indexOfChild(this);</span><br><span class="line">    &#x2F;&#x2F; 移除ViewStub</span><br><span class="line">    &#x2F;&#x2F; 注意：调用removeViewInLayout方法之后，调用findViewById()是找不到该ViewStub对象</span><br><span class="line">    parent.removeViewInLayout(this);</span><br><span class="line"></span><br><span class="line">    final ViewGroup.LayoutParams layoutParams &#x3D; getLayoutParams();</span><br><span class="line">    &#x2F;&#x2F; 将xml中指定的 android:layout 布局文件中最顶层的View，添加到被移除的 ViewStub的位置</span><br><span class="line">    if (layoutParams !&#x3D; null) &#123;</span><br><span class="line">        parent.addView(view, index, layoutParams);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        parent.addView(view, index);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>获取ViewStub在视图中的位置，然后移除ViewStub</li>
+<li>添加android:layout 布局文件中最顶层的View到被移除的ViewStub的位置</li>
+</ol>
+<h3 id="1-7-ViewStub的注意事项"><a href="#1-7-ViewStub的注意事项" class="headerlink" title="1.7 ViewStub的注意事项"></a>1.7 ViewStub的注意事项</h3><ul>
+<li>使用ViewStub需要在xml中设置android:layout，不是layout，否则会抛出异常</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">throw new IllegalArgumentException(&quot;ViewStub must have a valid layoutResource&quot;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>ViewStub不能作为根布局，它需要放在ViewGroup中, 否则会抛出异常</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">throw new IllegalStateException(&quot;ViewStub must have a non-null ViewGroup viewParent&quot;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>一旦调用setVisibility(View.VISIBLE)或者inflate()方法之后，该ViewStub将会从试图中被移除（此时调用findViewById()是找不到该ViewStub对象).</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; 获取ViewStub在视图中的位置</span><br><span class="line">final int index &#x3D; parent.indexOfChild(this);</span><br><span class="line">&#x2F;&#x2F; 移除ViewStub</span><br><span class="line">&#x2F;&#x2F; 注意：调用removeViewInLayout方法之后，调用findViewById()是找不到该ViewStub对象</span><br><span class="line">parent.removeViewInLayout(this);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果指定了mInflatedId , 被inflate的layoutView的id就是mInflatedId</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; mInflatedId 是在xml设置的 inflateId</span><br><span class="line">if (mInflatedId !&#x3D; NO_ID) &#123;</span><br><span class="line">    &#x2F;&#x2F; 将id复制给view</span><br><span class="line">    view.setId(mInflatedId);</span><br><span class="line">    &#x2F;&#x2F;注意：如果指定了mInflatedId , 被inflate的layoutView的id就是mInflatedId</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>被inflate的layoutView的layoutParams与ViewStub的layoutParams相同.</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">final ViewGroup.LayoutParams layoutParams &#x3D; getLayoutParams();</span><br><span class="line">&#x2F;&#x2F; 将xml中指定的 android:layout 布局文件中最顶层的View 也就是根view，</span><br><span class="line">&#x2F;&#x2F; 添加到被移除的 ViewStub的位置</span><br><span class="line">if (layoutParams !&#x3D; null) &#123;</span><br><span class="line">    parent.addView(view, index, layoutParams);</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    parent.addView(view, index);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>到这里关于ViewStub的构建、布局的加载以及注意事项分析完了，接下来分析一下 LayoutInflater是如何被创建的</p>
+<h2 id="2-关于LayoutInflater"><a href="#2-关于LayoutInflater" class="headerlink" title="2 关于LayoutInflater"></a>2 关于LayoutInflater</h2><p>在<a href="https://juejin.im/post/5e6c8c14f265da574b792a1a">0xA02 Android 10 源码分析：Apk加载流程之资源加载</a>文章中，介绍了Activity启动的时候通过调用LayoutInflater的inflater的方法加载layout文件，那么LayoutInflater是如何被创建的呢，先来看一段代码，相信下面的代码都不会很陌生</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) &#123;</span><br><span class="line">    return new AllVh(LayoutInflater</span><br><span class="line">            .from(viewGroup.getContext())</span><br><span class="line">            .inflate(R.layout.list_item, viewGroup, false));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>LayoutInflater的inflate方法的三个参数都代表什么意思？</strong></p>
+<ul>
+<li>resource：要解析的xml布局文件Id</li>
+<li>root：表示根布局</li>
+<li>attachToRoot：是否要添加到父布局root中</li>
+</ul>
+<p>resource其实很好理解就是资源Id，而root 和 attachToRoot 分别代表什么意思：</p>
+<ul>
+<li>当attachToRoot == true且root ！= null时，新解析出来的View会被add到root中去，然后将root作为结果返回</li>
+<li>当attachToRoot == false且root ！= null时，新解析的View会直接作为结果返回，而且root会为新解析的View生成LayoutParams并设置到该View中去</li>
+<li>当attachToRoot == false且root == null时，新解析的View会直接作为结果返回</li>
+</ul>
+<h3 id="2-1-LayoutInflater是如何被创建的"><a href="#2-1-LayoutInflater是如何被创建的" class="headerlink" title="2.1 LayoutInflater是如何被创建的"></a>2.1 LayoutInflater是如何被创建的</h3><p>LayoutInflater是一个抽象类，通过调用了from()的静态函数，经由系统服务LAYOUT_INFLATER_SERVICE，最终创建了一个LayoutInflater的子类对象PhoneLayoutInflater，继承结构如下：</p>
+<p><img src="http://cdn.51git.cn/2020-03-28-15837476773367.jpg" alt=""></p>
+<p>LayoutInflater.from(ctx) 就是根据传递过来的Context对象，调用getSystemService()来获取对应的系统服务, 来看一下这个方法<br><strong>frameworks/base/core/java/android/view/LayoutInflater.java</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public static LayoutInflater from(Context context) &#123;</span><br><span class="line">    &#x2F;&#x2F; 获取系统服务 LAYOUT_INFLATER_SERVICE ，并赋值给 LayoutInflater</span><br><span class="line">    &#x2F;&#x2F; Context 是一个抽象类，真正的实现类是ContextImpl</span><br><span class="line">    LayoutInflater LayoutInflater &#x3D;</span><br><span class="line">            (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);</span><br><span class="line">    if (LayoutInflater &#x3D;&#x3D; null) &#123;</span><br><span class="line">        throw new AssertionError(&quot;LayoutInflater not found.&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    return LayoutInflater;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>而Context本身是一个抽象类，它真正的实例化对象是ContextImpl<br><strong>frameworks/base/core/java/android/app/ContextImpl.java</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public Object getSystemService(String name) &#123;</span><br><span class="line">    &#x2F;&#x2F; SystemServiceRegistry 是管理系统服务的</span><br><span class="line">    &#x2F;&#x2F; 调用getSystemService方法，通过服务名字查找对应的服务</span><br><span class="line">    return SystemServiceRegistry.getSystemService(this, name);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-SystemServiceRegistry"><a href="#2-2-SystemServiceRegistry" class="headerlink" title="2.2 SystemServiceRegistry"></a>2.2 SystemServiceRegistry</h3><p>SystemServiceRegistry管理所有的系统服务，调用getSystemService方法，通过服务名字查找对应的服务<br><strong>frameworks/base/core/java/android/app/SystemServiceRegistry.java</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public static Object getSystemService(ContextImpl ctx, String name) &#123;</span><br><span class="line">    &#x2F;&#x2F; SYSTEM_SERVICE_FETCHERS 是一个map集合</span><br><span class="line">    &#x2F;&#x2F; 从 map 集合中取出系统服务</span><br><span class="line">    ServiceFetcher&lt;?&gt; fetcher &#x3D; SYSTEM_SERVICE_FETCHERS.get(name);</span><br><span class="line">    return fetcher !&#x3D; null ? fetcher.getService(ctx) : null;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>ServiceFetcher为SystemServiceRegistry类的静态内部接口，定义了getService方法</li>
+<li>ServiceFetcher的实现类CachedServiceFetcher实现了getService方法</li>
+<li>所有的系统服务都存储在一个map集合SYSTEM_SERVICE_FETCHERS当中，调用get方法来获取对应的服务</li>
+</ul>
+<p>如果有getSystemService方法来获取服务，那么相应的也会有添加服务的方法<br><strong>frameworks/base/core/java/android/app/SystemServiceRegistry.java</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">private static &lt;T&gt; void registerService(String serviceName, Class&lt;T&gt; serviceClass,</span><br><span class="line">        ServiceFetcher&lt;T&gt; serviceFetcher) &#123;</span><br><span class="line">    SYSTEM_SERVICE_NAMES.put(serviceClass, serviceName);</span><br><span class="line">    SYSTEM_SERVICE_FETCHERS.put(serviceName, serviceFetcher);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过调用SYSTEM_SERVICE_NAMES的put方法，往map集合中添加数据，那么registerService是什么时候调用的，在SystemServiceRegistry类中搜索registerService方法，知道了在类加载的时候通过静态代码块中添加的，来看一下</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">static &#123;</span><br><span class="line">    &#x2F;&#x2F; 初始化加载所有的系统服务</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line">    &#x2F;&#x2F; 省略了很多系统服务</span><br><span class="line"></span><br><span class="line">    registerService(Context.LAYOUT_INFLATER_SERVICE, LayoutInflater.class,</span><br><span class="line">            new CachedServiceFetcher&lt;LayoutInflater&gt;() &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public LayoutInflater createService(ContextImpl ctx) &#123;</span><br><span class="line">            return new PhoneLayoutInflater(ctx.getOuterContext());</span><br><span class="line">        &#125;&#125;);</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line">    &#x2F;&#x2F; 省略了很多系统服务</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最终是创建了一个PhoneLayoutInflater并返回的，到这里LayoutInflater的创建流程就分析完了</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><strong>View中的INVISIBLE、VISIBLE、GONE都有什么作用？</strong></p>
+<p>如果想隐藏或者显示View，可以通过调用setVisibility(int visibility)方法来实现，参数visibility对应三个值分别是INVISIBLE、VISIBLE、GONE</p>
+<ul>
+<li>VISIBLE：视图可见</li>
+<li>INVISIBLE：视图不可见的，它仍然占用布局的空间</li>
+<li>GONE：视图不可见，它不占用布局的空间</li>
+</ul>
+<p><strong>为什么ViewStub是大小为0的视图？</strong><br><strong>frameworks/base/core/java/android/view/ViewStub.java</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) &#123;</span><br><span class="line">    &#x2F;&#x2F; 设置视图大小为0</span><br><span class="line">    setMeasuredDimension(0, 0);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>ViewStub有什么作用？</strong></p>
+<p>ViewStub的作用主要用来延迟布局的加载</p>
+<p><strong>ViewStub是如何创建的？</strong></p>
+<p>因为ViewStub是继承View, 所以ViewStub的创建和View的创建是相同的，通过调用了LayoutInflater.createView方法根据完整的类的路径名利用反射机制构建View对象<br><strong>frameworks/base/core/java/android/view/LayoutInflater.java</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">...</span><br><span class="line"></span><br><span class="line">try &#123;</span><br><span class="line">    &#x2F;&#x2F; 利用构造函数，创建View</span><br><span class="line">    final View view &#x3D; constructor.newInstance(args);</span><br><span class="line">    if (view instanceof ViewStub) &#123;</span><br><span class="line">        &#x2F;&#x2F; 如果是ViewStub，则设置LayoutInflater</span><br><span class="line">        final ViewStub viewStub &#x3D; (ViewStub) view;</span><br><span class="line">        viewStub.setLayoutInflater(cloneInContext((Context) args[0]));</span><br><span class="line">    &#125;</span><br><span class="line">    return view;</span><br><span class="line">&#125; finally &#123;</span><br><span class="line">    mConstructorArgs[0] &#x3D; lastContext;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p><strong>为什么ViewStub能做到延迟加载？</strong></p>
+<p>因为在解析layout文件过程中遇到ViewStub，只是构建ViewStub的对象和初始化ViewStub的属性，没有真正开始解析view，所以可以做到延迟初始化</p>
+<p><strong>ViewStub指定的Layout布局文件是什么时候被加载的？</strong></p>
+<p>当ViewStub控件设置可见，或者调用inflate()方法，ViewStub所指定的layout资源就会被加载</p>
+<p><strong>LayoutInflater是一个抽象类它如何被创建的？</strong></p>
+<p>LayoutInflater是一个抽象类，通过调用了from()的静态函数，经由系统服务LAYOUT_INFLATER_SERVICE，最终创建了一个LayoutInflater的子类对象PhoneLayoutInflater，继承结构如下：</p>
+<p><img src="http://cdn.51git.cn/2020-03-28-15837476773367.jpg" alt=""></p>
+<p>LayoutInflater.from(ctx) 就是根据传递过来的Context对象，调用getSystemService()来获取对应的系统服务</p>
+<p><strong>系统服务存储在哪里？如何获取和添加系统服务？</strong></p>
+<p>SystemServiceRegistry管理所有的系统服务，所有的系统服务都存储在一个map集合SYSTEM_SERVICE_FETCHERS当中，调用getSystemService方法获取系统服务，调用registerService方法添加系统服务</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>致力于分享一系列的Android系统源码、逆向分析、算法相关的文章，每篇文章都会反复检查之后才会发布，如果你同我一样喜欢研究Android源码，一起来学习，期待与你一起成长</p>
+<h3 id="系列文章"><a href="#系列文章" class="headerlink" title="系列文章"></a>系列文章</h3><p><strong>Android 10 源码系列：</strong></p>
+<ul>
+<li><a href="https://juejin.im/post/5e4366c3f265da57397e1189">0xA01 Android 10 源码分析：Apk是如何生成的</a></li>
+<li><a href="https://juejin.im/post/5e5a1e6a6fb9a07cb427d8cd">0xA02 Android 10 源码分析：Apk的安装流程</a></li>
+<li><a href="https://juejin.im/post/5e6c8c14f265da574b792a1a">0xA03 Android 10 源码分析：Apk加载流程之资源加载</a></li>
+<li><a href="https://juejin.im/post/5e7f0f2c51882573c4676bc7">0xA04 Android 10 源码分析：Apk加载流程之资源加载（二）ViewStub</a></li>
+</ul>
+<p><strong>工具系列：</strong></p>
+<ul>
+<li><a href="https://juejin.im/post/5df4933e518825126e639d62">为数不多的人知道的AndroidStudio快捷键(一)</a></li>
+<li><a href="https://juejin.im/post/5df986d66fb9a016613903da">为数不多的人知道的AndroidStudio快捷键(二)</a></li>
+<li><a href="https://juejin.im/post/5d57cfff51882505a87a8526">关于adb命令你所需要知道的</a></li>
+<li><a href="https://juejin.im/post/5d11d8835188251c10631ffd">如何高效获取视频截图</a></li>
+<li><a href="https://juejin.im/post/5a6378055188253dc332130a">10分钟入门Shell脚本编程</a></li>
+</ul>
+<p><strong>逆向系列：</strong></p>
+<ul>
+<li><a href="https://juejin.im/post/5c8ce8b76fb9a049e30900bf">基于Smali文件 Android Studio 动态调试 APP</a></li>
+<li><a href="https://juejin.im/post/5c556ff7f265da2dbe02ba3c">解决在Android Studio 3.2找不到Android Device Monitor工具</a></li>
+</ul>
+</div><h1 class="title is-4 is-size-4-mobile"></h1><h1 class="title is-4 is-size-4-mobile"></h1><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css"><div class="social-share"></div><script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script><h1 class="title is-4 is-size-4-mobile"></h1></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2020/06/07/android10/window-manager/05-Dialog/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">0xA05 Android 10 源码分析：Dialog加载绘制流程以及在Kotlin、DataBinding中的使用</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2020/06/07/android10/resource-manager/03-APK-resource/"><span class="level-item">0xA03 Android 10 源码分析：APK 加载流程之资源加载</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">评论</h3><div class="content" id="valine-thread"></div><script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script><script src="https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js"></script><script>new Valine({
+            el: '#valine-thread' ,
+            notify: false,
+            verify: undefined,
+            appId: 'zfvr24HFhzQ5vtHkr4NQ1fmW-gzGzoHsz',
+            appKey: 'RChgr9mR005hgu4yiQ4WQU3O',
+            placeholder: '说点什么',
+            avatar: 'mm',
+            avatarForce: false,
+            meta: ["nick","mail","link"],
+            pageSize: 10,
+            visitor: false,
+            highlight: true,
+            recordIP: false
+        });</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1 is-sticky"><div class="card widget" id="toc" style="max-height: 500px;overflow: auto;"><div class="card-content"><div class="menu"><h3 class="menu-label">目录</h3><ul class="menu-list"><li><a class="is-flex" href="#引言"><span>引言</span></a></li><li><a class="is-flex" href="#1-ViewStub是什么"><span>1. ViewStub是什么</span></a><ul class="menu-list"><li><a class="is-flex" href="#1-1-ViewStub-是如何被创建的"><span>1.1 ViewStub 是如何被创建的</span></a></li><li><a class="is-flex" href="#1-2-ViewStub的构造方法"><span>1.2 ViewStub的构造方法</span></a></li><li><a class="is-flex" href="#1-3-ViewStub的setVisibility方法"><span>1.3 ViewStub的setVisibility方法</span></a></li><li><a class="is-flex" href="#1-4-ViewStub-inflate方法"><span>1.4 ViewStub.inflate方法</span></a></li><li><a class="is-flex" href="#1-5-ViewStub-inflateViewNoAdd方法"><span>1.5 ViewStub.inflateViewNoAdd方法</span></a></li><li><a class="is-flex" href="#1-6-ViewStub-replaceSelfWithView方法"><span>1.6 ViewStub.replaceSelfWithView方法</span></a></li><li><a class="is-flex" href="#1-7-ViewStub的注意事项"><span>1.7 ViewStub的注意事项</span></a></li></ul></li><li><a class="is-flex" href="#2-关于LayoutInflater"><span>2 关于LayoutInflater</span></a><ul class="menu-list"><li><a class="is-flex" href="#2-1-LayoutInflater是如何被创建的"><span>2.1 LayoutInflater是如何被创建的</span></a></li><li><a class="is-flex" href="#2-2-SystemServiceRegistry"><span>2.2 SystemServiceRegistry</span></a></li></ul></li><li><a class="is-flex" href="#总结"><span>总结</span></a></li><li><a class="is-flex" href="#结语"><span>结语</span></a><ul class="menu-list"><li><a class="is-flex" href="#系列文章"><span>系列文章</span></a></li></ul></li></ul></div></div></div><div class="card widget"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content size-small"><p><time dateTime="2020-06-06T16:45:50.638Z">2020-06-07</time></p><p class="title is-6"><a class="link-muted" href="/2020/06/07/android10/window-manager/07-WindowManagerService/">0xA07 Android 10 源码分析：Window 的类型 以及 三维视图层级分析</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-06-06T16:43:56.280Z">2020-06-07</time></p><p class="title is-6"><a class="link-muted" href="/2020/06/07/android10/window-manager/06-Window-WindowManager/">0xA06 Android 10 源码分析：WindowManager 视图绑定以及体系结构</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-06-06T16:38:15.320Z">2020-06-07</time></p><p class="title is-6"><a class="link-muted" href="/2020/06/07/android10/window-manager/05-Dialog/">0xA05 Android 10 源码分析：Dialog加载绘制流程以及在Kotlin、DataBinding中的使用</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-06-06T16:34:23.363Z">2020-06-07</time></p><p class="title is-6"><a class="link-muted" href="/2020/06/07/android10/resource-manager/04-APK-resource2/">0xA04 Android 10 源码分析：Apk加载流程之资源加载（二）</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-06-06T16:26:40.660Z">2020-06-07</time></p><p class="title is-6"><a class="link-muted" href="/2020/06/07/android10/resource-manager/03-APK-resource/">0xA03 Android 10 源码分析：APK 加载流程之资源加载</a></p><p class="is-uppercase"></p></div></article></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile is-marginless" href="/categories/Android10/"><span class="level-start"><span class="level-item">Android10</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/AndroidStudio/"><span class="level-start"><span class="level-item">AndroidStudio</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/LeetCode/"><span class="level-start"><span class="level-item">LeetCode</span></span><span class="level-end"><span class="level-item tag">6</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Linux/"><span class="level-start"><span class="level-item">Linux</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E9%80%86%E5%90%91/"><span class="level-start"><span class="level-item">逆向</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/Android10-%E5%8C%85%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-包管理系统</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-窗口管理系统</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-资源管理系统</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/AndroidStudio/"><span class="tag">AndroidStudio</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android%E6%BA%90%E7%A0%81/"><span class="tag">Android源码</span><span class="tag is-grey-lightest">7</span></a></div><div class="control"><a class="tags has-addons" href="/tags/DeviceMonitor/"><span class="tag">DeviceMonitor</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Java/"><span class="tag">Java</span><span class="tag is-grey-lightest">6</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Kotlin/"><span class="tag">Kotlin</span><span class="tag is-grey-lightest">6</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Linux/"><span class="tag">Linux</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Shell/"><span class="tag">Shell</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/apktool/"><span class="tag">apktool</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/smali-android-studio/"><span class="tag">smali-android-studio</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/smalidea/"><span class="tag">smalidea</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/"><span class="tag">二分查找</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%89%91%E6%8C%87offer/"><span class="tag">剑指offer</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%95%B0%E7%BB%84/"><span class="tag">数组</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%AE%97%E6%B3%95/"><span class="tag">算法</span><span class="tag is-grey-lightest">6</span></a></div></div></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level-item"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img class="logo-img" src="/img/logo.png" alt="奔跑吧前中后浪" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="奔跑吧前中后浪" height="28"></a><p class="size-small"><span>&copy; 2020 Hi Dhl</span>  <a href="http://www.beian.miit.gov.cn/" target="_blank">京ICP备18050211号-2</a>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            site: {
+                url: 'http://yoursite.com',
+                external_link: {"enable":true,"exclude":[]}
+            },
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><script src="https://s9.cnzz.com/z_stat.php?id=1278919895&amp;web_id=1278919895" async></script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><script src="/js/imaegoo/universe.js"></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>
