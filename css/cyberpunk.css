@@ -10716,7 +10716,7 @@ html {
 }
 .card {
   overflow: visible;
-  border-radius: 0;
+  border-radius: 10px;
 }
 .card + .card,
 .card + .column-right-shadow {
@@ -10724,8 +10724,8 @@ html {
 }
 .card .card-image {
   overflow: hidden;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 }
 .card .media + .media {
   border: none;
@@ -10751,24 +10751,32 @@ article.article .content {
   font-size: 1.1rem;
 }
 article.article .content h1 {
+  font-weight: bold;
   font-size: 1.75em;
 }
 article.article .content h2 {
+  font-weight: bold;
   font-size: 1.5em;
 }
 article.article .content h3 {
+  font-weight: bold;
   font-size: 1.25em;
 }
 article.article .content h4 {
+  font-weight: bold;
   font-size: 1.125em;
 }
 article.article .content h5 {
+  font-weight: bold;
   font-size: 1em;
 }
 article.article .content pre {
   font-size: 0.85em;
 }
-article.article .content code {
+article.article .title {
+  font-weight: 500;
+}
+article.article .title code {
   padding: 0;
   background: transparent;
   overflow-wrap: break-word;
@@ -11233,7 +11241,7 @@ figure.highlight .section {
   line-height: 0;
   overflow: hidden;
   box-shadow: none, 0 0 1px rgba(0,0,0,0.1);
-  border-radius: 0;
+  border-radius: 10px;
 }
 .donate .qrcode img {
   max-width: 280px;
@@ -11253,7 +11261,7 @@ figure.highlight .section {
   outline: none;
   padding: 8px 0;
   line-height: 24px;
-  border-radius: 0;
+  border-radius: 10px;
   transform: translateY(120px);
   transition: 0.4s ease opacity, 0.4s ease width, 0.4s ease transform, 0.4s ease border-radius;
 }
