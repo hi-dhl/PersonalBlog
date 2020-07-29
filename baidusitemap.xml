@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://hi-dhl.com/2020/07/27/LeetCode/offer/2020-07-27/</loc>
+    <loc>https://hi-dhl.com/2020/07/29/LeetCode/character/01-longest-common-prefix/</loc>
+    <lastmod>2020-07-29</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/07/27/LeetCode/offer/16-shu-zhi-de-zheng-shu-ci-fang/</loc>
     <lastmod>2020-07-26</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/2020/06/28/LeetCode/binary-tree/05-binary-tree-construct/</loc>
