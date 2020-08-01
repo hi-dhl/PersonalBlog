@@ -10730,6 +10730,24 @@ html {
   border: none;
   margin-top: 0;
 }
+.card .template p,
+.card .template blockquote,
+.card .template ul,
+.card ol,
+.card .template dl,
+.card .template table,
+.card .template pre {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+.template ul {
+  padding-left: 2em;
+}
+.template ul li {
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style-type: lower-roman;
+}
 article.media .media-content {
   color: #7a7a7a;
 }
