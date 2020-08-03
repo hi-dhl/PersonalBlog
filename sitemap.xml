@@ -2,23 +2,30 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://hi-dhl.com/2020/08/01/LeetCode/search/02-perfect-squares/</loc>
-    
-    <lastmod>2020-08-01T04:44:05.388Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://hi-dhl.com/2020/07/31/translate/02-fragment-data/</loc>
     
-    <lastmod>2020-08-01T04:42:30.899Z</lastmod>
+    <lastmod>2020-08-03T17:53:29.242Z</lastmod>
     
   </url>
   
   <url>
     <loc>https://hi-dhl.com/2020/06/10/translate/01-fragment/</loc>
     
-    <lastmod>2020-08-01T04:42:23.159Z</lastmod>
+    <lastmod>2020-08-03T17:53:27.013Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://hi-dhl.com/2020/08/04/translate/03-dagger-koin/</loc>
+    
+    <lastmod>2020-08-03T17:40:07.066Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://hi-dhl.com/2020/08/01/LeetCode/search/02-perfect-squares/</loc>
+    
+    <lastmod>2020-08-01T04:44:05.388Z</lastmod>
     
   </url>
   

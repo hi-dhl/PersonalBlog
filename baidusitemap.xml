@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://hi-dhl.com/2020/08/01/LeetCode/search/02-perfect-squares/</loc>
-    <lastmod>2020-08-01</lastmod>
-  </url>  <url>
     <loc>https://hi-dhl.com/2020/07/31/translate/02-fragment-data/</loc>
-    <lastmod>2020-08-01</lastmod>
+    <lastmod>2020-08-03</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/2020/06/10/translate/01-fragment/</loc>
+    <lastmod>2020-08-03</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/08/04/translate/03-dagger-koin/</loc>
+    <lastmod>2020-08-03</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/08/01/LeetCode/search/02-perfect-squares/</loc>
     <lastmod>2020-08-01</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/2020/06/07/android10/window-manager/07-WindowManagerService/</loc>
