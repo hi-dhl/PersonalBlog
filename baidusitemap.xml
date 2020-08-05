@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://hi-dhl.com/2020/08/05/translate/04-kotlin-performance/</loc>
+    <lastmod>2020-08-05</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/08/04/translate/03-dagger-koin/</loc>
+    <lastmod>2020-08-05</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/08/05/LeetCode/offer/17-da-yin-cong-1dao-zui-da-de-nwei-sh/</loc>
+    <lastmod>2020-08-05</lastmod>
+  </url>  <url>
     <loc>https://hi-dhl.com/2020/07/31/translate/02-fragment-data/</loc>
     <lastmod>2020-08-03</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/2020/06/10/translate/01-fragment/</loc>
-    <lastmod>2020-08-03</lastmod>
-  </url>  <url>
-    <loc>https://hi-dhl.com/2020/08/04/translate/03-dagger-koin/</loc>
     <lastmod>2020-08-03</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/2020/08/01/LeetCode/search/02-perfect-squares/</loc>
