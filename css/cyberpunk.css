@@ -10770,23 +10770,33 @@ article.article .content {
 }
 article.article .content h1 {
   font-weight: bold;
-  font-size: 1.75em;
+  padding-bottom: 0.3em;
+  font-size: 2.25em;
+  line-height: 1.2;
+  border-bottom: 1px solid #eee;
 }
 article.article .content h2 {
   font-weight: bold;
-  font-size: 1.5em;
+  padding-bottom: 0.3em;
+  font-size: 1.75em;
+  line-height: 1.225;
+  border-bottom: 1px solid #eee;
 }
 article.article .content h3 {
   font-weight: bold;
-  font-size: 1.25em;
+  font-size: 1.5em;
+  line-height: 1.43;
 }
 article.article .content h4 {
-  font-weight: bold;
-  font-size: 1.125em;
+  font-size: 1.25em;
 }
 article.article .content h5 {
   font-weight: bold;
   font-size: 1em;
+}
+article.article .content h6 {
+  font-size: 1em;
+  color: #777;
 }
 article.article .content pre {
   font-size: 0.85em;

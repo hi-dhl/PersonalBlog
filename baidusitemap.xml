@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://hi-dhl.com/2020/08/08/LeetCode/offer/2020-08-08/</loc>
+    <lastmod>2020-08-08</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/07/30/LeetCode/character/02-longest-substring-without-repeating-characters/</loc>
+    <lastmod>2020-08-08</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/08/06/LeetCode/offer/18-shan-chu-lian-biao-de-jie-dian/</loc>
+    <lastmod>2020-08-06</lastmod>
+  </url>  <url>
     <loc>https://hi-dhl.com/2020/08/05/translate/04-kotlin-performance/</loc>
     <lastmod>2020-08-05</lastmod>
   </url>  <url>
@@ -86,9 +95,6 @@
     <lastmod>2020-08-01</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/2020/05/24/LeetCode/offer/03-number/</loc>
-    <lastmod>2020-08-01</lastmod>
-  </url>  <url>
-    <loc>https://hi-dhl.com/2020/07/30/LeetCode/character/02-longest-substring-without-repeating-characters/</loc>
     <lastmod>2020-08-01</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/2020/07/29/LeetCode/character/01-longest-common-prefix/</loc>
