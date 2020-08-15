@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://hi-dhl.com/2020/08/08/LeetCode/offer/2020-08-08/</loc>
+    <loc>https://hi-dhl.com/2020/08/15/LeetCode/linked-list/01-design-linked-list/</loc>
+    <lastmod>2020-08-15</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/08/09/LeetCode/queue/01-design-circular-queue/</loc>
+    <lastmod>2020-08-15</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/08/13/LeetCode/stack/02-valid-parentheses/</loc>
+    <lastmod>2020-08-13</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/08/09/LeetCode/stack/01-min-stack/</loc>
+    <lastmod>2020-08-09</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/08/08/LeetCode/offer/19-zheng-ze-biao-da-shi-pi-pei/</loc>
     <lastmod>2020-08-08</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/2020/07/30/LeetCode/character/02-longest-substring-without-repeating-characters/</loc>
