@@ -10801,6 +10801,16 @@ article.article .content h6 {
 article.article .content pre {
   font-size: 0.85em;
 }
+article.article .content p,
+article.article .content blockquote,
+article.article .content ul,
+article.article .content ol,
+article.article .content dl,
+article.article .content table,
+article.article .content pre {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
 article.article .title {
   font-weight: 500;
 }
