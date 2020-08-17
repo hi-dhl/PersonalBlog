@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://hi-dhl.com/2020/08/17/translate/07-kotlin-let-run/</loc>
-    <lastmod>2020-08-16</lastmod>
-  </url>  <url>
     <loc>https://hi-dhl.com/2020/08/17/translate/05-rxJava-error/</loc>
+    <lastmod>2020-08-17</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/08/17/translate/07-kotlin-let-run/</loc>
     <lastmod>2020-08-16</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/2020/08/05/translate/04-kotlin-performance/</loc>
