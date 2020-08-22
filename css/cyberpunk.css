@@ -10811,32 +10811,47 @@ article.article .content pre {
   margin-top: 0;
   margin-bottom: 16px;
 }
-article.article .title {
+article.article .content table {
+  display: block;
+  width: 100%;
+  overflow: auto;
+  word-break: normal;
+  word-break: keep-all;
+}
+article.article .content table th {
+  font-weight: bold;
+}
+article.article .content table th,
+article.article table td {
+  padding: 6px 13px;
+  border: 1px solid #ddd;
+}
+article .title {
   font-weight: 500;
 }
-article.article .title code {
+article .title code {
   padding: 0;
   background: transparent;
   overflow-wrap: break-word;
 }
-article.article blockquote.pullquote {
+article blockquote.pullquote {
   float: right;
   max-width: 50%;
   font-size: 1.15rem;
   position: relative;
 }
-article.article a img {
+article a img {
   margin: auto;
   display: block;
 }
-article.article a img footer strong + cite {
+article a img footer strong + cite {
   margin-left: 0.5em;
 }
-article.article a .message.message-immersive {
+article a .message.message-immersive {
   border-radius: 0;
   margin: 0 -1.5rem 1.5rem -1.5rem;
 }
-article.article a .message.message-immersive .message-body {
+article a .message.message-immersive .message-body {
   border: none;
 }
 .rtl {

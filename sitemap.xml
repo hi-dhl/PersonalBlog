@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://hi-dhl.com/2020/08/22/android/03-adb/</loc>
+    
+    <lastmod>2020-08-22T12:26:34.306Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://hi-dhl.com/2020/08/22/jetpack/01-app-startup/</loc>
     
     <lastmod>2020-08-22T12:02:34.694Z</lastmod>
@@ -68,13 +75,6 @@
     <loc>https://hi-dhl.com/2020/08/22/jetpack/10-remoteMediator/</loc>
     
     <lastmod>2020-08-22T12:01:27.712Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://hi-dhl.com/2020/08/22/android/03-adb/</loc>
-    
-    <lastmod>2020-08-22T11:56:39.824Z</lastmod>
     
   </url>
   
