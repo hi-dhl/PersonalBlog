@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="generator" content="Hexo 4.2.1"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Kotlin Sealed 是什么？为什么 Google 都用 - 奔跑吧前中后浪</title><meta description="之前的文章介绍了如何使用 Sealed Classes 在 Flow 基础上对网络请求成功和失败进行处理，而这篇文章是对 Sealed Classes 更加深入的解析，结合函数式编程功能很强大，掌握并且灵活运用它，需要大量的实践"><meta property="og:type" content="blog"><meta property="og:title" content="Kotlin Sealed 是什么？为什么 Google 都用"><meta property="og:url" content="https://hi-dhl.com/2020/08/22/kotlin/03-sealed/"><meta property="og:site_name" content="奔跑吧前中后浪"><meta property="og:description" content="之前的文章介绍了如何使用 Sealed Classes 在 Flow 基础上对网络请求成功和失败进行处理，而这篇文章是对 Sealed Classes 更加深入的解析，结合函数式编程功能很强大，掌握并且灵活运用它，需要大量的实践"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="http://cdn.51git.cn/2020-08-12-15971994341699.jpg"><meta property="article:published_time" content="2020-08-22T11:46:43.107Z"><meta property="article:modified_time" content="2020-08-22T11:51:11.600Z"><meta property="article:author" content="Hi Dhl"><meta property="article:tag" content="Android10"><meta property="article:tag" content="AndroidStudio"><meta property="article:tag" content="buildSrc"><meta property="article:tag" content="kotlin"><meta property="article:tag" content="run"><meta property="article:tag" content="with"><meta property="article:tag" content="let"><meta property="article:tag" content="also"><meta property="article:tag" content="apply"><meta property="article:tag" content="Jetpack"><meta property="article:tag" content="App Startup"><meta property="article:tag" content="Paging3"><meta property="article:tag" content="Hilt"><meta property="article:tag" content="Dagger"><meta property="article:tag" content="Koin"><meta property="article:tag" content="Jetpack"><meta property="article:tag" content="MVVM"><meta property="article:tag" content="Repository"><meta property="article:tag" content="Kotlin Flow"><meta property="article:tag" content="sealed"><meta property="article:tag" content="RemoteMediator"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="http://cdn.51git.cn/2020-08-12-15971994341699.jpg"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://hi-dhl.com/2020/08/22/kotlin/03-sealed/"},"headline":"奔跑吧前中后浪","image":["http://cdn.51git.cn/2020-08-12-15971994341699.jpg"],"datePublished":"2020-08-22T11:46:43.107Z","dateModified":"2020-08-22T11:51:11.600Z","author":{"@type":"Person","name":"Hi Dhl"},"description":"之前的文章介绍了如何使用 Sealed Classes 在 Flow 基础上对网络请求成功和失败进行处理，而这篇文章是对 Sealed Classes 更加深入的解析，结合函数式编程功能很强大，掌握并且灵活运用它，需要大量的实践"}</script><link rel="canonical" href="https://hi-dhl.com/2020/08/22/kotlin/03-sealed/"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" defer></script><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script></head><body class="is-2-column"><script type="text/javascript" src="/js/imaegoo/night.js"></script><canvas id="universe"></canvas><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img class="logo-img" src="/img/logo.png" alt="奔跑吧前中后浪" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="奔跑吧前中后浪" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">首页</a><a class="navbar-item" href="/archives">时间轴</a><a class="navbar-item" href="/categories">分类</a><a class="navbar-item" href="/tags">标签</a><a class="navbar-item" href="/categories/Android10/">Android-10-源码</a><a class="navbar-item" href="/categories/LeetCode/">LeetCode</a><a class="navbar-item" href="/categories/offer-algorithms/">剑指Offer</a><a class="navbar-item" href="http://site.51git.cn/">国内外书签</a></div><div class="navbar-end"><a class="navbar-item night" id="night-nav" title="Night Mode" href="javascript:;"><i class="fas fa-moon" id="night-icon"></i></a><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/hi-dhl"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><div class="card-image"><span class="image is-7by3"><img class="thumbnail" src="http://cdn.51git.cn/2020-08-12-15971994341699.jpg" alt="Kotlin Sealed 是什么？为什么 Google 都用"></span></div><article class="card-content article" role="article"><h1 class="title is-3 is-size-4-mobile"></h1><h1 class="title is-3 is-size-4-mobile">Kotlin Sealed 是什么？为什么 Google 都用</h1><div class="article-meta size-small level is-mobile"><div class="level-left"><span class="mr-2"><i class="fa fa-calendar"></i></span><time class="level-item" dateTime="2020-08-22T11:46:43.107Z" title="2020-08-22T11:46:43.107Z">2020-08-22</time><span class="mr-2"> <i class="fa fa-folder"></i></span><span class="level-item"><a class="link-muted" href="/categories/Jetpack-kotlin/">Jetpack,kotlin</a></span><span class="mr-2"> <i class="fa fa-tag"></i></span><span class="level-item"><a class="link-muted" href="/tags/Jetpack/">Jetpack</a><span> , </span><a class="link-muted" href="/tags/kotlin/">kotlin</a></span></div></div><div class="level-left article-meta size-small is-mobile"></div><h1 class="title is-3 is-size-4-mobile"></h1><div class="content"><p>写这篇文章之前，做了很多调研，查阅了很多资料，文章也反复推敲打磨了很多遍，为什么我要去做这么多的调研工作，因为 Sealed Classes 概念很简单，但是想要写好它很难，由于目前我对 Sealed Classes 的理解也有限，所以做了很多工作。希望这篇文章的内容不会让小伙伴们失望，如果你对 Sealed Classes 有独到的理解，也欢迎在评论区和大家一起分享。</p>
+<p>在上一篇文章 <a href="https://juejin.im/post/6854573220457086990">Google 推荐在项目中使用 Sealed 和 RemoteMediator</a> 中介绍了如何使用 Sealed Classes 在 Flow 基础上对网络请求成功和失败进行处理，而这篇文章是对 Sealed Classes 更加深入的解析，结合函数式编程功能很强大，掌握并且灵活运用它，需要大量的实践。</p>
+<p><strong>通过这篇文章你将学习到以下内容：</strong></p>
+<ul>
+<li>Sealed Classes 原理分析？</li>
+<li>枚举和抽象类都有那些局限性？</li>
+<li>为什么枚举可以作为单例？枚举作为单例有那些优点？</li>
+<li>分别在什么情况下使用枚举和 Sealed Classes？</li>
+<li>Sealed Classes 究竟是什么？</li>
+<li>为什么 Sealed Classes 用于表示受限制的类层次结构？</li>
+<li>为什么说 Sealed Classes 是枚举类的扩展？</li>
+<li>Sealed Classes 的子类可以表示不同状态的实例，那么在项目中如何使用？</li>
+<li>禁止在 Sealed Classes 所定义的文件外使用， Kotlin 是如何做到的呢？</li>
+</ul>
+<h2 id="枚举和抽象类的局限性"><a href="#枚举和抽象类的局限性" class="headerlink" title="枚举和抽象类的局限性"></a>枚举和抽象类的局限性</h2><p>在分析 Sealed Classes 之前，我们先来分析一下枚举和抽象类都有那些局限性，<strong>注意：这些局限性是相对于 Sealed Classes 而言的，但是相对于它们自身而言是优点</strong>，而 Sealed Classes 出现也正是为了解决这些问题。先来看一下枚举的局限性：</p>
+<ul>
+<li>限制枚举每个类型只允许有一个实例</li>
+<li>限制所有枚举常量使用相同的类型的值</li>
+</ul>
+<h3 id="限制枚举每个类型只允许有一个实例"><a href="#限制枚举每个类型只允许有一个实例" class="headerlink" title="限制枚举每个类型只允许有一个实例"></a>限制枚举每个类型只允许有一个实例</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">enum class Color(val value: Int) &#123;</span><br><span class="line">    Red(1)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fun main(args: Array&lt;String&gt;) &#123;</span><br><span class="line">    val red1 &#x3D; Color.Red</span><br><span class="line">    val red2 &#x3D; Color.Red</span><br><span class="line">    println(&quot;$&#123;red1 &#x3D;&#x3D; red2&#125;&quot;) &#x2F;&#x2F; true</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后输出结果</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">red1 &#x3D;&#x3D; red2 : true</span><br></pre></td></tr></table></figure>
+
+<p>正如你看到的，我们定义了一个单元素的枚举类型，无论 Color.Red 有多少个对象，最终他们的实例都是一个，每个枚举常量仅作为一个实例存在，而一个密封类的子类可以有多个包含状态的实例，这既是枚举的<strong>局限性</strong>也是枚举的<strong>优点</strong>。</p>
+<p>枚举常量作为一个实例存在的<strong>优点：</strong> 枚举不仅能防止多次实例化，而且还可以防止反序列化，还能避免多线程同步问题，所以它也被列为实现单例方法之一。简单汇总一下。</p>
+<table>
+<thead>
+<tr>
+<th align="center">是否只有一个实例</th>
+<th align="center">是否反序列化</th>
+<th align="center">是否是线程安全</th>
+<th align="center">是否是懒加载</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">是</td>
+<td align="center">是</td>
+<td align="center">是</td>
+<td align="center">否</td>
+</tr>
+</tbody></table>
+<p>《Effective Java》 一书的作者 Josh Bloch 建议我们使用枚举作为单例，虽然使用枚举实现单例的方法还没有广泛采用，但是单元素的枚举类型已经成为实现 Singleton 的最佳方法。</p>
+<p>我们来看一下如何用枚举实现一个单例（与 Java 的实现方式相同），这里不会深究其原理，因为这不是本文的重点内容，小伙伴们可以从掘金搜索，有很多分析这方面原理的文章。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">interface ISingleton &#123;</span><br><span class="line">    fun doSomething()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">enum class Singleton : ISingleton &#123;</span><br><span class="line">    INSTANCE &#123;</span><br><span class="line">        override fun doSomething() &#123;</span><br><span class="line">            &#x2F;&#x2F; to do</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    fun getInstance(): Singleton &#x3D; Singleton.INSTANCE</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是在实际项目中使用枚举作为单例的很少，我看了很多开源项目，将枚举作为单例的场景少之有少，很大部分原因是因为使用枚举的时候非常不方便。</p>
+<p><strong>我这有个建议如果涉及反序列化创建对象的时候，建议使用枚举</strong>，因为 Java 规定，枚举的序列化和反序列化是有特殊定制的，因此禁用编译器使用 <code>writeObject</code> 、<code>readObject</code> 、<code>readObjectNoData</code> 、 <code>writeReplace</code> 、<code>readResolve</code> 等方法。</p>
+<h3 id="限制所有枚举常量使用相同的类型的值"><a href="#限制所有枚举常量使用相同的类型的值" class="headerlink" title="限制所有枚举常量使用相同的类型的值"></a>限制所有枚举常量使用相同的类型的值</h3><p>限制所有枚举常量使用相同的类型的值，也就是说每个枚举常量类型的值是相同的，我们还是用刚才的例子做个演示。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">enum class Color(val value: Int) &#123;</span><br><span class="line">    Red(1),</span><br><span class="line">    Green(2),</span><br><span class="line">    Blue(3);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>正如你所见，我们在枚举 Color 中定义了三个常量 Red 、Green 、Blue，但是它们只能使用 Int 类型的值，不能使用其他类型的值，如果使用其它类型的值会怎么样？如下所示：</p>
+<p><img src="http://cdn.51git.cn/2020-08-12-15969641645141.jpg" alt=""></p>
+<p>编译器会告诉你只接受 Int 类型的值，无法更改它的类型，也就是说你无法为枚举类型，添加额外的信息。</p>
+<h3 id="抽象类的局限性"><a href="#抽象类的局限性" class="headerlink" title="抽象类的局限性"></a>抽象类的局限性</h3><p>对于一个抽象类我们可以用一些子类去继承它，但是子类不是固定的，它可以随意扩展，同时也失去枚举常量的受限性。</p>
+<p><strong>Sealed Classes 包含了抽象类和枚举的优势：抽象类表示的灵活性和枚举常量的受限性</strong></p>
+<p>到这里可能会有一个疑问，如果 Sealed Classes 没有枚举和抽象类的局限性，那么它能在实际项目中给我们带来哪些好处呢？在了解它能带来哪些好处之前，我们先来看看官方对 Sealed Classes 的解释。</p>
+<h2 id="Sealed-Classes-是什么？"><a href="#Sealed-Classes-是什么？" class="headerlink" title="Sealed Classes 是什么？"></a>Sealed Classes 是什么？</h2><p>我们先来看一下官方对 Sealed Classes 的解释</p>
+<p><img src="http://cdn.51git.cn/2020-08-12-15969711127039.jpg" alt=""></p>
+<p>我们将上面这段话，简单的总结一下：</p>
+<ul>
+<li>Sealed Classes 用于表示受限制的类层次结构</li>
+<li>从某种意义上说，Sealed Classes 是枚举类的扩展</li>
+<li>枚举的不同之处在于，每个枚举常量仅作为单个实例存在，而 Sealed Classes 的子类可以表示不同状态的实例</li>
+</ul>
+<p>那上面这三段话分别是什么意思呢？接下来我们围绕这三个方面来分析。</p>
+<h3 id="Sealed-Classes-用于表示受限制的类层次结构"><a href="#Sealed-Classes-用于表示受限制的类层次结构" class="headerlink" title="Sealed Classes 用于表示受限制的类层次结构"></a>Sealed Classes 用于表示受限制的类层次结构</h3><p>Sealed Classes 用于表示受限制的类层次结构，其实这句话可以拆成两句话来理解。</p>
+<ul>
+<li><strong>Sealed Classes 用于表示层级关系：</strong> 子类可以是任意的类， 数据类、Kotlin 对象、普通的类，甚至也可以是另一个 Sealed</li>
+<li><strong>Sealed Classes 受限制：</strong> 必须在同一文件中，或者在 Sealed Classes 类的内部中使用，在Kotlin 1.1 之前，规则更加严格，子类只能在 Sealed Classes 类的内部中使用</li>
+</ul>
+<p>Sealed Classes 的用法也非常的简单，我们来看一下如何使用 Sealed Classes。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sealed class Color &#123;</span><br><span class="line">    class Red(val value: Int) : Color()</span><br><span class="line">    class Green(val value: Int) : Color()</span><br><span class="line">    class Blue(val name: String) : Color()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fun isInstance(color: Color) &#123;</span><br><span class="line">    when (color) &#123;</span><br><span class="line">        is Color.Red -&gt; TODO()</span><br><span class="line">        is Color.Green -&gt; TODO()</span><br><span class="line">        is Color.Blue -&gt; TODO()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这里推荐大家一个快捷键 <code>Mac/Win/Linux：Alt + Enter</code> 可以补全 when 语句下的所有分支，效果如下所示：</p>
+<p><img src="http://cdn.51git.cn/2020-08-12-15969725889928.gif" alt=""></p>
+<p>更多 AndroidStudio 快捷键，可以看之前的两篇文章</p>
+<ul>
+<li><a href="https://juejin.im/post/6844904020511981581">为数不多的人知道的AndroidStudio快捷键(一)</a></li>
+<li><a href="https://juejin.im/post/6844904023082926087">为数不多的人知道的AndroidStudio快捷键(二)</a></li>
+</ul>
+<h3 id="Sealed-Classes-是枚举类的扩展"><a href="#Sealed-Classes-是枚举类的扩展" class="headerlink" title="Sealed Classes 是枚举类的扩展"></a>Sealed Classes 是枚举类的扩展</h3><p>从某种意义上说，Sealed Classes 是枚举类的扩展，其实 Sealed Classes 和枚举很像，我们先来看一个例子。</p>
+<p><img src="http://cdn.51git.cn/2020-08-12-sealed-enum.png" alt="sealed-enu"></p>
+<p>正如你所看到的，在 Sealed Classes 内部中，使用 object 声明时，我们可以重用它们，不需要每次创建一个新实例，当这样使用时候，它看起来和枚举非常相似。</p>
+<p><strong>注意：实际上很少有人会这么使用，而且也不建议这么用，因为在这种情况枚举比 Sealed Classes 更适合</strong></p>
+<h3 id="在什么情况下使用枚举"><a href="#在什么情况下使用枚举" class="headerlink" title="在什么情况下使用枚举"></a>在什么情况下使用枚举</h3><p>如果你不需要多次实例化，也不需要不提供特殊行为，或者也不需要添加额外的信息，仅作为单个实例存在，这个时候使用枚举更加合适。</p>
+<p>我们来看一下 Paging3 中是如何使用枚举的，一起来看一下 <code>androidx.paging.LoadType</code> 这个类的源码。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">enum class LoadType &#123;</span><br><span class="line">    REFRESH,</span><br><span class="line">    PREPEND,</span><br><span class="line">    APPEND</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>枚举常量</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>refresh</td>
+<td>在初始化刷新的使用</td>
+</tr>
+<tr>
+<td>append</td>
+<td>在加载更多的时候使用</td>
+</tr>
+<tr>
+<td>prepend</td>
+<td>在当前列表头部添加数据的时候使用</td>
+</tr>
+</tbody></table>
+<p>它们不需要多次实例化，也不需要添加任何额外的信息，仅仅表示某种状态，而且它在很多地方都会用到比如 RemoteMediator、PagingSource 等等，想了解更多关于 Paging3 原理和实战案例可以看之前写的几篇文章。 </p>
+<ul>
+<li><a href="https://juejin.im/post/5ee998e8e51d4573d65df02b">Jetpack 成员 Paging3 数据库实践以及源码分析（一）</a></li>
+<li><a href="https://juejin.im/post/5eeefbf4e51d45742c53ddce">Jetpack 成员 Paging3 网络实践及原理分析（二）</a></li>
+<li><a href="https://juejin.im/post/6854573220457086990#heading-1">Jetpack 成员 Paging3 使用 RemoteMediator 实现加载网络分页数据并更新到数据库中（三）</a></li>
+<li><a href="https://juejin.im/post/5f0d303e6fb9a07e76550d4c?utm_source=gold_browser_extension">神奇宝贝(PokemonGo)  眼前一亮的 Jetpack + MVVM 极简实战</a> </li>
+</ul>
+<h3 id="4-Sealed-Classes-的子类可以表示不同状态的实例"><a href="#4-Sealed-Classes-的子类可以表示不同状态的实例" class="headerlink" title="4.Sealed Classes 的子类可以表示不同状态的实例"></a>4.Sealed Classes 的子类可以表示不同状态的实例</h3><p>与枚举的不同之处在于，每个枚举常量仅作为单个实例存在，而 Sealed Classes 的子类可以表示不同状态的实例，我们来看个例子可能更容易理解这句话。</p>
+<p>这里我们延用之前在 <a href="https://juejin.im/post/6854573220457086990">Google 推荐在项目中使用 sealed 和 RemoteMediator</a> 这篇文章中用到的例子，在请求网络的时候需要对成功或者失败进行处理，我们来看一下用 Sealed Classes 如何进行封装。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sealed class PokemonResult&lt;out T&gt; &#123;</span><br><span class="line">    data class Success&lt;out T&gt;(val value: T) : PokemonResult&lt;T&gt;()</span><br><span class="line"></span><br><span class="line">    data class Failure(val throwable: Throwable?) : PokemonResult&lt;Nothing&gt;()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>这里只贴出来部分代码，核心实现可以查看项目 <a href="https://github.com/hi-dhl/PokemonGo">PokemonGo</a><br><a href="https://github.com/hi-dhl/PokemonGo">GitHub 地址：https://github.com/hi-dhl/PokemonGo</a><br>代码路径：<strong>PokemonGo/app/…/com/hi/dhl/pokemon/data/remote/PokemonResult.kt</strong></p>
+</blockquote>
+<p>一起来看一下如何使用</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">when (result) &#123;</span><br><span class="line">    is PokemonResult.Failure -&gt; &#123;</span><br><span class="line">        &#x2F;&#x2F; 进行失败提示</span><br><span class="line">    &#125;</span><br><span class="line">    is PokemonResult.Success -&gt; &#123;</span><br><span class="line">        &#x2F;&#x2F; 进行成功处理</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们在来看另外一个例子，在一个列表中可能会有不同类型的数据，比如图片、文本等等，那么用 Sealed Classes 如何表示。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sealed class ListItem &#123;</span><br><span class="line">    class Text(val title: String, val content: String) : ListItem()</span><br><span class="line">    class Image(val url: String) : ListItem()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这是两个比较常见的例子，当然 Sealed Classes 强大不止于此，还有更多场景，等着一起来挖掘。</p>
+<p>我们来看一下大神 Antonio Leiva 在这篇文章 <a href="https://antonioleiva.com/sealed-classes-kotlin/">Sealed classes in Kotlin: enums with super-powers</a> 分享的一个比较有趣的例子，对 View 进行的一系列操作可以封装在 Sealed Classes 中，我们来看一下会有什么样的效果。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sealed class UiOp &#123;</span><br><span class="line">    object Show: UiOp()</span><br><span class="line">    object Hide: UiOp()</span><br><span class="line">    class TranslateX(val px: Float): UiOp()</span><br><span class="line">    class TranslateY(val px: Float): UiOp()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fun execute(view: View, op: UiOp) &#x3D; when (op) &#123;</span><br><span class="line">    UiOp.Show -&gt; view.visibility &#x3D; View.VISIBLE</span><br><span class="line">    UiOp.Hide -&gt; view.visibility &#x3D; View.GONE</span><br><span class="line">    is UiOp.TranslateX -&gt; view.translationX &#x3D; op.px</span><br><span class="line">    is UiOp.TranslateY -&gt; view.translationY &#x3D; op.px</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在 Sealed Classes 类中，我们定义了一系列 View 的操作 <code>Show</code> 、 <code>Hide</code> 、 <code>TranslateX</code> 、 <code>TranslateY</code> ，现在我们创建一个类，将这些对视图的操作整合在一起。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class Ui(val uiOps: List &#x3D; emptyList()) &#123;</span><br><span class="line">    operator fun plus(uiOp: UiOp) &#x3D; Ui(uiOps + uiOp)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在 Ui 这个类中声明了一个 List 存储了所有的操作，并重写了 plus 操作符，关于 plus 操作符可以看之前的文章 <a href="https://juejin.im/post/6844904184974835720#heading-0">为数不多的人知道的 Kotlin 技巧以及 原理解析</a>，通过 plus 操作符将这些对视图的操作拼接在一起，这样不仅可以提高代码的可读性，而且使用起来也非常的方便，都定义好之后，我们来看一下如何使用这个类。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">val ui &#x3D; Ui() +</span><br><span class="line">        UiOp.Show +</span><br><span class="line">        UiOp.TranslateX(20f) +</span><br><span class="line">        UiOp.TranslateY(40f) +</span><br><span class="line">        UiOp.Hide</span><br><span class="line">        </span><br><span class="line">run(view, ui)</span><br></pre></td></tr></table></figure>
+
+<p>定义了一系列操作之后，然后通过 run 方法来执行这些操作，来看一下 run 方法的实现。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">fun run(view: View, ui: Ui) &#123;</span><br><span class="line">    ui.uiOps.forEach &#123; execute(view, it) &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>代码很简单，这里就不多做解释了，在 kotlin 中函数可以作为参数传递，可以将 run 方法传递给另一个函数或者一个类，并且这些操作完全可互换的，将它们结合在一起功能将非常强大。</p>
+<p>Sealed Classes 强大不止于此，还有很多很多非常实用的场景，现在我对 Sealed Classes 的理解也非常有限，还不够灵活的使用它，我相信在更多项目，更多的场景，会看到更多实用的一些技巧。</p>
+<h2 id="Sealed-Classes-原理"><a href="#Sealed-Classes-原理" class="headerlink" title="Sealed Classes 原理"></a>Sealed Classes 原理</h2><p>在这里我们还是使用上文中用到的例子，来分析 Sealed Classes 原理。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sealed class Color &#123;</span><br><span class="line">    object Red : Color()</span><br><span class="line">    object Green : Color()</span><br><span class="line">    object Blue : Color()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>一起来分析一下反编译后的 Java 代码都做了什么。PS：<code>Tools → Kotlin → Show Kotlin Bytecode</code> </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">... &#x2F;&#x2F; 省略部分代码</span><br><span class="line"></span><br><span class="line">@Metadata(</span><br><span class="line">   mv &#x3D; &#123;1, 1, 13&#125;,</span><br><span class="line">   bv &#x3D; &#123;1, 0, 3&#125;,</span><br><span class="line">   k &#x3D; 1,</span><br><span class="line">   d1 &#x3D; &#123;&quot;\u0000\u001a\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\b6\u0018\u00002\u00020\u0001:\u0003\u0003\u0004\u0005B\u0007\b\u0002¢\u0006\u0002\u0010\u0002\u0082\u0001\u0003\u0006\u0007\b¨\u0006\t&quot;&#125;,</span><br><span class="line">   d2 &#x3D; &#123;&quot;Lcom&#x2F;hidhl&#x2F;leetcode&#x2F;test&#x2F;saledvsemun&#x2F;Color;&quot;, &quot;&quot;, &quot;()V&quot;, &quot;Blue&quot;, &quot;Green&quot;, &quot;Red&quot;, &quot;Lcom&#x2F;hidhl&#x2F;leetcode&#x2F;test&#x2F;saledvsemun&#x2F;Color$Red;&quot;, &quot;Lcom&#x2F;hidhl&#x2F;leetcode&#x2F;test&#x2F;saledvsemun&#x2F;Color$Green;&quot;, &quot;Lcom&#x2F;hidhl&#x2F;leetcode&#x2F;test&#x2F;saledvsemun&#x2F;Color$Blue;&quot;, &quot;Java-kotlin&quot;&#125;</span><br><span class="line">)</span><br><span class="line">public abstract class Color &#123;</span><br><span class="line">   private Color() &#123;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   public Color(DefaultConstructorMarker $constructor_marker) &#123;</span><br><span class="line">      this();</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line">... &#x2F;&#x2F; 省略部分代码</span><br></pre></td></tr></table></figure>
+
+<p><code>@Metadata</code> 这个注解会出现在 Kotlin 编译器生成的任何类文件中，可以通过反射的方式获取 <code>@Metadata</code> 信息。参数名称都非常短，可以帮助减少 class 文件的大小。</p>
+<p><code>@Metadata</code> 存储了 Kotlin 主要的语法信息例如扩展函数、typealias 等等，这些信息都是由 kotlinc 编译器，并以注解的形式存放在 Java 的字节码中的，如果元数据被丢弃掉，运行在 JVM 上会抛出异常，那么如何才能确定它们之间的对应关系呢，其实就是通过 <code>@Metadata</code> 这个注解提供的信息。</p>
+<blockquote>
+<p>正因为元数据不能被丢掉，R8 带了新的优化，将元数据信息记录在 R8 的内部数据结构中，当 R8 完成对第三库或者应用程序的优化和收缩时，它会为所有 Kotlin 类合成新的正确的 Kotlin 元数据，其目的就是为了减少应用程序的大小，目前我也在研究中，日后会分享。</p>
+</blockquote>
+<p>而在本例中  <code>@Metadata</code> 保存了一个子类的列表，编译器在使用的时候会用到这些信息。正如你看到的 Sealed class 被编译成了 abstract class，它本身是不能被实例化，只能用它的子类实例化对象。</p>
+<p>抽象类 Color 默认的构造方法被私有化了，所以在 Kotlin 1.1 之前，子类必须嵌套在 Sealed Classes 类中，后来放宽了要求，禁止在 Sealed Classes 所定义的文件外使用， Kotlin 是如何做到的呢？如果我们在 Sealed Classes 所定义的文件外使用会怎么样？</p>
+<p><img src="http://cdn.51git.cn/2020-08-12-15969768277576.jpg" alt=""></p>
+<p>正如你所看到，会导致编译错误，那么为什么 Sealed Classes 可以在同文件内使用呢？来看一下反编译后的代码。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; sealed</span><br><span class="line">sealed class Color</span><br><span class="line">&#x2F;&#x2F; 同文件中使用 sealed class</span><br><span class="line">class Red : Color()</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">&#x2F;&#x2F; 以下是反编译代码 </span><br><span class="line">  </span><br><span class="line">... &#x2F;&#x2F; 省略部分代码  </span><br><span class="line">public final class Red extends Color &#123;</span><br><span class="line">   public Red() &#123;</span><br><span class="line">      super((DefaultConstructorMarker)null);</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">... &#x2F;&#x2F; 省略部分代码    </span><br><span class="line">public abstract class Color &#123;</span><br><span class="line">   private Color() &#123;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   &#x2F;&#x2F; $FF: synthetic method</span><br><span class="line">   public Color(DefaultConstructorMarker $constructor_marker) &#123;</span><br><span class="line">      this();</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line">... &#x2F;&#x2F; 省略部分代码</span><br></pre></td></tr></table></figure>
+
+<p>可以看到 Red class 被编译成了 final class， Sealed class 被编译成了 abstract class，同时编译器生成了一个 <strong>公有</strong> 的构造方法，其他的类无法直接调用，只有 Kotlin 编译器可以使用，Red class 被编译成 final class，在其构造方法内调用了 Color class <strong>公有</strong> 的构造方法，而这些都是 Kotlin 编译器帮我们做的。</p>
+<ul>
+<li>构造函数<strong>私有化</strong>，限制了子类必须嵌套在 Sealed Classes 类中</li>
+<li>编译器生成了一个 <strong>公有</strong> 的构造方法，在子类的构造方法中调用了父类 <strong>公有</strong> 的构造方法，而这些都是 Kotlin 编译器帮我们做的</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><strong>枚举的局限性</strong></p>
+<ul>
+<li>限制枚举每个类型只允许有一个实例</li>
+<li>限制所有枚举常量使用相同的类型的值</li>
+</ul>
+<p><strong>抽象类的局限性</strong></p>
+<p>对于一个抽象类我们可以用一些子类去继承它，但是子类不是固定的，它可以随意扩展，同时也失去枚举常量受限性。</p>
+<p><strong>枚举作为单例的优点</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">是否只有一个实例</th>
+<th align="center">是否反序列化</th>
+<th align="center">是否是线程安全</th>
+<th align="center">是否是懒加载</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">是</td>
+<td align="center">是</td>
+<td align="center">是</td>
+<td align="center">否</td>
+</tr>
+</tbody></table>
+<p><strong>Sealed Classes 是什么？</strong></p>
+<p>Sealed 是一个 abstract 类，它本身是不能被实例化，只能用它的子类实例化对象。Sealed 的构造方法私有化，禁止在 Sealed 所定义的文件外使用。</p>
+<ul>
+<li>Sealed Classes 用于表示受限制的类层次结构</li>
+<li>从某种意义上说，Sealed Classes 是枚举类的扩展</li>
+<li>枚举的不同之处在于，每个枚举常量仅作为单个实例存在，而 Sealed Classes 的子类可以表示不同状态的实例。</li>
+</ul>
+<p><strong>在什么情况下使用枚举或者 Sealed？</strong></p>
+<ul>
+<li>如果涉及反序列化创建对象的时候，建议使用枚举，因为 Java 规定，枚举的序列化和反序列化是有特殊定制的，因此禁用编译器使用 <code>writeObject</code> 、<code>readObject</code> 、<code>readObjectNoData</code> 、 <code>writeReplace</code> 、<code>readResolve</code> 等方法。</li>
+<li>如果你不需要多次实例化，也不需要不提供特殊行为，或者也不需要添加额外的信息，仅作为单个实例存在，这个时候使用枚举更加合适。</li>
+<li>其他情况下使用 Sealed Classes，在一定程度上可以使用 Sealed Classes 代替枚举</li>
+</ul>
+<p><strong>自动补全 when 语句下的所有分支</strong></p>
+<p>推荐给大家一个快捷键 <code>Mac/Win/Linux：Alt + Enter</code> 可以补全 when 语句下的所有分支，效果如下所示：</p>
+<p><img src="http://cdn.51git.cn/2020-08-12-15969725889928.gif" alt=""></p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li><a href="https://antonioleiva.com/sealed-classes-kotlin/">Sealed classes in Kotlin: enums with super-powers</a></li>
+<li><a href="https://kotlinlang.org/docs/reference/sealed-classes.html">Sealed Classes</a></li>
+<li><a href="https://mp.weixin.qq.com/s/yrWJ-ApIMTs979NW1v42UQ">Kotlin Vocabulary | 密封类 sealed class</a></li>
+<li><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-metadata/">Kotlin Metadata</a></li>
+</ul>
+<blockquote>
+<p>正在建立一个最全、最新的 AndroidX Jetpack 相关组件的实战项目 以及 相关组件原理分析文章，目前已经包含了 App Startup、Paging3、Hilt 等等，正在逐渐增加其他 Jetpack 新成员，仓库持续更新，可以前去查看：<a href="https://github.com/hi-dhl/AndroidX-Jetpack-Practice">AndroidX-Jetpack-Practice</a>, 如果这个仓库对你有帮助，请仓库右上角帮我点个赞。</p>
+</blockquote>
+</div><p style="height:10px"></p><!--!--><h1 class="title is-4 is-size-4-mobile"></h1></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2020/08/22/android/03-adb/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">关于 adb 命令你所需要知道的</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2020/08/22/jetpack/10-remoteMediator/"><span class="level-item">Google 推荐在项目中使用 sealed 和 RemoteMediator</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content template"><p>致力于分享一系列 Android 系统源码、逆向分析、算法、翻译、Jetpack 源码相关的文章，在技术的道路上一起前进</p><h3 class="title is-4">Android10 源码分析</h3><p>正在写一系列的 Android 10 源码分析的文章，了解系统源码，不仅有助于分析问题，在面试过程中，对我们也是非常有帮助的，如果你同我一样喜欢研究 Android 源码，可以关注我 GitHub 上的 <a href="https://github.com/hi-dhl/Android10-Source-Analysis">Android10-Source-Analysis</a>。</p><h3 class="title is-4">算法题库的归纳和总结</h3><p>由于 LeetCode 的题库庞大，每个分类都能筛选出数百道题，由于每个人的精力有限，不可能刷完所有题目，因此我按照经典类型题目去分类、和题目的难易程度去排序。</p><ul><li>数据结构： 数组、栈、队列、字符串、链表、树……</li><li>算法： 查找算法、搜索算法、位运算、排序、数学、……</li></ul><p>每道题目都会用 Java 和 kotlin 去实现，并且每道题目都有解题思路，如果你同我一样喜欢算法、LeetCode，可以关注我 GitHub 上的 LeetCode 题解：<a href="https://github.com/hi-dhl/Leetcode-Solutions-with-Java-And-Kotlin">Leetcode-Solutions-with-Java-And-Kotlin</a>。</p><h3 class="title is-4">精选国外的技术文章</h3><p>目前正在整理和翻译一系列精选国外的技术文章，不仅仅是翻译，很多优秀的英文技术文章提供了很好思路和方法，每篇文章都会有<strong>译者思考</strong>部分，对原文的更加深入的解读，可以关注我 GitHub 上的 <a href="https://github.com/hi-dhl/Technical-Article-Translation">Technical-Article-Translation</a>。</p><p></p></div></div><div class="card"><div class="card-content"><h3 class="title is-5">评论</h3><div class="content" id="valine-thread"></div><script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script><script src="https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js"></script><script>new Valine({
+            el: '#valine-thread' ,
+            notify: false,
+            verify: undefined,
+            appId: 'zfvr24HFhzQ5vtHkr4NQ1fmW-gzGzoHsz',
+            appKey: 'RChgr9mR005hgu4yiQ4WQU3O',
+            placeholder: '说点什么',
+            avatar: 'mm',
+            avatarForce: false,
+            meta: ["nick","mail","link"],
+            pageSize: 10,
+            visitor: false,
+            highlight: true,
+            recordIP: false
+        });</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1 is-sticky"><div class="card widget" id="toc" style="max-height: 500px;overflow: auto;"><div class="card-content"><div class="menu"><h3 class="menu-label">目录</h3><ul class="menu-list"><li><a class="is-flex" href="#枚举和抽象类的局限性"><span>枚举和抽象类的局限性</span></a><ul class="menu-list"><li><a class="is-flex" href="#限制枚举每个类型只允许有一个实例"><span>限制枚举每个类型只允许有一个实例</span></a></li><li><a class="is-flex" href="#限制所有枚举常量使用相同的类型的值"><span>限制所有枚举常量使用相同的类型的值</span></a></li><li><a class="is-flex" href="#抽象类的局限性"><span>抽象类的局限性</span></a></li></ul></li><li><a class="is-flex" href="#Sealed-Classes-是什么？"><span>Sealed Classes 是什么？</span></a><ul class="menu-list"><li><a class="is-flex" href="#Sealed-Classes-用于表示受限制的类层次结构"><span>Sealed Classes 用于表示受限制的类层次结构</span></a></li><li><a class="is-flex" href="#Sealed-Classes-是枚举类的扩展"><span>Sealed Classes 是枚举类的扩展</span></a></li><li><a class="is-flex" href="#在什么情况下使用枚举"><span>在什么情况下使用枚举</span></a></li><li><a class="is-flex" href="#4-Sealed-Classes-的子类可以表示不同状态的实例"><span>4.Sealed Classes 的子类可以表示不同状态的实例</span></a></li></ul></li><li><a class="is-flex" href="#Sealed-Classes-原理"><span>Sealed Classes 原理</span></a></li><li><a class="is-flex" href="#总结"><span>总结</span></a></li><li><a class="is-flex" href="#参考文献"><span>参考文献</span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content size-small"><p><time dateTime="2020-08-22T11:51:48.423Z">2020-08-22</time></p><p class="title is-6"><a class="link-muted" href="/2020/08/22/android/03-adb/">关于 adb 命令你所需要知道的</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-08-22T11:46:43.107Z">2020-08-22</time></p><p class="title is-6"><a class="link-muted" href="/2020/08/22/kotlin/03-sealed/">Kotlin Sealed 是什么？为什么 Google 都用</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-08-22T11:43:32.461Z">2020-08-22</time></p><p class="title is-6"><a class="link-muted" href="/2020/08/22/jetpack/10-remoteMediator/">Google 推荐在项目中使用 sealed 和 RemoteMediator</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-08-22T11:41:10.398Z">2020-08-22</time></p><p class="title is-6"><a class="link-muted" href="/2020/08/22/jetpack/09-kotlin-flow/">Google 推荐在 MVVM 架构中使用 Kotlin Flow</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-08-22T11:37:49.745Z">2020-08-22</time></p><p class="title is-6"><a class="link-muted" href="/2020/08/22/jetpack/08-PokemonGo/">神奇宝贝  眼前一亮的 Jetpack + MVVM 极简实战</a></p><p class="is-uppercase"></p></div></article></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile is-marginless" href="/categories/Android/"><span class="level-start"><span class="level-item">Android</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Android10/"><span class="level-start"><span class="level-item">Android10</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/AndroidStudio/"><span class="level-start"><span class="level-item">AndroidStudio</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Jetpack/"><span class="level-start"><span class="level-item">Jetpack</span></span><span class="level-end"><span class="level-item tag">9</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Jetpack-kotlin/"><span class="level-start"><span class="level-item">Jetpack,kotlin</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Kotlin/"><span class="level-start"><span class="level-item">Kotlin</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/LeetCode/"><span class="level-start"><span class="level-item">LeetCode</span></span><span class="level-end"><span class="level-item tag">25</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Linux/"><span class="level-start"><span class="level-item">Linux</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/offer-algorithms/"><span class="level-start"><span class="level-item">剑指Offer</span></span><span class="level-end"><span class="level-item tag">18</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E7%B2%BE%E9%80%89%E8%AF%91%E6%96%87/"><span class="level-start"><span class="level-item">精选译文</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E9%80%86%E5%90%91/"><span class="level-start"><span class="level-item">逆向</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E9%80%86%E5%90%91-AndroidStudio/"><span class="level-start"><span class="level-item">逆向,AndroidStudio</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/Android/"><span class="tag">Android</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E5%8C%85%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-包管理系统</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-窗口管理系统</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-资源管理系统</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/AndroidStudio/"><span class="tag">AndroidStudio</span><span class="tag is-grey-lightest">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android%E6%BA%90%E7%A0%81/"><span class="tag">Android源码</span><span class="tag is-grey-lightest">7</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Fragment/"><span class="tag">Fragment</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Jetpack/"><span class="tag">Jetpack</span><span class="tag is-grey-lightest">11</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Koin/"><span class="tag">Koin</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Kotlin/"><span class="tag">Kotlin</span><span class="tag is-grey-lightest">5</span></a></div><div class="control"><a class="tags has-addons" href="/tags/LeetCode/"><span class="tag">LeetCode</span><span class="tag is-grey-lightest">22</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Linux/"><span class="tag">Linux</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/RxJava/"><span class="tag">RxJava</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Shell/"><span class="tag">Shell</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/kotlin/"><span class="tag">kotlin</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/"><span class="tag">二分查找</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/"><span class="tag">二叉树</span><span class="tag is-grey-lightest">12</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E4%BD%8D%E8%BF%90%E7%AE%97/"><span class="tag">位运算</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%89%91%E6%8C%87Offer/"><span class="tag">剑指Offer</span><span class="tag is-grey-lightest">18</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/"><span class="tag">动态规划</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/"><span class="tag">字符串</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%B9%BF%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/"><span class="tag">广度优先搜索</span><span class="tag is-grey-lightest">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%95%B0%E5%AD%A6/"><span class="tag">数学</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%A0%88/"><span class="tag">栈</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/"><span class="tag">深度优先搜索</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%AF%91%E6%96%87/"><span class="tag">译文</span><span class="tag is-grey-lightest">7</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E9%93%BE%E8%A1%A8/"><span class="tag">链表</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E9%98%9F%E5%88%97/"><span class="tag">队列</span><span class="tag is-grey-lightest">1</span></a></div></div></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level-item"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img class="logo-img" src="/img/logo.png" alt="奔跑吧前中后浪" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="奔跑吧前中后浪" height="28"></a><p class="size-small"><span>&copy; 2020 Hi Dhl</span>  <a href="http://www.beian.miit.gov.cn/" target="_blank">京ICP备18050211号-2</a>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            site: {
+                url: 'https://hi-dhl.com',
+                external_link: {"enable":true,"exclude":[]}
+            },
+            article: {
+                highlight: {
+                    clipboard: false,
+                    fold: ''
+                }
+            }
+        };</script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><script src="https://s9.cnzz.com/z_stat.php?id=1278919895&amp;web_id=1278919895" async></script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><script src="/js/imaegoo/universe.js"></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>

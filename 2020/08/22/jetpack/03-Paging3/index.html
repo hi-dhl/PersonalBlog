@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="generator" content="Hexo 4.2.1"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Jetpack 新成员 Paging3 网络实践及原理分析（二） - 奔跑吧前中后浪</title><meta description="今天这边文章主要来分析 Paging3 加载网络数据及其原理，利用周末的时间参考 Google 文档实现了 Paging3 期间也遇到一些坑，会在文中详细分析"><meta property="og:type" content="blog"><meta property="og:title" content="Jetpack 新成员 Paging3 网络实践及原理分析（二）"><meta property="og:url" content="https://hi-dhl.com/2020/08/22/jetpack/03-Paging3/"><meta property="og:site_name" content="奔跑吧前中后浪"><meta property="og:description" content="今天这边文章主要来分析 Paging3 加载网络数据及其原理，利用周末的时间参考 Google 文档实现了 Paging3 期间也遇到一些坑，会在文中详细分析"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="http://cdn.51git.cn/2020-06-21-15927197805397.jpg"><meta property="article:published_time" content="2020-08-22T11:23:53.246Z"><meta property="article:modified_time" content="2020-08-22T11:33:08.722Z"><meta property="article:author" content="Hi Dhl"><meta property="article:tag" content="Android10"><meta property="article:tag" content="AndroidStudio"><meta property="article:tag" content="buildSrc"><meta property="article:tag" content="kotlin"><meta property="article:tag" content="run"><meta property="article:tag" content="with"><meta property="article:tag" content="let"><meta property="article:tag" content="also"><meta property="article:tag" content="apply"><meta property="article:tag" content="Jetpack"><meta property="article:tag" content="App Startup"><meta property="article:tag" content="Paging3"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="http://cdn.51git.cn/2020-06-21-15927197805397.jpg"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://hi-dhl.com/2020/08/22/jetpack/03-Paging3/"},"headline":"奔跑吧前中后浪","image":["http://cdn.51git.cn/2020-06-21-15927197805397.jpg"],"datePublished":"2020-08-22T11:23:53.246Z","dateModified":"2020-08-22T11:33:08.722Z","author":{"@type":"Person","name":"Hi Dhl"},"description":"今天这边文章主要来分析 Paging3 加载网络数据及其原理，利用周末的时间参考 Google 文档实现了 Paging3 期间也遇到一些坑，会在文中详细分析"}</script><link rel="canonical" href="https://hi-dhl.com/2020/08/22/jetpack/03-Paging3/"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" defer></script><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script></head><body class="is-2-column"><script type="text/javascript" src="/js/imaegoo/night.js"></script><canvas id="universe"></canvas><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img class="logo-img" src="/img/logo.png" alt="奔跑吧前中后浪" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="奔跑吧前中后浪" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">首页</a><a class="navbar-item" href="/archives">时间轴</a><a class="navbar-item" href="/categories">分类</a><a class="navbar-item" href="/tags">标签</a><a class="navbar-item" href="/categories/Android10/">Android-10-源码</a><a class="navbar-item" href="/categories/LeetCode/">LeetCode</a><a class="navbar-item" href="/categories/offer-algorithms/">剑指Offer</a><a class="navbar-item" href="http://site.51git.cn/">国内外书签</a></div><div class="navbar-end"><a class="navbar-item night" id="night-nav" title="Night Mode" href="javascript:;"><i class="fas fa-moon" id="night-icon"></i></a><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/hi-dhl"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><div class="card-image"><span class="image is-7by3"><img class="thumbnail" src="http://cdn.51git.cn/2020-06-21-15927197805397.jpg" alt="Jetpack 新成员 Paging3 网络实践及原理分析（二）"></span></div><article class="card-content article" role="article"><h1 class="title is-3 is-size-4-mobile"></h1><h1 class="title is-3 is-size-4-mobile">Jetpack 新成员 Paging3 网络实践及原理分析（二）</h1><div class="article-meta size-small level is-mobile"><div class="level-left"><span class="mr-2"><i class="fa fa-calendar"></i></span><time class="level-item" dateTime="2020-08-22T11:23:53.246Z" title="2020-08-22T11:23:53.246Z">2020-08-22</time><span class="mr-2"> <i class="fa fa-folder"></i></span><span class="level-item"><a class="link-muted" href="/categories/Jetpack/">Jetpack</a></span><span class="mr-2"> <i class="fa fa-tag"></i></span><span class="level-item"><a class="link-muted" href="/tags/Jetpack/">Jetpack</a></span></div></div><div class="level-left article-meta size-small is-mobile"></div><h1 class="title is-3 is-size-4-mobile"></h1><div class="content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Google 最近更新了几个 Jetpack 新成员 Hilt、Paging 3、App Startup 等等。</p>
+<p>在之前的文章里面分别分析 <strong>App Startup 实践以及原理</strong> 和 <strong>Paging3 加载本地数据（一）实践以及原理</strong>，如果没有看过可以点击下方地址前去查看：</p>
+<ul>
+<li><a href="https://juejin.im/post/5ee4bbe4f265da76b559bdfe">Jetpack 最新成员 AndroidX App Startup 实践以及原理分析</a></li>
+<li><a href="https://juejin.im/post/5ee998e8e51d4573d65df02b">Jetpack 成员 Paging3 数据实践以及源码分析（一）</a></li>
+<li><a href="https://juejin.im/post/5eeefbf4e51d45742c53ddce">Jetpack 成员 Paging3 网络实践及原理分析（二）</a></li>
+<li><a href="https://juejin.im/post/6854573220457086990#heading-1">Jetpack 成员 Paging3 使用 RemoteMediator 实现加载网络分页数据并更新到数据库中（三）</a></li>
+<li><a href="https://github.com/hi-dhl/AndroidX-Jetpack-Practice">代码地址：https://github.com/hi-dhl/AndroidX-Jetpack-Practice</a></li>
+</ul>
+<p>今天这边文章主要来分析 Paging3 加载网络数据及其原理，利用周末的时间参考 Google 文档实现了 Paging3 期间也遇到一些坑，会在文中详细分析，代码已经上传到了 GitHub：<a href="https://github.com/hi-dhl/AndroidX-Jetpack-Practice">Paging3SimpleWithNetWork</a></p>
+<p><strong>通过这篇文章你将学习到以下内容：</strong></p>
+<ul>
+<li>Paging3 是什么？</li>
+<li>Paging3 相对之前版本 (Paging1、Paging2) 核心的变化？</li>
+<li>关于 Paging 支持的分页策略？</li>
+<li>在项目中如何使用 Paging3 去加载网络数据？</li>
+<li>Paging3 网络异常如何处理？</li>
+<li>Paging3 如何监听网络请求状态？</li>
+<li>Paging3 如何进行刷新和重试？</li>
+</ul>
+<p>在项目 <a href="https://github.com/hi-dhl/AndroidX-Jetpack-Practice">Paging3SimpleWithNetWork</a> 中用到了 Coil（Kotlin 图片加载库）、Databinding（数据绑定）、Anko（主要用来替换替代 XML 使用的方式）、Koin（Kotlin 依赖注入库）、JDatabinding（基于 Databinding 封装的组件）、Data Mapper（数据映射）、使用 Composing builds 作为依赖库的版本管理、Repository 设计模式、MVVM 架构等等，关于这里一些技术之前没有了解过，可以点击下面连接前往查看。</p>
+<ul>
+<li><a href="https://juejin.im/post/5edd1f5ae51d45789e0d9a22">[译][1.4K+ Star] Kotlin 新秀 Coil VS Glide and Picasso</a></li>
+<li><a href="https://juejin.im/post/5ebc1eb8e51d454dcf45744e">[译][2.4K Star] 放弃 Dagger 拥抱 Koin</a></li>
+<li><a href="https://juejin.im/post/5ed3ef906fb9a047bf7070b6">再见吧 buildSrc, 拥抱 Composing builds 提升 Android 编译速度</a></li>
+<li><a href="https://juejin.im/post/5e9c434a51882573663f6cc6">项目中封装 Kotlin + Android Databinding</a></li>
+<li><a href="https://juejin.im/post/5edfd7c9e51d45789a7f206d">为数不多的人知道的 Kotlin 技巧以及 原理解析</a></li>
+</ul>
+<h2 id="Paging3-是什么？"><a href="#Paging3-是什么？" class="headerlink" title="Paging3 是什么？"></a>Paging3 是什么？</h2><p>Paging 是一个分页库，它可以帮助您从本地存储或通过网络加载显示数据。这种方法使你的 App 更有效地使用网络带宽和系统资源。</p>
+<p>Google 推荐使用 Paging 作为 App 架构的一部分，它可以很方便的和 Jetpack 组件集成，Paging3 包含了以下功能：</p>
+<ul>
+<li>在内存中缓存分页数据，确保您的 App 在使用分页数据时有效地使用系统资源。</li>
+<li>内置删除重复数据的请求，确保您的 App 有效地使用网络带宽和系统资源。</li>
+<li>可配置 RecyclerView 的 adapters，当用户滚动到加载数据的末尾时自动请求数据。</li>
+<li>支持 Kotlin 协程和 Flow, 以及 LiveData 和 RxJava。</li>
+<li>内置的错误处理支持，包括刷新和重试等功能。</li>
+</ul>
+<h2 id="Paging3-相对于之前类的职能变化"><a href="#Paging3-相对于之前类的职能变化" class="headerlink" title="Paging3 相对于之前类的职能变化"></a>Paging3 相对于之前类的职能变化</h2><p>在 Paging3 之前提供了 ItemKeyedDataSource、PageKeyedDataSource、PositionalDataSource 这三个类，在这三个类中进行数据获取的操作。</p>
+<ul>
+<li>PositionalDataSource：主要用于加载数据有限的数据（加载本地数据库）</li>
+<li>ItemKeyedDataSource：主要用来请求网络数据，它适用于通过当前页面最后一条数据的 id，作为下一页的数据的开始的位置，例如 Github 的 API。<ul>
+<li>例如地址 <code>https://api.github.com/users?since=0?per_page=30</code> 当 since = 0 时获取第一页数据，当前页面最后一条数据的 ID 是 46。</li>
+<li>将 46 作为开始位置，此时 since = 46，地址变成：<code>https://api.github.com/users?since=46?per_page=30</code>。</li>
+</ul>
+</li>
+<li>PageKeyedDataSource：也是用来请求网络数据，它适用于通过页码分页来请求数据。</li>
+</ul>
+<p>在 Paging3 之后 ItemKeyedDataSource、PageKeyedDataSource、PositionalDataSource 合并为一个 PagingSource，所有旧 API 加载方法被合并到 PagingSource 中的单个 load() 方法中。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">abstract suspend fun load(params: LoadParams&lt;Key&gt;): LoadResult&lt;Key, Value&gt;</span><br></pre></td></tr></table></figure>
+
+<p>这是一个挂起函数，实现这个方法来触发异步加载，具体实现见下文，另外在 Paging3 中还有以下变化</p>
+<ul>
+<li>LivePagedListBuilder 和 RxPagedListBuilder 合并为了 Pager。</li>
+<li>使用 PagedList.Config 替换 PagingConfig。</li>
+<li>使用 RemoteMediator 替换了 PagedList.BoundaryCallback 去加载网络和本地数据库的数据。</li>
+</ul>
+<h2 id="四步实现-Paging3-加载网络数据"><a href="#四步实现-Paging3-加载网络数据" class="headerlink" title="四步实现 Paging3 加载网络数据"></a>四步实现 Paging3 加载网络数据</h2><p>Google 推荐我们使用 Paging3 时，在应用程序的三层中操作，以及它们如何协同工作加载和显示分页数据，如下图所示：</p>
+<p><img src="http://cdn.51git.cn/2020-06-21-15923662891361.jpg" alt=""></p>
+<p>我们接下来按照 Google 推荐的方式开始实现，只需要四步即可实现 Paging3 加载网络数据，文中只贴出核心代码，具体实现可以看 GitHub 上的 <a href="https://github.com/hi-dhl/AndroidX-Jetpack-Practice">Paging3SimpleWithNetWork</a> 项目，先在 App 模块中的 build.gradle 文件中添加以下代码：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">  def paging_version &#x3D; &quot;3.0.0-alpha01&quot;</span><br><span class="line"></span><br><span class="line">  implementation &quot;androidx.paging:paging-runtime:$paging_version&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-网络请求部分"><a href="#1-网络请求部分" class="headerlink" title="1. 网络请求部分"></a>1. 网络请求部分</h3><p>这里选择使用的是 GitHub API</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">interface GitHubService &#123;</span><br><span class="line"></span><br><span class="line">    @GET(&quot;users&quot;)</span><br><span class="line">    suspend fun getGithubAccount(@Query(&quot;since&quot;) id: Int, @Query(&quot;per_page&quot;) perPage: Int):</span><br><span class="line">            List&lt;GithubAccountModel&gt;</span><br><span class="line"></span><br><span class="line">    companion object &#123;</span><br><span class="line">        fun create(): GitHubService &#123;</span><br><span class="line">            val client &#x3D; OkHttpClient.Builder()</span><br><span class="line">                .build()</span><br><span class="line"></span><br><span class="line">            val retrofit &#x3D; Retrofit.Builder()</span><br><span class="line">                .client(client)</span><br><span class="line">                .baseUrl(&quot;https:&#x2F;&#x2F;api.github.com&#x2F;&quot;)</span><br><span class="line">                .addConverterFactory(GsonConverterFactory.create())</span><br><span class="line">                .build()</span><br><span class="line"></span><br><span class="line">            return retrofit.create(GitHubService::class.java)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong> 这里需要在 getGithubAccount 方法前添加 suspend 关键字，否则调用的时候，会抛出以下异常。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Unable to create call adapter for XXXXX</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-在-Repository-层创建-PagingSource-数据源"><a href="#2-在-Repository-层创建-PagingSource-数据源" class="headerlink" title="2. 在 Repository 层创建 PagingSource 数据源"></a>2. 在 Repository 层创建 PagingSource 数据源</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class GitHubItemPagingSource(</span><br><span class="line">    private val api: GitHubService</span><br><span class="line">) : PagingSource&lt;Int, GithubAccountModel&gt;(), AnkoLogger &#123;</span><br><span class="line">    override suspend fun load(params: LoadParams&lt;Int&gt;): LoadResult&lt;Int, GithubAccountModel&gt; &#123;</span><br><span class="line"></span><br><span class="line">        return try &#123;</span><br><span class="line">            &#x2F;&#x2F; key 相当于 id</span><br><span class="line">            val key &#x3D; params.key ?: 0</span><br><span class="line">            &#x2F;&#x2F; 获取网络数据</span><br><span class="line">            val items &#x3D; api.getGithubAccount(key, params.loadSize)</span><br><span class="line">            &#x2F;&#x2F; 请求失败或者出现异常，会跳转到 case 语句返回 LoadResult.Error(e)</span><br><span class="line">            &#x2F;&#x2F; 请求成功，构造一个 LoadResult.Page 返回</span><br><span class="line">            LoadResult.Page(</span><br><span class="line">                data &#x3D; items, &#x2F;&#x2F; 返回获取到的数据</span><br><span class="line">                prevKey &#x3D; null, &#x2F;&#x2F; 上一页，设置为空就没有上一页的效果，这需要注意的是，如果是第一页需要返回 null，否则会出现多次请求</span><br><span class="line">                nextKey &#x3D; items.lastOrNull()?.id&#x2F;&#x2F; 下一页，设置为空就没有加载更多效果，如果后面没有更多数据设置为空，即滑动到最后不会在加载数据</span><br><span class="line">            )</span><br><span class="line">        &#125; catch (e: Exception) &#123;</span><br><span class="line">            e.printStackTrace()</span><br><span class="line">            LoadResult.Error(e)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>PagingSource 是一个抽象类，主要用来向 Paging 提供源数据，需要重写 load 方法，在这个方法进行网络请求的处理。需要注意的是 LoadResult.Page 里面的两个参数 prevKey 和 nextKey，<strong>这里有个坑</strong>。</p>
+<ul>
+<li>prevKey：上一页，设置为空就没有上一页的效果，这需要注意的是，如果是第一页需要返回 null，否则会出现多次请求，我刚开始忽略了，导致首次加载的时候，出现了两次请求。</li>
+<li>nextKey：下一页，设置为空就没有加载更多效果，如果后面没有更多数据设置为空，即滑动到最后不会在加载数据。</li>
+</ul>
+</li>
+<li><p>load 方法的参数 LoadParams，它是一个密封类，里面有三个内部类 Refresh、Append、Prepend。</p>
+<table>
+<thead>
+<tr>
+<th>类名</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Refresh</td>
+<td>在初始化刷新的使用</td>
+</tr>
+<tr>
+<td>Append</td>
+<td>在加载更多的时候使用</td>
+</tr>
+<tr>
+<td>Prepend</td>
+<td>在当前列表头部添加数据的时候使用</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<h3 id="3-在-Repository-层创建-Pager-和-PagingData"><a href="#3-在-Repository-层创建-Pager-和-PagingData" class="headerlink" title="3. 在 Repository 层创建 Pager 和 PagingData"></a>3. 在 Repository 层创建 Pager 和 PagingData</h3><ul>
+<li>Pager：是主要的入口页面，在其构造方法中接受 PagingConfig、initialKey、remoteMediator、pagingSourceFactory。</li>
+<li>PagingData：是分页数据的容器，它查询一个 PagingSource 对象并存储结果。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class GitHubRepositoryImpl(</span><br><span class="line">    val pageConfig: PagingConfig,</span><br><span class="line">    val gitHubApi: GitHubService,</span><br><span class="line">    val mapper2Person: Mapper&lt;GithubAccountModel, GitHubAccount&gt;</span><br><span class="line">) : Repository &#123;</span><br><span class="line"></span><br><span class="line">    override fun postOfData(id: Int): Flow&lt;PagingData&lt;GitHubAccount&gt;&gt; &#123;</span><br><span class="line">        return Pager(pageConfig) &#123;</span><br><span class="line">            &#x2F;&#x2F; 加载数据库的数据</span><br><span class="line">            GitHubItemPagingSource(gitHubApi, 0)</span><br><span class="line">        &#125;.flow.map &#123; pagingData -&gt;</span><br><span class="line">            &#x2F;&#x2F; 数据映射，数据源 GithubAccountModel ——&gt;  上层用到的 GitHubAccount</span><br><span class="line">            pagingData.map &#123; mapper2Person.map(it) &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在 postOfData 方法中构建了一个 Pager， 其构造方法中接受 PagingConfig、initialKey、remoteMediator、pagingSourceFactory，其中 initialKey、remoteMediator 是可选的，pageConfig 和 pagingSourceFactory 必填的。</p>
+<p>pagingSourceFactory 是一个 lambda 表达式，在 Kotlin 中可以直接用花括号表示，在花括号内，执行执行网络请求 <code>GitHubItemPagingSource(gitHubApi, 0)</code>。</p>
+<p>最后调用 flow 返回 <code>Flow&lt;PagingData&lt;Value&gt;&gt;</code>，然后通过 Flow 的 map 方法将数据源 GithubAccountModel 转换成上层用到的 GithubAccount。</p>
+<p>关于 flow 在上一篇 <a href="https://juejin.im/post/5ee998e8e51d4573d65df02b">Jetpack 成员 Paging3 实践以及源码分析（一）</a> 已经分析过了.</p>
+<h3 id="4-最后一步，接受数据，并绑定-UI"><a href="#4-最后一步，接受数据，并绑定-UI" class="headerlink" title="4. 最后一步，接受数据，并绑定 UI"></a>4. 最后一步，接受数据，并绑定 UI</h3><p>在 ViewModel 接受数据，并传递给 Adapter.</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">val gitHubLiveData: LiveData&lt;PagingData&lt;GitHubAccount&gt;&gt; &#x3D;</span><br><span class="line">        repository.postOfData(0).asLiveData()</span><br></pre></td></tr></table></figure>
+
+<p>LiveData 有三种使用方式，这里演示的是其中一种，其余的在之前的文章<br><a href="https://juejin.im/post/5ee998e8e51d4573d65df02b">Jetpack 成员 Paging3 实践以及源码分析（一）</a> 已经分析过了。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mMainViewModel.gitHubLiveData.observe(this, Observer &#123; data -&gt;</span><br><span class="line">           mAdapter.submitData(lifecycle, data)</span><br><span class="line">       &#125;)</span><br></pre></td></tr></table></figure>
+
+<p>到这里请求网络数据并显示的在 UI 上就结束了，最后我们来分析一下 Paging3 内置的错误处理支持，包括刷新和重试等功能。</p>
+<h3 id="5-网络状态异常的处理"><a href="#5-网络状态异常的处理" class="headerlink" title="5. 网络状态异常的处理"></a>5. 网络状态异常的处理</h3><p>Paging3 提供了内置的错误处理支持，包括刷新和重试等功能，说到这里 Google 对于 Paging3 的设计相比于之前的设计真的好，基本上进行网络请求地方用 RecyclerView 去展示数据，都需要用到刷新、重试、错误处理等等功能。</p>
+<p><strong>1. 错误处理</strong></p>
+<p>Paging3 的组件 PagingDataAdapter，PagingDataAdapter 是一个处理分页数据的可回收视图适配器，PagingDataAdapter 提供了三个方法，如下图所示：</p>
+<p><img src="http://cdn.51git.cn/2020-06-21-15926738979597.jpg" alt=""></p>
+<table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>withLoadStateFooter</td>
+<td>添加列表底部（类似于加载更多）</td>
+</tr>
+<tr>
+<td>withLoadStateHeader</td>
+<td>添加列表的头部</td>
+</tr>
+<tr>
+<td>withLoadStateHeaderAndFooter</td>
+<td>添加头部和底部</td>
+</tr>
+</tbody></table>
+<p>Paging3 提供了 LoadStateAdapter 用于实现列表底部和头部样式，只需要继承 LoadStateAdapter 做对应的网络状态处理即可，例如这里实现的 FooterAdapter 加载更多样式。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class FooterAdapter(val adapter: GitHubAdapter) : LoadStateAdapter&lt;NetworkStateItemViewHolder&gt;() &#123;</span><br><span class="line">    override fun onBindViewHolder(holder: NetworkStateItemViewHolder, loadState: LoadState) &#123;</span><br><span class="line">        holder.bindData(loadState, 0)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    override fun onCreateViewHolder(</span><br><span class="line">        parent: ViewGroup,</span><br><span class="line">        loadState: LoadState</span><br><span class="line">    ): NetworkStateItemViewHolder &#123;</span><br><span class="line">        val view &#x3D; inflateView(parent, R.layout.recycie_item_network_state)</span><br><span class="line">        return NetworkStateItemViewHolder(view) &#123; adapter.retry() &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private fun inflateView(viewGroup: ViewGroup, @LayoutRes viewType: Int): View &#123;</span><br><span class="line">        val layoutInflater &#x3D; LayoutInflater.from(viewGroup.context)</span><br><span class="line">        return layoutInflater.inflate(viewType, viewGroup, false)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class NetworkStateItemViewHolder(view: View, private val retryCallback: () -&gt; Unit) :</span><br><span class="line">    DataBindingViewHolder&lt;LoadState&gt;(view) &#123;</span><br><span class="line">    val mBinding: RecycieItemNetworkStateBinding by viewHolderBinding(view)</span><br><span class="line"></span><br><span class="line">    override fun bindData(data: LoadState, position: Int) &#123;</span><br><span class="line">        mBinding.apply &#123;</span><br><span class="line">            &#x2F;&#x2F; 正在加载，显示进度条</span><br><span class="line">            progressBar.isVisible &#x3D; data is LoadState.Loading</span><br><span class="line">            &#x2F;&#x2F; 加载失败，显示并点击重试按钮</span><br><span class="line">            retryButton.isVisible &#x3D; data is LoadState.Error</span><br><span class="line">            retryButton.setOnClickListener &#123; retryCallback() &#125;</span><br><span class="line">            &#x2F;&#x2F; 加载失败显示错误原因</span><br><span class="line">            errorMsg.isVisible &#x3D; !(data as? LoadState.Error)?.error?.message.isNullOrBlank()</span><br><span class="line">            errorMsg.text &#x3D; (data as? LoadState.Error)?.error?.message</span><br><span class="line"></span><br><span class="line">            executePendingBindings()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在上面分别处理了，正在加载、加载失败并提供重试按钮等等状态。</p>
+<p><strong>2. Paging3 同时提供了刷新、重试等等方法，如下图所示：</strong></p>
+<p><img src="http://cdn.51git.cn/2020-06-21-15926747346127.jpg" alt=""></p>
+<ul>
+<li>refresh：常用用于下拉更新数据。</li>
+<li>retry：常用于底部更多样式，当请求网络失败的时候，显示重试按钮，点击调用 retry。</li>
+</ul>
+<p><strong>3. Paging3 还帮我处理了如果出现多次网络请求，只会处理最后一次请求，例如由于网络慢，用户频繁的刷新数据等等</strong></p>
+<h3 id="6-监听网路请求状态"><a href="#6-监听网路请求状态" class="headerlink" title="6. 监听网路请求状态"></a>6. 监听网路请求状态</h3><p>刚才分析过 PagingDataAdapter 是一个处理分页数据的可回收视图适配器，并且还提供了两个监听数据状态的方法。</p>
+<p><img src="http://cdn.51git.cn/2020-06-21-15926753394736.jpg" alt=""></p>
+<p>这两个方法的区别是：</p>
+<ul>
+<li>addDataRefreshListener：当一个新的 PagingData 提交并显示的时候调用。</li>
+<li>addLoadStateListener：这个方法同 addDataRefreshListener 方法，它们之间的区别是 addLoadStateListener 方法返回了一个 CombinedLoadStates  的对象，如上图所示。</li>
+</ul>
+<p>CombinedLoadStates 是一个数据类，里面有三个成员变量 refresh、prepend 和 append。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">val refresh: LoadState &#x3D; (mediator ?: source).refresh</span><br><span class="line">val prepend: LoadState &#x3D; (mediator ?: source).prepend</span><br><span class="line">val append: LoadState &#x3D; (mediator ?: source).append</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>变量</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>refresh</td>
+<td>在初始化刷新的使用</td>
+</tr>
+<tr>
+<td>append</td>
+<td>在加载更多的时候使用</td>
+</tr>
+<tr>
+<td>prepend</td>
+<td>在当前列表头部添加数据的时候使用</td>
+</tr>
+</tbody></table>
+<p>refresh、prepend 和 append 都是 LoadState 的对象，LoadState 也是一个密封类，每一个 refresh、prepend 和 append 都对应着三种状态。</p>
+<p><img src="http://cdn.51git.cn/2020-06-21-15926763954578.jpg" alt=""></p>
+<table>
+<thead>
+<tr>
+<th>变量</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Error</td>
+<td>表示加载失败</td>
+</tr>
+<tr>
+<td>Loading</td>
+<td>表示正在加载</td>
+</tr>
+<tr>
+<td>NotLoading</td>
+<td>表示当前未加载</td>
+</tr>
+</tbody></table>
+<p>到这里不得不佩服 Google 什么都替我们想好了，这里需要结合自己的项目实际情况，去定制不同的状态处理。</p>
+<p>到这里 Paging3 算是完结了，最后贴一下本文案例 <a href="https://github.com/hi-dhl/AndroidX-Jetpack-Practice">Paging3SimpleWithNetWork</a> 已经上传到 GitHub，最后祝大家周末愉快呀。</p>
+<blockquote>
+<p>计划建立一个最全、最新的 AndroidX Jetpack 相关组件的实战项目 以及 相关组件原理分析文章，正在逐渐增加 Jetpack 新成员，仓库持续更新，可以前去查看：<a href="https://github.com/hi-dhl/AndroidX-Jetpack-Practice">AndroidX-Jetpack-Practice</a>, 如果这个仓库对你有帮助，请在仓库右上角帮我点个赞，后面我会陆续完成更多 Jetpack 新成员的项目实践</p>
+</blockquote>
+</div><p style="height:10px"></p><!--!--><h1 class="title is-4 is-size-4-mobile"></h1></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2020/08/22/jetpack/04-hilt/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">Jetpack 新成员 Hilt 实践（一）启程过坑记</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2020/08/22/jetpack/02-Paging3/"><span class="level-item">Jetpack 成员 Paging3 数据库实践以及源码分析（一）</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content template"><p>致力于分享一系列 Android 系统源码、逆向分析、算法、翻译、Jetpack 源码相关的文章，在技术的道路上一起前进</p><h3 class="title is-4">Android10 源码分析</h3><p>正在写一系列的 Android 10 源码分析的文章，了解系统源码，不仅有助于分析问题，在面试过程中，对我们也是非常有帮助的，如果你同我一样喜欢研究 Android 源码，可以关注我 GitHub 上的 <a href="https://github.com/hi-dhl/Android10-Source-Analysis">Android10-Source-Analysis</a>。</p><h3 class="title is-4">算法题库的归纳和总结</h3><p>由于 LeetCode 的题库庞大，每个分类都能筛选出数百道题，由于每个人的精力有限，不可能刷完所有题目，因此我按照经典类型题目去分类、和题目的难易程度去排序。</p><ul><li>数据结构： 数组、栈、队列、字符串、链表、树……</li><li>算法： 查找算法、搜索算法、位运算、排序、数学、……</li></ul><p>每道题目都会用 Java 和 kotlin 去实现，并且每道题目都有解题思路，如果你同我一样喜欢算法、LeetCode，可以关注我 GitHub 上的 LeetCode 题解：<a href="https://github.com/hi-dhl/Leetcode-Solutions-with-Java-And-Kotlin">Leetcode-Solutions-with-Java-And-Kotlin</a>。</p><h3 class="title is-4">精选国外的技术文章</h3><p>目前正在整理和翻译一系列精选国外的技术文章，不仅仅是翻译，很多优秀的英文技术文章提供了很好思路和方法，每篇文章都会有<strong>译者思考</strong>部分，对原文的更加深入的解读，可以关注我 GitHub 上的 <a href="https://github.com/hi-dhl/Technical-Article-Translation">Technical-Article-Translation</a>。</p><p></p></div></div><div class="card"><div class="card-content"><h3 class="title is-5">评论</h3><div class="content" id="valine-thread"></div><script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script><script src="https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js"></script><script>new Valine({
+            el: '#valine-thread' ,
+            notify: false,
+            verify: undefined,
+            appId: 'zfvr24HFhzQ5vtHkr4NQ1fmW-gzGzoHsz',
+            appKey: 'RChgr9mR005hgu4yiQ4WQU3O',
+            placeholder: '说点什么',
+            avatar: 'mm',
+            avatarForce: false,
+            meta: ["nick","mail","link"],
+            pageSize: 10,
+            visitor: false,
+            highlight: true,
+            recordIP: false
+        });</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1 is-sticky"><div class="card widget" id="toc" style="max-height: 500px;overflow: auto;"><div class="card-content"><div class="menu"><h3 class="menu-label">目录</h3><ul class="menu-list"><li><a class="is-flex" href="#前言"><span>前言</span></a></li><li><a class="is-flex" href="#Paging3-是什么？"><span>Paging3 是什么？</span></a></li><li><a class="is-flex" href="#Paging3-相对于之前类的职能变化"><span>Paging3 相对于之前类的职能变化</span></a></li><li><a class="is-flex" href="#四步实现-Paging3-加载网络数据"><span>四步实现 Paging3 加载网络数据</span></a><ul class="menu-list"><li><a class="is-flex" href="#1-网络请求部分"><span>1. 网络请求部分</span></a></li><li><a class="is-flex" href="#2-在-Repository-层创建-PagingSource-数据源"><span>2. 在 Repository 层创建 PagingSource 数据源</span></a></li><li><a class="is-flex" href="#3-在-Repository-层创建-Pager-和-PagingData"><span>3. 在 Repository 层创建 Pager 和 PagingData</span></a></li><li><a class="is-flex" href="#4-最后一步，接受数据，并绑定-UI"><span>4. 最后一步，接受数据，并绑定 UI</span></a></li><li><a class="is-flex" href="#5-网络状态异常的处理"><span>5. 网络状态异常的处理</span></a></li><li><a class="is-flex" href="#6-监听网路请求状态"><span>6. 监听网路请求状态</span></a></li></ul></li></ul></div></div></div><div class="card widget"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content size-small"><p><time dateTime="2020-08-22T11:51:48.423Z">2020-08-22</time></p><p class="title is-6"><a class="link-muted" href="/2020/08/22/android/03-adb/">关于 adb 命令你所需要知道的</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-08-22T11:46:43.107Z">2020-08-22</time></p><p class="title is-6"><a class="link-muted" href="/2020/08/22/kotlin/03-sealed/">Kotlin Sealed 是什么？为什么 Google 都用</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-08-22T11:43:32.461Z">2020-08-22</time></p><p class="title is-6"><a class="link-muted" href="/2020/08/22/jetpack/10-remoteMediator/">Google 推荐在项目中使用 sealed 和 RemoteMediator</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-08-22T11:41:10.398Z">2020-08-22</time></p><p class="title is-6"><a class="link-muted" href="/2020/08/22/jetpack/09-kotlin-flow/">Google 推荐在 MVVM 架构中使用 Kotlin Flow</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-08-22T11:37:49.745Z">2020-08-22</time></p><p class="title is-6"><a class="link-muted" href="/2020/08/22/jetpack/08-PokemonGo/">神奇宝贝  眼前一亮的 Jetpack + MVVM 极简实战</a></p><p class="is-uppercase"></p></div></article></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile is-marginless" href="/categories/Android/"><span class="level-start"><span class="level-item">Android</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Android10/"><span class="level-start"><span class="level-item">Android10</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/AndroidStudio/"><span class="level-start"><span class="level-item">AndroidStudio</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Jetpack/"><span class="level-start"><span class="level-item">Jetpack</span></span><span class="level-end"><span class="level-item tag">9</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Jetpack-kotlin/"><span class="level-start"><span class="level-item">Jetpack,kotlin</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Kotlin/"><span class="level-start"><span class="level-item">Kotlin</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/LeetCode/"><span class="level-start"><span class="level-item">LeetCode</span></span><span class="level-end"><span class="level-item tag">25</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Linux/"><span class="level-start"><span class="level-item">Linux</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/offer-algorithms/"><span class="level-start"><span class="level-item">剑指Offer</span></span><span class="level-end"><span class="level-item tag">18</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E7%B2%BE%E9%80%89%E8%AF%91%E6%96%87/"><span class="level-start"><span class="level-item">精选译文</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E9%80%86%E5%90%91/"><span class="level-start"><span class="level-item">逆向</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E9%80%86%E5%90%91-AndroidStudio/"><span class="level-start"><span class="level-item">逆向,AndroidStudio</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/Android/"><span class="tag">Android</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E5%8C%85%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-包管理系统</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-窗口管理系统</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-资源管理系统</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/AndroidStudio/"><span class="tag">AndroidStudio</span><span class="tag is-grey-lightest">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android%E6%BA%90%E7%A0%81/"><span class="tag">Android源码</span><span class="tag is-grey-lightest">7</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Fragment/"><span class="tag">Fragment</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Jetpack/"><span class="tag">Jetpack</span><span class="tag is-grey-lightest">11</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Koin/"><span class="tag">Koin</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Kotlin/"><span class="tag">Kotlin</span><span class="tag is-grey-lightest">5</span></a></div><div class="control"><a class="tags has-addons" href="/tags/LeetCode/"><span class="tag">LeetCode</span><span class="tag is-grey-lightest">22</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Linux/"><span class="tag">Linux</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/RxJava/"><span class="tag">RxJava</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Shell/"><span class="tag">Shell</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/kotlin/"><span class="tag">kotlin</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/"><span class="tag">二分查找</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/"><span class="tag">二叉树</span><span class="tag is-grey-lightest">12</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E4%BD%8D%E8%BF%90%E7%AE%97/"><span class="tag">位运算</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%89%91%E6%8C%87Offer/"><span class="tag">剑指Offer</span><span class="tag is-grey-lightest">18</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/"><span class="tag">动态规划</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/"><span class="tag">字符串</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%B9%BF%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/"><span class="tag">广度优先搜索</span><span class="tag is-grey-lightest">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%95%B0%E5%AD%A6/"><span class="tag">数学</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%A0%88/"><span class="tag">栈</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/"><span class="tag">深度优先搜索</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%AF%91%E6%96%87/"><span class="tag">译文</span><span class="tag is-grey-lightest">7</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E9%93%BE%E8%A1%A8/"><span class="tag">链表</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E9%98%9F%E5%88%97/"><span class="tag">队列</span><span class="tag is-grey-lightest">1</span></a></div></div></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level-item"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img class="logo-img" src="/img/logo.png" alt="奔跑吧前中后浪" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="奔跑吧前中后浪" height="28"></a><p class="size-small"><span>&copy; 2020 Hi Dhl</span>  <a href="http://www.beian.miit.gov.cn/" target="_blank">京ICP备18050211号-2</a>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            site: {
+                url: 'https://hi-dhl.com',
+                external_link: {"enable":true,"exclude":[]}
+            },
+            article: {
+                highlight: {
+                    clipboard: false,
+                    fold: ''
+                }
+            }
+        };</script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><script src="https://s9.cnzz.com/z_stat.php?id=1278919895&amp;web_id=1278919895" async></script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><script src="/js/imaegoo/universe.js"></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>

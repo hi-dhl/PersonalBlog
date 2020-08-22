@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="generator" content="Hexo 4.2.1"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>神奇宝贝  眼前一亮的 Jetpack + MVVM 极简实战 - 奔跑吧前中后浪</title><meta description="Jetpack 实战项目 PokemonGo（神奇宝贝）基于  MVVM 架构和 Repository 设计模式，PokemonGo 项目中用到的技术，都是之前写过的一系列文章里面涉及到的知识点：Paging3（network + db），Dagger-Hilt，App Startup，DataBinding，Room，Motionlayout，Kotlin Flow，Coil，JProgress"><meta property="og:type" content="blog"><meta property="og:title" content="神奇宝贝  眼前一亮的 Jetpack + MVVM 极简实战"><meta property="og:url" content="https://hi-dhl.com/2020/08/22/jetpack/08-PokemonGo/"><meta property="og:site_name" content="奔跑吧前中后浪"><meta property="og:description" content="Jetpack 实战项目 PokemonGo（神奇宝贝）基于  MVVM 架构和 Repository 设计模式，PokemonGo 项目中用到的技术，都是之前写过的一系列文章里面涉及到的知识点：Paging3（network + db），Dagger-Hilt，App Startup，DataBinding，Room，Motionlayout，Kotlin Flow，Coil，JProgress"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="http://cdn.51git.cn/2020-07-23-Pokemon12.png"><meta property="article:published_time" content="2020-08-22T11:37:49.745Z"><meta property="article:modified_time" content="2020-08-22T11:41:50.936Z"><meta property="article:author" content="Hi Dhl"><meta property="article:tag" content="Android10"><meta property="article:tag" content="AndroidStudio"><meta property="article:tag" content="buildSrc"><meta property="article:tag" content="kotlin"><meta property="article:tag" content="run"><meta property="article:tag" content="with"><meta property="article:tag" content="let"><meta property="article:tag" content="also"><meta property="article:tag" content="apply"><meta property="article:tag" content="Jetpack"><meta property="article:tag" content="App Startup"><meta property="article:tag" content="Paging3"><meta property="article:tag" content="Hilt"><meta property="article:tag" content="Dagger"><meta property="article:tag" content="Koin"><meta property="article:tag" content="Jetpack"><meta property="article:tag" content="MVVM"><meta property="article:tag" content="Repository"><meta property="article:tag" content="Kotlin Flow"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="http://cdn.51git.cn/2020-07-23-Pokemon12.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://hi-dhl.com/2020/08/22/jetpack/08-PokemonGo/"},"headline":"奔跑吧前中后浪","image":["http://cdn.51git.cn/2020-07-23-Pokemon12.png"],"datePublished":"2020-08-22T11:37:49.745Z","dateModified":"2020-08-22T11:41:50.936Z","author":{"@type":"Person","name":"Hi Dhl"},"description":"Jetpack 实战项目 PokemonGo（神奇宝贝）基于  MVVM 架构和 Repository 设计模式，PokemonGo 项目中用到的技术，都是之前写过的一系列文章里面涉及到的知识点：Paging3（network + db），Dagger-Hilt，App Startup，DataBinding，Room，Motionlayout，Kotlin Flow，Coil，JProgress"}</script><link rel="canonical" href="https://hi-dhl.com/2020/08/22/jetpack/08-PokemonGo/"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" defer></script><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script></head><body class="is-2-column"><script type="text/javascript" src="/js/imaegoo/night.js"></script><canvas id="universe"></canvas><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img class="logo-img" src="/img/logo.png" alt="奔跑吧前中后浪" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="奔跑吧前中后浪" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">首页</a><a class="navbar-item" href="/archives">时间轴</a><a class="navbar-item" href="/categories">分类</a><a class="navbar-item" href="/tags">标签</a><a class="navbar-item" href="/categories/Android10/">Android-10-源码</a><a class="navbar-item" href="/categories/LeetCode/">LeetCode</a><a class="navbar-item" href="/categories/offer-algorithms/">剑指Offer</a><a class="navbar-item" href="http://site.51git.cn/">国内外书签</a></div><div class="navbar-end"><a class="navbar-item night" id="night-nav" title="Night Mode" href="javascript:;"><i class="fas fa-moon" id="night-icon"></i></a><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/hi-dhl"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><div class="card-image"><span class="image is-7by3"><img class="thumbnail" src="http://cdn.51git.cn/2020-07-23-Pokemon12.png" alt="神奇宝贝  眼前一亮的 Jetpack + MVVM 极简实战"></span></div><article class="card-content article" role="article"><h1 class="title is-3 is-size-4-mobile"></h1><h1 class="title is-3 is-size-4-mobile">神奇宝贝  眼前一亮的 Jetpack + MVVM 极简实战</h1><div class="article-meta size-small level is-mobile"><div class="level-left"><span class="mr-2"><i class="fa fa-calendar"></i></span><time class="level-item" dateTime="2020-08-22T11:37:49.745Z" title="2020-08-22T11:37:49.745Z">2020-08-22</time><span class="mr-2"> <i class="fa fa-folder"></i></span><span class="level-item"><a class="link-muted" href="/categories/Jetpack/">Jetpack</a></span><span class="mr-2"> <i class="fa fa-tag"></i></span><span class="level-item"><a class="link-muted" href="/tags/Jetpack/">Jetpack</a></span></div></div><div class="level-left article-meta size-small is-mobile"></div><h1 class="title is-3 is-size-4-mobile"></h1><div class="content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Jetpack 实战项目 PokemonGo（神奇宝贝）基于  MVVM 架构和 Repository 设计模式，PokemonGo 项目中用到的技术，都是之前写过的一系列文章里面涉及到的知识点：Paging3（network + db），Dagger-Hilt，App Startup，DataBinding，Room，Motionlayout，Kotlin Flow，Coil，JProgressView 等等。</p>
+<p>项目 PokemonGo 已经上传到 <a href="https://github.com/hi-dhl/PokemonGo">GitHub: https://github.com/hi-dhl/PokemonGo</a>，欢迎前去查看，动态效果图如下所示，如果动图无法查看，请点击这里查看 <a href="http://cdn.51git.cn/2020-07-14-15946978385391.gif">动态效果图</a> | <a href="http://cdn.51git.cn/2020-07-14-PokemonGo2.png">静态图</a></p>
+<p><img src="http://cdn.51git.cn/2020-07-14-15947034326244.gif" alt=""></p>
+<p>Jetpack 实战项目 PokemonGo 包含了以下功能：</p>
+<ol>
+<li>自定义 RemoteMediator 实现 network + db 的混合使用 ( RemoteMediator 是 Paging3 当中重要成员 )</li>
+<li>使用 Data Mapper 分离数据源 和 UI</li>
+<li>Kotlin Flow 结合  Retrofit2 + Room 的混合使用</li>
+<li>Kotlin Flow 与 LiveData 的使用</li>
+<li>使用 Coil 加载图片</li>
+<li>使用 ViewModel、LiveData、DataBinding 协同工作</li>
+<li>使用 Motionlayout 做动画</li>
+<li>App Startup 与 Hilt 的使用</li>
+</ol>
+<p>PokemonGo 涉及的技术：</p>
+<ul>
+<li><a href="https://github.com/ben-manes/gradle-versions-plugin">Gradle Versions Plugin</a>：检查依赖库是否存在最新版本</li>
+<li><a href="https://kotlinlang.org/">Kotlin</a> + <a href="https://github.com/Kotlin/kotlinx.coroutines">Coroutines</a> + <a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/-flow/">Flow</a>：flow 是对 Kotlin 协程的扩展，让我们可以像运行同步代码一样运行异步代码</li>
+<li>JetPack<ul>
+<li>Paging3（network + db）：用到了 Paging3 中的  <code>RemoteMediator</code> 用来实现 network + db</li>
+<li>Dagger-Hilt (2.28-alpha)：依赖注入框架</li>
+<li>App Startup：设置组件初始化顺序</li>
+<li>DataBinding：以声明方式将可观察数据绑定到界面上</li>
+<li>Room：在 SQLite 上提供了一个抽象层，流畅地访问 SQLite 数据库</li>
+<li>LiveData：在底层数据库更改时通知视图</li>
+<li>ViewModel：以注重生命周期的方式管理界面相关的数据</li>
+<li>Andriod KTX：编写更简洁、惯用的 Kotlin 代码</li>
+</ul>
+</li>
+<li>项目架构<ul>
+<li>MVVM 架构</li>
+<li>Repository 设计模式</li>
+<li>Data Mapper 数据映射 </li>
+</ul>
+</li>
+<li><a href="https://github.com/square/retrofit">Retrofit2 &amp; OkHttp3</a>：用于请求网路数据</li>
+<li><a href="https://github.com/coil-kt/coil/">Coil</a>：基于 Kotlin 开发的首个图片加载库</li>
+<li><a href="https://github.com/material-components/material-components-android">material-components-android</a>：模块化和可定制的材料设计 UI 组件</li>
+<li><a href="https://developer.android.com/training/constraint-layout/motionlayout">Motionlayout</a> ：MotionLayout 是一种布局类型，可帮助您管理应用中的动画</li>
+<li><a href="https://github.com/JakeWharton/timber">Timber</a>: 日志打印</li>
+<li><a href="https://github.com/hi-dhl/JProgressView">JProgressView</a> ：一个小巧灵活可定制的进度条，支持图形：圆形、圆角矩形、矩形等等</li>
+</ul>
+<p>以上技术栈对应之前写的技术文章：</p>
+<ul>
+<li><a href="https://juejin.im/post/5ee4bbe4f265da76b559bdfe">Jetpack 最新成员 AndroidX App Startup 实践以及原理分析</a></li>
+<li><a href="https://juejin.im/post/5ee998e8e51d4573d65df02b">Jetpack 成员 Paging3 实践以及源码分析（一）</a></li>
+<li><a href="https://juejin.im/post/5eeefbf4e51d45742c53ddce">Jetpack 新成员 Paging3 网络实践及原理分析（二）</a></li>
+<li><a href="https://juejin.im/post/5ef2f31951882565a94e06a5?utm_source=gold_browser_extension">Jetpack 新成员 Hilt 实践（一）启程过坑记</a> </li>
+<li><a href="https://juejin.im/post/5ef7638c5188252e6a532db3">Jetpack 新成员 Hilt 实践之 App Startup（二）进阶篇</a></li>
+<li><a href="https://juejin.im/post/5efca0c1e51d4534a40d972f">Jetpack 新成员 Hilt 与 Dagger 大不同（三）落地篇</a></li>
+<li><a href="https://juejin.im/post/5f02114d5188252e8a081afb">全方面分析 Hilt 和 Koin 性能</a></li>
+<li><a href="https://juejin.im/post/5ebc1eb8e51d454dcf45744e">[译][2.4K Star] 放弃 Dagger 拥抱 Koin</a></li>
+<li><a href="https://juejin.im/post/5e9c434a51882573663f6cc6">项目中封装 Kotlin + Android Databinding</a></li>
+<li><a href="https://juejin.im/post/5edfd7c9e51d45789a7f206d">为数不多的人知道的 Kotlin 技巧以及 原理解析(一)</a></li>
+<li><a href="https://juejin.im/post/5f0747486fb9a07ea86dc881">为数不多的人知道的 Kotlin 技巧以及 原理解析(二)</a></li>
+</ul>
+<p><strong>如果之前对这些技术没有接触过，或者只是听说，对阅读本文没有什么影响</strong>，本文会对这些技术结合着项目 PokemonGo 来分析，为了文章的简洁性，本文不会细究技术细节，因为每个技术都需要花好几篇文章才能分析清楚，我会在后续的文章去详细分析。</p>
+<h2 id="如何检查依赖库最新版本"><a href="#如何检查依赖库最新版本" class="headerlink" title="如何检查依赖库最新版本"></a>如何检查依赖库最新版本</h2><p>在之前的文章 <a href="https://juejin.im/post/5ed3ef906fb9a047bf7070b6">再见吧 buildSrc, 拥抱 Composing builds 提升 Android 编译速度</a> 分析过，到目前为止大概管理 Gradle 依赖提供了 4 种不同方法：</p>
+<ul>
+<li>手动管理 ：在每个 module 中定义插件依赖库，每次升级依赖库时都需要手动更改（不建议使用）</li>
+<li>使用 ext 的方式管理插件依赖库 ：这是 Google 推荐管理依赖的方法 <a href="https://developer.android.com/studio/build/gradle-tips#configure-project-wide-properties">Android官方文档</a></li>
+<li>Kotlin + buildSrc：自动补全和单击跳转，依赖更新时 <strong>将重新</strong> 构建整个项目</li>
+<li>Composing builds：自动补全和单击跳转，依赖更新时 <strong>不会重新</strong> 构建整个项目</li>
+</ul>
+<p>新版的 AndroidStudio 只支持 <strong>ext 的方式</strong> 和 <strong>手动方式管理</strong>  检查依赖库是否存在最新版本，不支持 buildSrc、gradle-wrapper 版本的检查。</p>
+<p><img src="http://cdn.51git.cn/2020-07-14-15946137545843.jpg" alt=""></p>
+<p>满足不了 PokemonGo 项目的需求，在 PokemonGo 项目中采用 buildSrc 方式去管理所有依赖库，因为 PokemonGo 项目采用单模块结构，而且支持 <strong>自动补全</strong> 和 <strong>单击跳转</strong> 很方便，所这里用到了 <a href="https://github.com/ben-manes/gradle-versions-plugin">Gradle Versions Plugin</a> 插件去检查依赖库的最新版本，检查结果如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">The following dependencies have later release versions:</span><br><span class="line"> - androidx.swiperefreshlayout:swiperefreshlayout [1.0.0 -&gt; 1.1.0]</span><br><span class="line">     https:&#x2F;&#x2F;developer.android.com&#x2F;jetpack&#x2F;androidx</span><br><span class="line"> - com.squareup.okhttp3:logging-interceptor [3.9.0 -&gt; 4.7.2]</span><br><span class="line">     https:&#x2F;&#x2F;square.github.io&#x2F;okhttp&#x2F;</span><br><span class="line"> - junit:junit [4.12 -&gt; 4.13]</span><br><span class="line">     http:&#x2F;&#x2F;junit.org</span><br><span class="line"> - org.koin:koin-android [2.1.5 -&gt; 2.1.6]</span><br><span class="line"> - org.koin:koin-androidx-viewmodel [2.1.5 -&gt; 2.1.6]</span><br><span class="line"> - org.koin:koin-core [2.1.5 -&gt; 2.1.6]</span><br><span class="line"></span><br><span class="line">Gradle release-candidate updates:</span><br><span class="line"> - Gradle: [6.1.1 -&gt; 6.5.1]</span><br></pre></td></tr></table></figure>
+
+<p>会列出所有需要更新的依赖库的最新版本，并且 Gradle Versions Plugin 比 AndroidStudio 所支持的更加全面：</p>
+<ul>
+<li>支持手动方式管理依赖库最新版本检查</li>
+<li>支持 ext 的方式管理依赖库最新版本检查</li>
+<li>支持 buildSrc 方式管理依赖库最新版本检查</li>
+<li>支持 gradle-wrapper 最新版本检查</li>
+<li>支持多模块的依赖库最新版本检查</li>
+</ul>
+<p><strong>那么如何使用呢？只需要三步</strong></p>
+<ul>
+<li><p>1.将 <a href="https://github.com/hi-dhl/PokemonGo">PokemonGo</a> 项目根目录 checkVersions.gradle 文件拷贝到你的项目根目录下面</p>
+</li>
+<li><p>2.在项目的根目录 build.gradle 文件夹内添加以下代码</p>
+  <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">apply from: &#39;.&#x2F;checkVersions.gradle&#39;</span><br><span class="line">buildscript &#123;</span><br><span class="line">    repositories &#123;</span><br><span class="line">        google()</span><br><span class="line">        jcenter()</span><br><span class="line">    &#125;</span><br><span class="line">    dependencies &#123;</span><br><span class="line">        classpath &quot;com.github.ben-manes:gradle-versions-plugin:0.28.0&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>3.添加完成之后，在根目录下执行以下命令。</p>
+  <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">.&#x2F;gradlew dependencyUpdates</span><br></pre></td></tr></table></figure>
+
+<p>  会在当前目录下生成 build/dependencyUpdates/report.txt 文件。</p>
+</li>
+</ul>
+<h2 id="MVVM-架构"><a href="#MVVM-架构" class="headerlink" title="MVVM 架构"></a>MVVM 架构</h2><p>Jetpack 实战项目 PokemonGo 基于  MVVM 架构和 Repository 设计模式，如今几乎所有的 Android 开发者至少都听过 MVVM 架构，在谷歌 Android 团队宣布了 Jetpack 的视图模型之后，它已经成为了现代 Android 开发模式最流行的架构之一，如下图所示：</p>
+<p><img src="http://cdn.51git.cn/2020-07-12-159453363449491.jpg" alt=""></p>
+<p>MVVM 有助于将应用程序的业务逻辑与 UI 完全分开。 如果业务逻辑与 UI 逻辑之间的联系非常紧密，那么维护将很困难，由于很难重用业务逻辑，因此编写单元测试代码非常困难，一堆重复的代码和复杂的逻辑。</p>
+<p>Jetpack 的视图模型的 MVVM 架构由 View + DataBinding + ViewModel + Model 组成。</p>
+<h3 id="DataBinding"><a href="#DataBinding" class="headerlink" title="DataBinding"></a>DataBinding</h3><p>DataBinding（数据绑定）实际上是 XML 布局中的另一个视图结构层次，视图 (XML) 通过数据绑定层不断地与 ViewModel 交互。</p>
+<p>我们来看一个例子，首页上有个 RecyclerView 用来展示神奇宝贝数据（名字、图片、点击事件等等），每一个 item 对应一个 ViewHolder，来看一下 ViewHolder 的实现。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class PokemonViewModel(view: View) : DataBindingViewHolder&lt;PokemonListModel&gt;(view) &#123;</span><br><span class="line">    private val mBinding: RecycleItemPokemonBinding by viewHolderBinding(view)</span><br><span class="line"></span><br><span class="line">    override fun bindData(data: PokemonListModel, position: Int) &#123;</span><br><span class="line">        mBinding.apply &#123;</span><br><span class="line">            pokemon &#x3D; data</span><br><span class="line">            executePendingBindings()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>正如你所看到的，由于使用了数据绑定，ViewHolder 里面的代码变的非常简单，可能这个例子不够明显，我们来看一个劲爆的，点击首页每一个 item 会跳转到详情页面，详情页面如下图所示：</p>
+<p><img src="http://cdn.51git.cn/2020-07-12-device11.png" alt="device11"></p>
+<p>详情页面（DetailActivity）展示了神奇宝贝的详细数据，先查询数据库，如果没有找到，读取网路数据然后保存到数据库，由于使用了数据绑定，代码变得非常简单，如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class DetailActivity : DataBindingAppCompatActivity() &#123;</span><br><span class="line"></span><br><span class="line">    private val mBindingActivity: ActivityDetailsBinding by binding(R.layout.activity_details)</span><br><span class="line">    private val mViewModel: DetailViewModel by viewModels()</span><br><span class="line">    lateinit var mPokemonModel: PokemonListModel</span><br><span class="line"></span><br><span class="line">    override fun onCreate(savedInstanceState: Bundle?) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState)</span><br><span class="line">        mBindingActivity.apply &#123;</span><br><span class="line">            mPokemonModel &#x3D; requireNotNull(intent.getParcelableExtra(KEY_LIST_MODEL))</span><br><span class="line">            pokemonListModel &#x3D; mPokemonModel</span><br><span class="line">            lifecycleOwner &#x3D; this@DetailActivity</span><br><span class="line">            viewModel &#x3D; mViewModel.apply &#123;</span><br><span class="line">                fectchPokemonInfo(mPokemonModel.name)</span><br><span class="line">                    .observe(this@DetailActivity, Observer &#123;&#125;)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>正如你所见 DetailActivity 代码变得非常简单，如果以后我们想要改变网络的 URL、Model、获取或保存数据的方式等等，我们不需要改变 DetailActivity 中的任何代码。</p>
+<p>更多关于 DataBinding 的使用请参考我另外一个仓库 <a href="https://github.com/hi-dhl/JDataBinding">JDataBinding</a>：目前已经封装了一系列的组件包含 DataBindingActivity、DataBindingAppCompatActivity、DataBindingFragmentActivity、DataBindingFragment、DataBindingDialog、DataBindingListAdapter、DataBindingViewHolder 等等。</p>
+<h3 id="ViewModel"><a href="#ViewModel" class="headerlink" title="ViewModel"></a>ViewModel</h3><p>ViewModel 是 MVVM 架构中非常重要的设计，它在 activities 或 fragments 和业务逻辑中起到了非常重要的作用，它不依赖于 UI 组件，使得单元测试更加容易，ViewModel 以生命周期的方式管理界面相关的数据，直到 Activity 被销毁。</p>
+<p>LiveData 与 ViewModel 具有很好的协同作用，LiveData 持有从数据源获取到的数据，并且它可以被 DataBinding 组件观察，当 Activity 被销毁时，它将被取消订阅。</p>
+<p>而详情页面（DetailActivity) 代码之所以能这么简单得益于 ViewModel、LiveData、DataBinding 协同工作, 我们来看一下 ViewModel 代码。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class DetailViewModel @ViewModelInject constructor(</span><br><span class="line">    val polemonRepository: Repository</span><br><span class="line">) : ViewModel() &#123;</span><br><span class="line">    private val _pokemon &#x3D; MutableLiveData&lt;PokemonInfoModel&gt;()</span><br><span class="line">    val pokemon: LiveData&lt;PokemonInfoModel&gt; &#x3D; _pokemon</span><br><span class="line"></span><br><span class="line">    @OptIn(ExperimentalCoroutinesApi::class)</span><br><span class="line">    fun fectchPokemonInfo(name: String) &#x3D; liveData&lt;PokemonInfoModel&gt; &#123;</span><br><span class="line">        polemonRepository.featchPokemonInfo(name)</span><br><span class="line">        .collectLatest &#123;</span><br><span class="line">                _pokemon.postValue(it)</span><br><span class="line">                emit(it)</span><br><span class="line">            &#125;</span><br><span class="line">        .......</span><br><span class="line">        &#x2F;&#x2F; 省略部分代码，</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>activity_details.xml 代码</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;layout xmlns:android&#x3D;&quot;http:&#x2F;&#x2F;schemas.android.com&#x2F;apk&#x2F;res&#x2F;android&quot;</span><br><span class="line">    xmlns:app&#x3D;&quot;http:&#x2F;&#x2F;schemas.android.com&#x2F;apk&#x2F;res-auto&quot;</span><br><span class="line">    xmlns:tools&#x3D;&quot;http:&#x2F;&#x2F;schemas.android.com&#x2F;tools&quot;&gt;</span><br><span class="line"></span><br><span class="line">    &lt;data&gt;</span><br><span class="line">        &lt;variable</span><br><span class="line">            name&#x3D;&quot;viewModel&quot;</span><br><span class="line">            type&#x3D;&quot;com.hi.dhl.pokemon.ui.detail.DetailViewModel&quot; &#x2F;&gt;</span><br><span class="line"></span><br><span class="line">    &lt;&#x2F;data&gt;</span><br><span class="line">    </span><br><span class="line">    ......</span><br><span class="line">    &lt;androidx.appcompat.widget.AppCompatTextView</span><br><span class="line">        android:id&#x3D;&quot;@+id&#x2F;weight&quot;</span><br><span class="line">        android:text&#x3D;&quot;@&#123;viewModel.pokemon.getWeightString&#125;&quot;&#x2F;&gt;</span><br><span class="line">    ......</span><br><span class="line">    </span><br><span class="line">&lt;&#x2F;layout&gt;</span><br></pre></td></tr></table></figure>
+
+<p>这是获取神奇宝贝的详细信息，通过 DataBinding 以声明方式将数据（神奇宝贝的体重）绑定到界面上，更多使用参考项目中的代码。</p>
+<h3 id="Repository"><a href="#Repository" class="headerlink" title="Repository"></a>Repository</h3><p>Repository 设计模式是最流行、应用最广泛的设计模式之一，在 Repository 层获取网络数据，并将数据存储到数据库中，在这一层中有两个非常重要的成员 Paging3 库中的 <code>RemoteMediator</code> 和 Data Mappers。</p>
+<h4 id="RemoteMediator"><a href="#RemoteMediator" class="headerlink" title="RemoteMediator"></a>RemoteMediator</h4><p>在之前的文章 <a href="https://juejin.im/post/5ee998e8e51d4573d65df02b">Jetpack 成员 Paging3 实践以及源码分析（一）</a> 和 <a href="https://juejin.im/post/5eeefbf4e51d45742c53ddce">Jetpack 新成员 Paging3 网络实践及原理分析（二）</a>  分别分析了使用 Paging3 访问 <strong>数据库</strong> 和 <strong>网络</strong>，但是遗漏了 <code>RemoteMediator</code> 类的使用，RemoteMediator 是 Paging3 当中一个非常重要的成员，用于实现 <strong>数据库</strong> 和 <strong>网络</strong> 访问，所以这里是对之前的文章一个补充。</p>
+<blockquote>
+<p><code>RemoteMediator</code> 很重要，需要单独花一篇文章去分析，为了节省篇幅，在这里不会详细的去分析它，如果对 <code>RemoteMediator</code> 不太理解没有关系，我会在后续的文章里面详细的分析它。</p>
+</blockquote>
+<p>项目中网络访问用的是 <a href="https://github.com/square/retrofit">Retrofit2 &amp; OkHttp3</a> 用来请求网络数据，使用 Room 作为数据库存储，将获得的数据保存到数据库中，Room 在 SQLite 上提供了一个抽象层，流畅地访问 SQLite 数据库，同时拥有了 SQLite 全部功能，在编译的时候进行错误检查。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@OptIn(ExperimentalPagingApi::class)</span><br><span class="line">class PokemonRemoteMediator(</span><br><span class="line">    val api: PokemonService,</span><br><span class="line">    val db: AppDataBase</span><br><span class="line">) : RemoteMediator&lt;Int, PokemonEntity&gt;() &#123;</span><br><span class="line">    val mPageKey &#x3D; 0</span><br><span class="line">    override suspend fun load(</span><br><span class="line">        loadType: LoadType,</span><br><span class="line">        state: PagingState&lt;Int, PokemonEntity&gt;</span><br><span class="line">    ): MediatorResult &#123;</span><br><span class="line">        try &#123;</span><br><span class="line"></span><br><span class="line">            ......</span><br><span class="line">            val pageKey &#x3D; when (loadType) &#123;</span><br><span class="line">                &#x2F;&#x2F; 首次访问 或者调用 PagingDataAdapter.refresh()</span><br><span class="line">                LoadType.REFRESH -&gt; null</span><br><span class="line">                &#x2F;&#x2F; 在当前加载的数据集的开头加载数据时</span><br><span class="line">                LoadType.PREPEND -&gt; return MediatorResult.Success(endOfPaginationReached &#x3D; true)</span><br><span class="line">                &#x2F;&#x2F; 在当前数据集末尾添加数据</span><br><span class="line">                LoadType.APPEND -&gt; &#123;</span><br><span class="line">                    ......</span><br><span class="line">                    if (remoteKey &#x3D;&#x3D; null || remoteKey.nextKey &#x3D;&#x3D; null) &#123;</span><br><span class="line">                        return MediatorResult.Success(endOfPaginationReached &#x3D; true)</span><br><span class="line">                    &#125;</span><br><span class="line">                    remoteKey.nextKey</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            ......</span><br><span class="line">            &#x2F;&#x2F; 使用 Retrofit2 获取网络数据</span><br><span class="line">            val page &#x3D; pageKey ?: 0</span><br><span class="line">            val result &#x3D; api.fetchPokemonList(</span><br><span class="line">                state.config.pageSize,</span><br><span class="line">                page * state.config.pageSize</span><br><span class="line">            ).results</span><br><span class="line">            </span><br><span class="line"></span><br><span class="line">            .......</span><br><span class="line"></span><br><span class="line">            db.withTransaction &#123;</span><br><span class="line">                if (loadType &#x3D;&#x3D; LoadType.REFRESH) &#123; &#x2F;&#x2F; 当首次加载，或者下拉刷新的时候，清空当前数据 &#125;</span><br><span class="line">                ......</span><br><span class="line">                &#x2F;&#x2F; 存储获取到的数据</span><br><span class="line">                remoteKeysDao.insertAll(entity)</span><br><span class="line">                pokemonDao.insertPokemon(item)</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            return MediatorResult.Success(endOfPaginationReached &#x3D; endOfPaginationReached)</span><br><span class="line">        &#125; catch (e: IOException) &#123;</span><br><span class="line">            return MediatorResult.Error(e)</span><br><span class="line">        &#125; catch (e: HttpException) &#123;</span><br><span class="line">            return MediatorResult.Error(e)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：使用了 <code>@OptIn(ExperimentalPagingApi::class)</code> 需要在 App 模块 build.gradle 文件内添加以下代码。</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">android &#123;</span><br><span class="line">    kotlinOptions &#123;</span><br><span class="line">        freeCompilerArgs +&#x3D; [&quot;-Xopt-in&#x3D;kotlin.RequiresOptIn&quot;]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在 <code>RemoteMediator</code> 的实现类 <code>PokemonRemoteMediator</code> 中的核心部分是关于参数 LoadType 的判断。</p>
+<ul>
+<li><code>LoadType.REFRESH</code>：<strong>首次访问</strong> 或者调用 <strong>PagingDataAdapter.refresh(</strong>) 触发，这里不需要做任何操作，返回 null 就可以</li>
+<li><code>LoadType.PREPEND</code>：在当前列表头部添加数据的时候时触发，实际在项目中基本很少会用到直接返回  <code>MediatorResult.Success(endOfPaginationReached = true)</code> ，参数 endOfPaginationReached 表示没有数据了不在加载</li>
+<li><code>LoadType.APPEND</code>：下拉加载更多时触发，这里获取下一页的 key, 如果 key 不存在，表示已经没有更多数据，直接返回 <code>MediatorResult.Success(endOfPaginationReached = true)</code> 不会在进行网络和数据库的访问</li>
+</ul>
+<p>接下来的逻辑和之前请求网络数据的逻辑没有什么区别了，使用 Retrofit2 获取网络数据，然后使用 Room 将数据保存到数据库中。</p>
+<p>接下来聊一下 Repository 中另外一个重要的成员 Data Mapper，在项目中起到了非常的重要，在一个快速开发的项目中，为了越快完成第一个版本交付，下意识的将数据源和 UI 绑定到一起，当业务逐渐增多，数据源变化了，上层也要一起变化，导致后期的重构工作量很大，核心的原因耦合性太强了。</p>
+<h4 id="Data-Mapper（个人建议）"><a href="#Data-Mapper（个人建议）" class="headerlink" title="Data Mapper（个人建议）"></a>Data Mapper（个人建议）</h4><p>Data Mapper 的意识非常重要，在项目中起到了非常的重要，关于 Data Mappers 在 Repository 中的重要性可以看一下国外大神写的这篇文章 <a href="https://proandroiddev.com/the-real-repository-pattern-in-android-efba8662b754">The “Real” Repository Pattern in Android</a> 在 Medium 上获得了 4.9K 的赞。</p>
+<p>使用 Data Mapper 分离数据源的 Model 和 页面显示的 Model，不要因为数据源的增加、修改或者删除，导致上层页面也要跟着一起修改，换句话说使用 Data Mapper 做一个中间转换，如下图所示，来源于网络：</p>
+<p><img src="http://cdn.51git.cn/2020-07-14-159462974702102.jpg" alt=""></p>
+<p>使用 Data Mapper（数据映射）优点如下：</p>
+<ul>
+<li>数据源的更改不会影响上层的业务</li>
+<li>糟糕的后端实现不会影响上层的业务 ( 想象一下，如果你被迫执行2个网络请求，因为后端不能在一个请求中提供你需要的所有信息，你会让这个问题影响你的整个代码吗? )</li>
+<li>Data Mapper 便于做单元测试，确保不会因为数据源的变化，而影响上层的业务</li>
+</ul>
+<p>如果在一个大型项目中直接使用 Data Mapper 会有适得其反的效果，所以需要结合设计模式来完善，这不在本文讨论范围之内，其实在这里我想表达是，不要因为快速实现某个功能，下意识的将数据源的 model 和 UI 绑定在一起。</p>
+<p>Data Mappe 实现方式有很多种，可以手动实现，也可以通过引入第三方框架，其中有名框架  <a href="https://github.com/modelmapper/modelmapper">modelmapper</a>，在 PokemonGo 项目中是手动实现的。</p>
+<h3 id="Koltin-Flow"><a href="#Koltin-Flow" class="headerlink" title="Koltin Flow"></a>Koltin Flow</h3><p>停止使用 RxJava，尝试一下 Flow，不仅简单而且功能很强大，Retrofit2 和 Room 也都提供了对应的支持。</p>
+<p>Flow 库是在 Kotlin Coroutines 1.3.2 发布之后新增的库，也叫做异步流，类似 RxJava 的 Observable，在 PokemonGo 项目中也用到了 Flow。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">override suspend fun featchPokemonInfo(name: String): Flow&lt;PokemonInfoModel&gt; &#123;</span><br><span class="line">    return flow &#123;</span><br><span class="line">        val pokemonDao &#x3D; db.pokemonInfoDao()</span><br><span class="line">        var infoModel &#x3D; pokemonDao.getPokemon(name)</span><br><span class="line">        &#x2F;&#x2F; 查询数据库是否存在，如果不存在请求网络</span><br><span class="line">        if (infoModel &#x3D;&#x3D; null) &#123;</span><br><span class="line">            &#x2F;&#x2F; 网络请求</span><br><span class="line">            val netWorkPokemonInfo &#x3D; api.fetchPokemonInfo(name)</span><br><span class="line">            ......</span><br><span class="line">            pokemonDao.insertPokemon(infoModel) &#x2F;&#x2F; 插入更新数据库</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        val model &#x3D; mapper2InfoModel.map(infoModel) &#x2F;&#x2F; 数据转换</span><br><span class="line">        emit(model)</span><br><span class="line">    &#125;.flowOn(Dispatchers.IO)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这里做了三件事：</p>
+<ul>
+<li>查询数据库是否存在，如果不存在请求网络</li>
+<li>请求网络获取数据，更新数据库</li>
+<li>将数据源的 Model 转换为页面显示的 Model</li>
+</ul>
+<h3 id="依赖注入"><a href="#依赖注入" class="headerlink" title="依赖注入"></a>依赖注入</h3><p>Hilt、Dagger、Koin 等等都是依赖注入库，使用依赖注入库有以下优点：</p>
+<ul>
+<li>依赖注入库会自动释放不再使用的对象，减少资源的过度使用。</li>
+<li>在配置 scopes 范围内，可重用依赖项和创建的实例，提高代码的可重用性，减少了很多模板代码。</li>
+<li>代码变得更具可读性。</li>
+<li>易于构建对象。</li>
+<li>编写低耦合代码，更容易测试。</li>
+</ul>
+<p>在 PokemonGo 项目中使用的是 Hilt，Hilt 是在 Dagger 基础上进行开发的，减少了在项目中进行手动依赖，Hilt 集成了 Jetpack 库和 Android 框架类，并删除了大部分模板代码，让开发者只需要关注如何进行绑定，同时 Hilt 也继承了 Dagger 优点，编译时正确性、运行时性能、并且得到了 Android Studio 的支持，来看一下 Hilt 与 Room 在一起使用的例子。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@Module</span><br><span class="line">@InstallIn(ApplicationComponent::class)</span><br><span class="line">object RoomModule &#123;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * @Provides 常用于被 @Module 注解标记类的内部的方法，并提供依赖项对象。</span><br><span class="line">     * @Singleton 提供单例</span><br><span class="line">     *&#x2F;</span><br><span class="line">    @Provides</span><br><span class="line">    @Singleton</span><br><span class="line">    fun provideAppDataBase(application: Application): AppDataBase &#123;</span><br><span class="line">        return Room</span><br><span class="line">            .databaseBuilder(application, AppDataBase::class.java, &quot;dhl.db&quot;)</span><br><span class="line">            .fallbackToDestructiveMigration()</span><br><span class="line">            .allowMainThreadQueries()</span><br><span class="line">            .build()</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    @Singleton</span><br><span class="line">    @Provides</span><br><span class="line">    fun provideTasksRepository(</span><br><span class="line">        db: AppDataBase</span><br><span class="line">    ): Repository &#123;</span><br><span class="line">        return PokemonFactory.makePokemonRepository(db)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里需要用到 @Module 注解，使用 @Module 注解的普通类，在其内部提供 Room 的实例，更多使用可以查看 PokemonGo 项目。</p>
+<h3 id="小巧灵活的进度条"><a href="#小巧灵活的进度条" class="headerlink" title="小巧灵活的进度条"></a>小巧灵活的进度条</h3><p>神奇宝贝详情页的进度条使用的是 <a href="https://github.com/hi-dhl/JProgressView">JProgressView</a> ：一个小巧灵活可定制的进度条，支持图形：圆形、圆角矩形、矩形等等，效果如下图所示：</p>
+<p><img src="http://cdn.51git.cn/2020-07-14-15946238803357.gif" alt=""></p>
+<p>起源于当时想用一个现成的库，但是在网上找了很多，没有一个合适自己的，要不大而全，要不作者好久没更新了，要不不兼容 DataBinding，于是乎就自己封装了一个小巧灵活的进度条，项目长期维护并持续更新，如果有更好的建议欢迎告知我，JProgressView 使用非常的简单，根据自己的需求去配置即可。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;com.hi.dhl.jprogressview.JProgressView</span><br><span class="line">    android:layout_width&#x3D;&quot;match_parent&quot;</span><br><span class="line">    android:layout_height&#x3D;&quot;18dp&quot;</span><br><span class="line">    android:layout_below&#x3D;&quot;@+id&#x2F;exp&quot;</span><br><span class="line">    android:translationZ&#x3D;&quot;100dp&quot;</span><br><span class="line">    app:maxProgressValue&#x3D;&quot;@&#123;viewModel.pokemon.maxExp&#125;&quot;</span><br><span class="line">    app:progressValue&#x3D;&quot;@&#123;viewModel.pokemon.exp&#125;&quot;</span><br><span class="line">    app:progress_animate_duration&#x3D;&quot;@integer&#x2F;progress_animate_duration&quot;</span><br><span class="line">    app:progress_color&#x3D;&quot;@color&#x2F;color_progress_4&quot;</span><br><span class="line">    app:progress_color_background&#x3D;&quot;@color&#x2F;color_progress_bg&quot;</span><br><span class="line">    app:progress_paint_bg_width&#x3D;&quot;@dimen&#x2F;circle_stroke_width&quot;</span><br><span class="line">    app:progress_paint_value_width&#x3D;&quot;@dimen&#x2F;circle_stroke_width&quot;</span><br><span class="line">    app:progress_text_color&#x3D;&quot;@android:color&#x2F;black&quot;</span><br><span class="line">    app:progress_text_size&#x3D;&quot;@dimen&#x2F;text_size_12sp&quot;</span><br><span class="line">    app:progress_type&#x3D;&quot;@integer&#x2F;porgress_tpye_round_rect&quot; &#x2F;&gt;</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>值类型</th>
+<th>默认值</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>progress_type</td>
+<td>integer</td>
+<td>圆形：1</td>
+<td>矩形：0；矩形：0；矩形：0</td>
+</tr>
+<tr>
+<td>progress_animate_duration</td>
+<td>integer</td>
+<td>2000</td>
+<td>动画运行时间</td>
+</tr>
+<tr>
+<td>progress_color</td>
+<td>color</td>
+<td>Color.GRAY</td>
+<td>当前进度颜色</td>
+</tr>
+<tr>
+<td>progress_color_background</td>
+<td>color</td>
+<td>Color.GRAY</td>
+<td>进度条背景颜色</td>
+</tr>
+<tr>
+<td>progress_paint_bg_width</td>
+<td>dimen</td>
+<td>10</td>
+<td>进度条背景画笔的宽度</td>
+</tr>
+<tr>
+<td>progress_paint_value_width</td>
+<td>dimen</td>
+<td>10</td>
+<td>当前进度画笔的宽度</td>
+</tr>
+<tr>
+<td>progress_text_color</td>
+<td>color</td>
+<td>Color.BLUE</td>
+<td>进度条上的文字的颜色</td>
+</tr>
+<tr>
+<td>progress_text_size</td>
+<td>dimen</td>
+<td><code>sp2Px(20f)</code></td>
+<td>进度条上的文字的大小</td>
+</tr>
+<tr>
+<td>progress_text_visible</td>
+<td>boolean</td>
+<td>默认不显示：false</td>
+<td>是否显示文字</td>
+</tr>
+<tr>
+<td>progress_value</td>
+<td>integer</td>
+<td>0</td>
+<td>当前进度</td>
+</tr>
+<tr>
+<td>progress_value_max</td>
+<td>integer</td>
+<td>100</td>
+<td>当前进度条的最大值</td>
+</tr>
+</tbody></table>
+<p>更多关于进度条的使用，查看 <a href="https://github.com/hi-dhl/JProgressView">JProgressView</a> 仓库，全文到这里就结束了，为了节省篇幅，很多在之前系列文章里面分析过的，这里不在详细分析了，更多技术细节会在后续的系列文章中分析。</p>
+<blockquote>
+<p>正在建立一个最全、最新的 AndroidX Jetpack 相关组件的实战项目 以及 相关组件原理分析文章，目前已经包含了 App Startup、Paging3、Hilt 等等，正在逐渐增加其他 Jetpack 新成员，仓库持续更新，可以前去查看：<a href="https://github.com/hi-dhl/AndroidX-Jetpack-Practice">AndroidX-Jetpack-Practice</a>, 如果这个仓库对你有帮助，请仓库右上角帮我点个赞</p>
+</blockquote>
+</div><p style="height:10px"></p><!--!--><h1 class="title is-4 is-size-4-mobile"></h1></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2020/08/22/jetpack/09-kotlin-flow/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">Google 推荐在 MVVM 架构中使用 Kotlin Flow</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2020/08/22/jetpack/07-hilt-koin/"><span class="level-item">全方面分析 Hilt 和 Koin 性能</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content template"><p>致力于分享一系列 Android 系统源码、逆向分析、算法、翻译、Jetpack 源码相关的文章，在技术的道路上一起前进</p><h3 class="title is-4">Android10 源码分析</h3><p>正在写一系列的 Android 10 源码分析的文章，了解系统源码，不仅有助于分析问题，在面试过程中，对我们也是非常有帮助的，如果你同我一样喜欢研究 Android 源码，可以关注我 GitHub 上的 <a href="https://github.com/hi-dhl/Android10-Source-Analysis">Android10-Source-Analysis</a>。</p><h3 class="title is-4">算法题库的归纳和总结</h3><p>由于 LeetCode 的题库庞大，每个分类都能筛选出数百道题，由于每个人的精力有限，不可能刷完所有题目，因此我按照经典类型题目去分类、和题目的难易程度去排序。</p><ul><li>数据结构： 数组、栈、队列、字符串、链表、树……</li><li>算法： 查找算法、搜索算法、位运算、排序、数学、……</li></ul><p>每道题目都会用 Java 和 kotlin 去实现，并且每道题目都有解题思路，如果你同我一样喜欢算法、LeetCode，可以关注我 GitHub 上的 LeetCode 题解：<a href="https://github.com/hi-dhl/Leetcode-Solutions-with-Java-And-Kotlin">Leetcode-Solutions-with-Java-And-Kotlin</a>。</p><h3 class="title is-4">精选国外的技术文章</h3><p>目前正在整理和翻译一系列精选国外的技术文章，不仅仅是翻译，很多优秀的英文技术文章提供了很好思路和方法，每篇文章都会有<strong>译者思考</strong>部分，对原文的更加深入的解读，可以关注我 GitHub 上的 <a href="https://github.com/hi-dhl/Technical-Article-Translation">Technical-Article-Translation</a>。</p><p></p></div></div><div class="card"><div class="card-content"><h3 class="title is-5">评论</h3><div class="content" id="valine-thread"></div><script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script><script src="https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js"></script><script>new Valine({
+            el: '#valine-thread' ,
+            notify: false,
+            verify: undefined,
+            appId: 'zfvr24HFhzQ5vtHkr4NQ1fmW-gzGzoHsz',
+            appKey: 'RChgr9mR005hgu4yiQ4WQU3O',
+            placeholder: '说点什么',
+            avatar: 'mm',
+            avatarForce: false,
+            meta: ["nick","mail","link"],
+            pageSize: 10,
+            visitor: false,
+            highlight: true,
+            recordIP: false
+        });</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1 is-sticky"><div class="card widget" id="toc" style="max-height: 500px;overflow: auto;"><div class="card-content"><div class="menu"><h3 class="menu-label">目录</h3><ul class="menu-list"><li><a class="is-flex" href="#前言"><span>前言</span></a></li><li><a class="is-flex" href="#如何检查依赖库最新版本"><span>如何检查依赖库最新版本</span></a></li><li><a class="is-flex" href="#MVVM-架构"><span>MVVM 架构</span></a><ul class="menu-list"><li><a class="is-flex" href="#DataBinding"><span>DataBinding</span></a></li><li><a class="is-flex" href="#ViewModel"><span>ViewModel</span></a></li><li><a class="is-flex" href="#Repository"><span>Repository</span></a><ul class="menu-list"><li><a class="is-flex" href="#RemoteMediator"><span>RemoteMediator</span></a></li><li><a class="is-flex" href="#Data-Mapper（个人建议）"><span>Data Mapper（个人建议）</span></a></li></ul></li><li><a class="is-flex" href="#Koltin-Flow"><span>Koltin Flow</span></a></li><li><a class="is-flex" href="#依赖注入"><span>依赖注入</span></a></li><li><a class="is-flex" href="#小巧灵活的进度条"><span>小巧灵活的进度条</span></a></li></ul></li></ul></div></div></div><div class="card widget"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content size-small"><p><time dateTime="2020-08-22T11:51:48.423Z">2020-08-22</time></p><p class="title is-6"><a class="link-muted" href="/2020/08/22/android/03-adb/">关于 adb 命令你所需要知道的</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-08-22T11:46:43.107Z">2020-08-22</time></p><p class="title is-6"><a class="link-muted" href="/2020/08/22/kotlin/03-sealed/">Kotlin Sealed 是什么？为什么 Google 都用</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-08-22T11:43:32.461Z">2020-08-22</time></p><p class="title is-6"><a class="link-muted" href="/2020/08/22/jetpack/10-remoteMediator/">Google 推荐在项目中使用 sealed 和 RemoteMediator</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-08-22T11:41:10.398Z">2020-08-22</time></p><p class="title is-6"><a class="link-muted" href="/2020/08/22/jetpack/09-kotlin-flow/">Google 推荐在 MVVM 架构中使用 Kotlin Flow</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-08-22T11:37:49.745Z">2020-08-22</time></p><p class="title is-6"><a class="link-muted" href="/2020/08/22/jetpack/08-PokemonGo/">神奇宝贝  眼前一亮的 Jetpack + MVVM 极简实战</a></p><p class="is-uppercase"></p></div></article></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile is-marginless" href="/categories/Android/"><span class="level-start"><span class="level-item">Android</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Android10/"><span class="level-start"><span class="level-item">Android10</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/AndroidStudio/"><span class="level-start"><span class="level-item">AndroidStudio</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Jetpack/"><span class="level-start"><span class="level-item">Jetpack</span></span><span class="level-end"><span class="level-item tag">9</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Jetpack-kotlin/"><span class="level-start"><span class="level-item">Jetpack,kotlin</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Kotlin/"><span class="level-start"><span class="level-item">Kotlin</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/LeetCode/"><span class="level-start"><span class="level-item">LeetCode</span></span><span class="level-end"><span class="level-item tag">25</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Linux/"><span class="level-start"><span class="level-item">Linux</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/offer-algorithms/"><span class="level-start"><span class="level-item">剑指Offer</span></span><span class="level-end"><span class="level-item tag">18</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E7%B2%BE%E9%80%89%E8%AF%91%E6%96%87/"><span class="level-start"><span class="level-item">精选译文</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E9%80%86%E5%90%91/"><span class="level-start"><span class="level-item">逆向</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E9%80%86%E5%90%91-AndroidStudio/"><span class="level-start"><span class="level-item">逆向,AndroidStudio</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/Android/"><span class="tag">Android</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E5%8C%85%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-包管理系统</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-窗口管理系统</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-资源管理系统</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/AndroidStudio/"><span class="tag">AndroidStudio</span><span class="tag is-grey-lightest">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android%E6%BA%90%E7%A0%81/"><span class="tag">Android源码</span><span class="tag is-grey-lightest">7</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Fragment/"><span class="tag">Fragment</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Jetpack/"><span class="tag">Jetpack</span><span class="tag is-grey-lightest">11</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Koin/"><span class="tag">Koin</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Kotlin/"><span class="tag">Kotlin</span><span class="tag is-grey-lightest">5</span></a></div><div class="control"><a class="tags has-addons" href="/tags/LeetCode/"><span class="tag">LeetCode</span><span class="tag is-grey-lightest">22</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Linux/"><span class="tag">Linux</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/RxJava/"><span class="tag">RxJava</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Shell/"><span class="tag">Shell</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/kotlin/"><span class="tag">kotlin</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/"><span class="tag">二分查找</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/"><span class="tag">二叉树</span><span class="tag is-grey-lightest">12</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E4%BD%8D%E8%BF%90%E7%AE%97/"><span class="tag">位运算</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%89%91%E6%8C%87Offer/"><span class="tag">剑指Offer</span><span class="tag is-grey-lightest">18</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/"><span class="tag">动态规划</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/"><span class="tag">字符串</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%B9%BF%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/"><span class="tag">广度优先搜索</span><span class="tag is-grey-lightest">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%95%B0%E5%AD%A6/"><span class="tag">数学</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%A0%88/"><span class="tag">栈</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/"><span class="tag">深度优先搜索</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%AF%91%E6%96%87/"><span class="tag">译文</span><span class="tag is-grey-lightest">7</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E9%93%BE%E8%A1%A8/"><span class="tag">链表</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E9%98%9F%E5%88%97/"><span class="tag">队列</span><span class="tag is-grey-lightest">1</span></a></div></div></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level-item"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img class="logo-img" src="/img/logo.png" alt="奔跑吧前中后浪" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="奔跑吧前中后浪" height="28"></a><p class="size-small"><span>&copy; 2020 Hi Dhl</span>  <a href="http://www.beian.miit.gov.cn/" target="_blank">京ICP备18050211号-2</a>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            site: {
+                url: 'https://hi-dhl.com',
+                external_link: {"enable":true,"exclude":[]}
+            },
+            article: {
+                highlight: {
+                    clipboard: false,
+                    fold: ''
+                }
+            }
+        };</script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><script src="https://s9.cnzz.com/z_stat.php?id=1278919895&amp;web_id=1278919895" async></script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><script src="/js/imaegoo/universe.js"></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>

@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="generator" content="Hexo 4.2.1"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Jetpack 新成员 Hilt 实践（一）启程过坑记 - 奔跑吧前中后浪</title><meta description="Hilt 是 Android 的依赖注入库，它减少了在项目中进行手动依赖，进行手动依赖注入需要您手动构造每个类及其依赖，依赖注入库的出现节省了 Android 开发者大量的时间"><meta property="og:type" content="blog"><meta property="og:title" content="Jetpack 新成员 Hilt 实践（一）启程过坑记"><meta property="og:url" content="https://hi-dhl.com/2020/08/22/jetpack/04-hilt/"><meta property="og:site_name" content="奔跑吧前中后浪"><meta property="og:description" content="Hilt 是 Android 的依赖注入库，它减少了在项目中进行手动依赖，进行手动依赖注入需要您手动构造每个类及其依赖，依赖注入库的出现节省了 Android 开发者大量的时间"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="http://cdn.51git.cn/2020-06-24-15929760559237.jpg"><meta property="article:published_time" content="2020-08-22T11:26:08.186Z"><meta property="article:modified_time" content="2020-08-22T11:33:02.690Z"><meta property="article:author" content="Hi Dhl"><meta property="article:tag" content="Android10"><meta property="article:tag" content="AndroidStudio"><meta property="article:tag" content="buildSrc"><meta property="article:tag" content="kotlin"><meta property="article:tag" content="run"><meta property="article:tag" content="with"><meta property="article:tag" content="let"><meta property="article:tag" content="also"><meta property="article:tag" content="apply"><meta property="article:tag" content="Jetpack"><meta property="article:tag" content="App Startup"><meta property="article:tag" content="Paging3"><meta property="article:tag" content="Hilt"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="http://cdn.51git.cn/2020-06-24-15929760559237.jpg"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://hi-dhl.com/2020/08/22/jetpack/04-hilt/"},"headline":"奔跑吧前中后浪","image":["http://cdn.51git.cn/2020-06-24-15929760559237.jpg"],"datePublished":"2020-08-22T11:26:08.186Z","dateModified":"2020-08-22T11:33:02.690Z","author":{"@type":"Person","name":"Hi Dhl"},"description":"Hilt 是 Android 的依赖注入库，它减少了在项目中进行手动依赖，进行手动依赖注入需要您手动构造每个类及其依赖，依赖注入库的出现节省了 Android 开发者大量的时间"}</script><link rel="canonical" href="https://hi-dhl.com/2020/08/22/jetpack/04-hilt/"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" defer></script><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script></head><body class="is-2-column"><script type="text/javascript" src="/js/imaegoo/night.js"></script><canvas id="universe"></canvas><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img class="logo-img" src="/img/logo.png" alt="奔跑吧前中后浪" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="奔跑吧前中后浪" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">首页</a><a class="navbar-item" href="/archives">时间轴</a><a class="navbar-item" href="/categories">分类</a><a class="navbar-item" href="/tags">标签</a><a class="navbar-item" href="/categories/Android10/">Android-10-源码</a><a class="navbar-item" href="/categories/LeetCode/">LeetCode</a><a class="navbar-item" href="/categories/offer-algorithms/">剑指Offer</a><a class="navbar-item" href="http://site.51git.cn/">国内外书签</a></div><div class="navbar-end"><a class="navbar-item night" id="night-nav" title="Night Mode" href="javascript:;"><i class="fas fa-moon" id="night-icon"></i></a><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/hi-dhl"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><div class="card-image"><span class="image is-7by3"><img class="thumbnail" src="http://cdn.51git.cn/2020-06-24-15929760559237.jpg" alt="Jetpack 新成员 Hilt 实践（一）启程过坑记"></span></div><article class="card-content article" role="article"><h1 class="title is-3 is-size-4-mobile"></h1><h1 class="title is-3 is-size-4-mobile">Jetpack 新成员 Hilt 实践（一）启程过坑记</h1><div class="article-meta size-small level is-mobile"><div class="level-left"><span class="mr-2"><i class="fa fa-calendar"></i></span><time class="level-item" dateTime="2020-08-22T11:26:08.186Z" title="2020-08-22T11:26:08.186Z">2020-08-22</time><span class="mr-2"> <i class="fa fa-folder"></i></span><span class="level-item"><a class="link-muted" href="/categories/Jetpack/">Jetpack</a></span><span class="mr-2"> <i class="fa fa-tag"></i></span><span class="level-item"><a class="link-muted" href="/tags/Jetpack/">Jetpack</a></span></div></div><div class="level-left article-meta size-small is-mobile"></div><h1 class="title is-3 is-size-4-mobile"></h1><div class="content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在之前的文章里面分别分析 <strong>Jetpack 新成员 App Startup 实践以及原理分析</strong> 和 <strong>Jetpack 新成员 Paging3 实践以及源码分析（一）</strong> 以及 <strong>Jetpack 新成员 Paging3 网络实践及原理分析（二）</strong> 如果没有看过可以点击下方地址前去查看：</p>
+<ul>
+<li><a href="https://juejin.im/post/5ee4bbe4f265da76b559bdfe">Jetpack 最新成员 AndroidX App Startup 实践以及原理分析</a></li>
+<li><a href="https://juejin.im/post/5ee998e8e51d4573d65df02b">Jetpack 成员 Paging3 数据实践以及源码分析（一）</a></li>
+<li><a href="https://juejin.im/post/5eeefbf4e51d45742c53ddce">Jetpack 成员 Paging3 网络实践及原理分析（二）</a></li>
+<li><a href="https://juejin.im/post/6854573220457086990#heading-1">Jetpack 成员 Paging3 使用 RemoteMediator 实现加载网络分页数据并更新到数据库中（三）</a></li>
+<li><a href="https://github.com/hi-dhl/AndroidX-Jetpack-Practice">代码地址：https://github.com/hi-dhl/AndroidX-Jetpack-Practice</a></li>
+</ul>
+<p>这篇文章主要来分析一下 Hilt，花了好几天时间梳理了一下 <a href="https://developer.android.com/training/dependency-injection/hilt-android#define-bindings">官方 Hilt 文档</a>，Hilt 的知识点有点多，将会分为三篇文章结合实际案例来完成，每篇文章都会有详细的使用的案例。本篇文章的案例已经上传到了 GitHub： <a href="https://github.com/hi-dhl/AndroidX-Jetpack-Practice">HiltSimple</a>。</p>
+<p><strong>通过这篇文章你将学习到以下内容：</strong></p>
+<ul>
+<li>为什么需要使用依赖注入库？</li>
+<li>Hilt 是什么？</li>
+<li>Hilt 常用注解含义？</li>
+<li>使用 Hilt 都有那些坑需要注意？</li>
+<li>Hilt 如何和 Android 组件一起使用？</li>
+<li>Hilt 如何和第三方组件一起使用？</li>
+<li>Hilt 如何和 Jetpack 组件 ViewModule 一起使用？</li>
+<li>Hilt 如何和 Jetpack 组件 Room 一起使用？</li>
+</ul>
+<p>研究 Hilt 时遇到一些坑，有些坑在 Goggle 文档上也没有提到，我会在文中特别强调，并在 <strong>文末总结部分</strong> 进行汇总。</p>
+<h2 id="为什么需要使用依赖注入库"><a href="#为什么需要使用依赖注入库" class="headerlink" title="为什么需要使用依赖注入库"></a>为什么需要使用依赖注入库</h2><p>Hilt、Dagger、Koin 等等都是依赖注入库，Google 也在努力不断的完善依赖注入库从 Dagger 到 Dagger2 在到现在的 Hilt，因为依赖注入是面向对象设计中最好的架构模式之一，使用依赖注入库有以下优点：</p>
+<ul>
+<li>依赖注入库会自动释放不再使用的对象，减少资源的过度使用。</li>
+<li>在配置 scopes 范围内，可重用依赖项和创建的实例，提高代码的可重用性，减少了很多模板代码。</li>
+<li>代码变得更具可读性。</li>
+<li>易于构建对象。</li>
+<li>编写低耦合代码，更容易测试。</li>
+</ul>
+<h2 id="Hilt-是什么？"><a href="#Hilt-是什么？" class="headerlink" title="Hilt 是什么？"></a>Hilt 是什么？</h2><p>Hilt 是 Android 的依赖注入库，它减少了在项目中进行手动依赖，进行手动依赖注入需要您手动构造每个类及其依赖，依赖注入库的出现节省了 Android 开发者大量的时间。</p>
+<p>Hilt 通过为项目中的每个 Android 类提供容器并自动管理它们的生命周期，提供了在应用程序中使用 DI 的标准方法。Hilt 是在 Dagger 的基础上进行构建，因为 Dagger 提供的编译时正确性、运行时性能、可伸缩性并且从 Android Studio 支持 Dagger 中获益。</p>
+<blockquote>
+<p>Hilt 的实现要比 Dagger 简单得多，使用 Dagger 实现依赖注入，需要去编写 modules、components 等等。每次创建一个新的 android 组件，比如 Activity、Fragment 或Service，我们都需要手动将它们添加到各自的 modules 中，以便在需要的时候注入它们。</p>
+</blockquote>
+<p>接下来我们开始从分析 Hilt 注解的含义出发，来了解如何在应用程序中使用 Hilt。</p>
+<h2 id="Hilt-常用注解的含义"><a href="#Hilt-常用注解的含义" class="headerlink" title="Hilt 常用注解的含义"></a>Hilt 常用注解的含义</h2><p>Hilt 常用注解包含 @HiltAndroidApp、@AndroidEntryPoint、@Inject、@Module、@InstallIn、@Provides、@EntryPoint 等等。</p>
+<h3 id="HiltAndroidApp"><a href="#HiltAndroidApp" class="headerlink" title="@HiltAndroidApp"></a>@HiltAndroidApp</h3><ol>
+<li>所有使用 Hilt 的 App 必须包含一个使用 @HiltAndroidApp 注解的 Application。</li>
+<li>@HiltAndroidApp 注解将会触发 Hilt 代码的生成，作为应用程序依赖项容器的基类。</li>
+<li>生成的 Hilt 组件依附于 Application 的生命周期，它也是 App 的父组件，提供其他组件访问的依赖。</li>
+<li>在 Application 中设置好 @HiltAndroidApp 之后，就可以使用 Hilt 提供的组件了，组件包含Application、Activity、Fragment、View、Service、BroadcastReceiver 等等。</li>
+</ol>
+<h3 id="AndroidEntryPoint"><a href="#AndroidEntryPoint" class="headerlink" title="@AndroidEntryPoint"></a>@AndroidEntryPoint</h3><p>Hilt 提供的 @AndroidEntryPoint 注解用于提供 Android 类的依赖（Activity、Fragment、View、Service、BroadcastReceiver）特殊的 Application 使用 @HiltAndroidApp 注解。</p>
+<ul>
+<li>Activity：仅仅支持 ComponentActivity 的子类例如 FragmentActivity、AppCompatActivity 等等。</li>
+<li>Fragment：仅仅支持继承 androidx.Fragment 的 Fragment</li>
+<li>View</li>
+<li>Service</li>
+<li>BroadcastReceiver</li>
+</ul>
+<p><strong>坑：</strong></p>
+<ul>
+<li><p>如果使用 @AndroidEntryPoint 在非 ComponentActivity 子类上注解，例如 Activity 则会抛出以下异常。</p>
+  <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Activities annotated with @AndroidEntryPoint must be a subclass of androidx.activity.ComponentActivity. (e.g. FragmentActivity, AppCompatActivity, etc.)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果使用 @AndroidEntryPoint 注解 Android 类，必须在它依赖的 Android 类添加同样的注解，例如在 Fragment 中添加 @AndroidEntryPoint 注解，必须在 Fragment 依赖的 Activity 上也添加 @AndroidEntryPoint 注解 , 否则会抛出以下异常。</p>
+  <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">java.lang.IllegalStateException: Hilt Fragments must be attached to an @AndroidEntryPoint Activity. Found: class com.hi.dhl.hilt.MainActivity</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="Inject"><a href="#Inject" class="headerlink" title="@Inject"></a>@Inject</h3><p>  Hilt 需要知道如何从相应的组件中提供必要依赖的实例。使用 @Inject 注解来告诉 Hilt 如何提供该类的实例，它常用于构造函数、非私有字段、方法中。</p>
+<p>  <strong>注意：在构建时，Hilt 为 Android 类生成 Dagger 组件。然后 Dagger 遍历您的代码并执行以下步骤：</strong></p>
+<ul>
+<li>构建并验证依赖关系，确保没有未满足的依赖关系。</li>
+<li>生成它在运行时用于创建实际对象及其依赖项的类。</li>
+</ul>
+<h3 id="Module"><a href="#Module" class="headerlink" title="@Module"></a>@Module</h3><p>常用于创建依赖类的对象(例如第三方库 OkHttp、Retrofit等等)，使用 @Module 注解的类，需要使用 @InstallIn 注解指定 module 的范围。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@Module</span><br><span class="line">@InstallIn(ApplicationComponent::class)</span><br><span class="line">&#x2F;&#x2F; 这里使用了 ApplicationComponent，因此 NetworkModule 绑定到 Application 的生命周期。</span><br><span class="line">object NetworkModule &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="InstallIn"><a href="#InstallIn" class="headerlink" title="@InstallIn"></a>@InstallIn</h3><p>使用 @Module 注入的类，需要使用 @InstallIn 注解指定 module 的范围，例如使用 @InstallIn(ActivityComponent::class) 注解的 module 会绑定到 activity 的生命周期上。</p>
+<p>Hilt 提供了以下组件来绑定依赖与 对应的 Android 类的活动范围。</p>
+<table>
+<thead>
+<tr>
+<th align="left">Hilt 提供的组件</th>
+<th align="left">对应的 Android 类的活动范围</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">ApplicationComponent</td>
+<td align="left">Application</td>
+</tr>
+<tr>
+<td align="left">ActivityRetainedComponent</td>
+<td align="left">ViewModel</td>
+</tr>
+<tr>
+<td align="left">ActivityComponent</td>
+<td align="left">Activity</td>
+</tr>
+<tr>
+<td align="left">FragmentComponent</td>
+<td align="left">Fragment</td>
+</tr>
+<tr>
+<td align="left">ViewComponent</td>
+<td align="left">View</td>
+</tr>
+<tr>
+<td align="left">ViewWithFragmentComponent</td>
+<td align="left">View annotated with @WithFragmentBindings</td>
+</tr>
+<tr>
+<td align="left">ServiceComponent</td>
+<td align="left">Service</td>
+</tr>
+</tbody></table>
+<p><strong>注意：Hilt 没有为 broadcast receivers 提供组件，因为 Hilt 直接从 ApplicationComponent 注入 broadcast receivers。</strong></p>
+<p>Hilt 会根据相应的 Android 类生命周期自动创建和销毁生成的组件类的实例，它们的对应关系如下表格所示。</p>
+<table>
+<thead>
+<tr>
+<th align="left">Hilt 提供的组件</th>
+<th align="left">创建对应的生命周期</th>
+<th align="left">销毁对应的生命周期</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">ApplicationComponent</td>
+<td align="left">Application#onCreate()</td>
+<td align="left">Application#onDestroy()</td>
+</tr>
+<tr>
+<td align="left">ActivityRetainedComponent</td>
+<td align="left">Activity#onCreate()</td>
+<td align="left">Activity#onDestroy()</td>
+</tr>
+<tr>
+<td align="left">ActivityComponent</td>
+<td align="left">Activity#onCreate()</td>
+<td align="left">Activity#onDestroy()</td>
+</tr>
+<tr>
+<td align="left">FragmentComponent</td>
+<td align="left">Fragment#onAttach()</td>
+<td align="left">Fragment#onDestroy()</td>
+</tr>
+<tr>
+<td align="left">ViewComponent</td>
+<td align="left">View#super()</td>
+<td align="left">View destroyed</td>
+</tr>
+<tr>
+<td align="left">ViewWithFragmentComponent</td>
+<td align="left">View#super()</td>
+<td align="left">View destroyed</td>
+</tr>
+<tr>
+<td align="left">ServiceComponent</td>
+<td align="left">Service#onCreate()</td>
+<td align="left">Service#onDestroy()</td>
+</tr>
+</tbody></table>
+<h3 id="Provides"><a href="#Provides" class="headerlink" title="@Provides"></a>@Provides</h3><p>它常用于被 @Module 注解标记类的内部的方法，并提供依赖项对象。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@Module</span><br><span class="line">@InstallIn(ApplicationComponent::class)</span><br><span class="line">&#x2F;&#x2F; 这里使用了 ApplicationComponent，因此 NetworkModule 绑定到 Application 的生命周期。</span><br><span class="line">object NetworkModule &#123;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * @Provides 常用于被 @Module 注解标记类的内部的方法，并提供依赖项对象。</span><br><span class="line">     * @Singleton 提供单例</span><br><span class="line">     *&#x2F;</span><br><span class="line">    @Provides</span><br><span class="line">    @Singleton</span><br><span class="line">    fun provideOkHttpClient(): OkHttpClient &#123;</span><br><span class="line">        return OkHttpClient.Builder()</span><br><span class="line">            .build()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="EntryPoint"><a href="#EntryPoint" class="headerlink" title="@EntryPoint"></a>@EntryPoint</h3><p>Hilt 支持最常见的 Android 类 Application、Activity、Fragment、View、Service、BroadcastReceiver 等等，但是您可能需要在Hilt 不支持的类中执行依赖注入，在这种情况下可以使用 @EntryPoint 注解进行创建，Hilt 会提供相应的依赖。</p>
+<p>基本概念介绍完了之后，我们正式在项目中使用 Hilt。</p>
+<h2 id="如何使用-Hilt"><a href="#如何使用-Hilt" class="headerlink" title="如何使用 Hilt"></a>如何使用 Hilt</h2><p>首先需要添加 Hilt 依赖，Hilt 依赖添加方式相比于 Koin 太麻烦了，首先在 project 的 build.gradle 添加以下依赖。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">buildscript &#123;</span><br><span class="line">    ...</span><br><span class="line">    dependencies &#123;</span><br><span class="line">        ...</span><br><span class="line">        classpath &#39;com.google.dagger:hilt-android-gradle-plugin:2.28-alpha&#39;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后在 App 模块中的 build.gradle 文件中添加以下代码。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">...</span><br><span class="line">apply plugin: &#39;kotlin-kapt&#39;</span><br><span class="line">apply plugin: &#39;dagger.hilt.android.plugin&#39;</span><br><span class="line"></span><br><span class="line">android &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">dependencies &#123;</span><br><span class="line">    implementation &quot;com.google.dagger:hilt-android:2.28-alpha&quot;</span><br><span class="line">    kapt &quot;com.google.dagger:hilt-android-compiler:2.28-alpha&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>坑：需要注意的是如果同时使用 hilt 和 data binding，Android Studio 的版本必须 &gt;= 4.0</strong></p>
+<blockquote>
+<p>所以还没有升级的朋友们，尽快升级吧，升级到 Android Studio 4.0 也会遇到一些坑，不过好在这些坑现在都有相应的解决方案了。</p>
+</blockquote>
+<p>Hilt 使用 Java 8 的功能，所以要在项目中启用 Java 8，需要在 App 模块的 build.gradle 文件中，添加以下代码。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">android &#123;</span><br><span class="line">  ...</span><br><span class="line">    compileOptions &#123;</span><br><span class="line">        sourceCompatibility JavaVersion.VERSION_1_8</span><br><span class="line">        targetCompatibility JavaVersion.VERSION_1_8</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; For Kotlin projects</span><br><span class="line">    kotlinOptions &#123;</span><br><span class="line">        jvmTarget &#x3D; &quot;1.8&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong> 这里有一个坑，对于 Kotlin 项目，需要添加 kotlinOptions，这是 Google 文档 <a href="https://developer.android.com/training/dependency-injection/hilt-android">Dependency injection with Hilt</a> 中没有提到的，否则使用 ViewModel 会编译不过，下文会有详细的讲解。</p>
+<blockquote>
+<p>Hilt 依赖添加方式相比于 Koin 太麻烦了，使用 koin 只需要添加相应的依赖就可以使用了。</p>
+</blockquote>
+<p>Application 是 App 的入口，所以所有使用 Hilt 的 App 必须包含一个使用 @HiltAndroidApp 注解的 Application</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@HiltAndroidApp</span><br><span class="line">class HiltApplication : Application() &#123;</span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 1. 所有使用 Hilt 的 App 必须包含一个使用 @HiltAndroidApp 注解的 Application</span><br><span class="line">     * 2. @HiltAndroidApp 将会触发 Hilt 代码的生成，包括用作应用程序依赖项容器的基类</span><br><span class="line">     * 3. 生成的 Hilt 组件依附于 Application 的生命周期，它也是 App 的父组件，提供其他组件访问的依赖</span><br><span class="line">     * 4. 在 Application 中设置好 @HiltAndroidApp 之后，就可以使用 Hilt 提供的组件了，</span><br><span class="line">     *    Hilt 提供的 @AndroidEntryPoint 注解用于提供 Android 类的依赖（Activity、Fragment、View、Service、BroadcastReceiver）等等</span><br><span class="line">     *    Application 使用 @HiltAndroidApp 注解</span><br><span class="line">     *&#x2F;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>@HiltAndroidApp 将会触发 Hilt 代码的生成，包括用作应用程序依赖容器的基类</li>
+<li>生成的 Hilt 组件依附于 Application 的生命周期，它也是 App 的父组件，提供其他组件访问的依赖</li>
+</ol>
+<p>准备工作都做完了，接下来我们来看几个例子，如何使用 Hilt 进行依赖注入。</p>
+<h2 id="如何使用-Hilt-进行依赖注入"><a href="#如何使用-Hilt-进行依赖注入" class="headerlink" title="如何使用 Hilt 进行依赖注入"></a>如何使用 Hilt 进行依赖注入</h2><p>我们先来看一个简单的例子，注入 HiltSimple 并在 Application 中调用它的 doSomething 方法。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class HiltSimple @Inject constructor() &#123;</span><br><span class="line">    fun doSomething() &#123;</span><br><span class="line">        Log.e(TAG, &quot;----doSomething----&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@HiltAndroidApp</span><br><span class="line">class HiltApplication : Application() &#123;</span><br><span class="line">    @Inject</span><br><span class="line">    lateinit var mHiltSimple: HiltSimple</span><br><span class="line"></span><br><span class="line">    override fun onCreate() &#123;</span><br><span class="line">        super.onCreate()</span><br><span class="line">        mHiltSimple.doSomething()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Hilt 需要知道如何从相应的组件中提供必要依赖的实例。使用 @Inject 注解来告诉 Hilt 如何提供该类的实例，@Inject 常用于构造函数、非私有字段、方法中。 </p>
+<h3 id="Hilt-如何和-Android-组件一起使用"><a href="#Hilt-如何和-Android-组件一起使用" class="headerlink" title="Hilt 如何和 Android 组件一起使用"></a>Hilt 如何和 Android 组件一起使用</h3><p>如果是 Hilt 支持的 Android 组件，直接使用 @AndroidEntryPoint 注解即可。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> *</span><br><span class="line"> * 为项目中的每个 Android 类生成一个 Hilt 组件，这些组件可以从它们各自的父类接收依赖项，</span><br><span class="line"> * 如果是抽象类则不能使用 @AndroidEntryPoint 注解</span><br><span class="line"> *</span><br><span class="line"> * 如果使用 @AndroidEntryPoint 注解 Android 类，还必须注解依赖于它的 Android 类，</span><br><span class="line"> * 例如 如果 注解 fragment 然后还必须注解  fragment 依赖的 Activity, 否则会抛出以下异常</span><br><span class="line"> * java.lang.IllegalStateException: Hilt Fragments must be attached to an @AndroidEntryPoint Activity. Found: class com.hi.dhl.hilt.MainActivity</span><br><span class="line"> *&#x2F;</span><br><span class="line">@AndroidEntryPoint</span><br><span class="line">class MainActivity : AppCompatActivity() &#123;</span><br><span class="line"></span><br><span class="line">    override fun onCreate(savedInstanceState: Bundle?) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_main)</span><br><span class="line">        &#x2F;&#x2F; 用到了 Fragment 1.2.0 中重要的更新</span><br><span class="line">        &#x2F;&#x2F; 可以查看之前写的这篇文章 @see https:&#x2F;&#x2F;juejin.im&#x2F;post&#x2F;5ecb16f1f265da76fb0c3967</span><br><span class="line">        supportFragmentManager.beginTransaction()</span><br><span class="line">            .add(R.id.container, HiltFragment::class.java, null)</span><br><span class="line">            .commit()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> *  如果 注解 fragment 然后还必须注解  fragment 依赖的 Activity, 否则会抛出以下异常</span><br><span class="line"> * java.lang.IllegalStateException: Hilt Fragments must be attached to an @AndroidEntryPoint Activity. Found: class com.hi.dhl.hilt.MainActivity</span><br><span class="line"> *&#x2F;</span><br><span class="line">@AndroidEntryPoint</span><br><span class="line">class HiltFragment : Fragment() &#123;</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; 使用 @Inject 注解从组件中获取依赖</span><br><span class="line">    @Inject</span><br><span class="line">    lateinit var mHiltSimple: HiltSimple</span><br><span class="line"></span><br><span class="line">    override fun onCreateView(</span><br><span class="line">        inflater: LayoutInflater,</span><br><span class="line">        container: ViewGroup?,</span><br><span class="line">        savedInstanceState: Bundle?</span><br><span class="line">    ): View? &#123;</span><br><span class="line">        return inflater.inflate(R.layout.fragment_hilt, container, false)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    override fun onViewCreated(view: View, savedInstanceState: Bundle?) &#123;</span><br><span class="line">        super.onViewCreated(view, savedInstanceState)</span><br><span class="line">        mHiltSimple.doSomething()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果是抽象类则不需要使用 @AndroidEntryPoint 注解。</li>
+<li>@AndroidEntryPoint 注解 仅仅支持 ComponentActivity 的子类例如 FragmentActivity、AppCompatActivity 等等。</li>
+<li>如果使用 @AndroidEntryPoint 注解 Android 类，必须在它依赖的 Android 类添加同样的注解，例如在 Fragment 中添加 @AndroidEntryPoint 注解，必须在 Fragment 依赖的 Activity 上也添加 @AndroidEntryPoint 注解。</li>
+</ul>
+<blockquote>
+<p><strong>注意：</strong> 在 Activity 中添加 Fragment，用到了 Fragment 1.2.0 中重要的更新，可以查看之前写的这篇文章 <a href="https://juejin.im/post/5ecb16f1f265da76fb0c3967">[译][Google工程师] 详解 FragmentFactory 如何优雅使用 Koin 以及部分源码分析</a>。</p>
+</blockquote>
+<h3 id="Hilt-如何和第三方组件一起使用"><a href="#Hilt-如何和第三方组件一起使用" class="headerlink" title="Hilt 如何和第三方组件一起使用"></a>Hilt 如何和第三方组件一起使用</h3><p>如果要在项目中注入第三方依赖，我们需要使用 @Module 注解，使用 @Module注解的普通类，在其中创建第三方依赖的对象。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@Module</span><br><span class="line">@InstallIn(ApplicationComponent::class)</span><br><span class="line">&#x2F;&#x2F; 这里使用了 ApplicationComponent，因此 NetworkModule 绑定到 Application 的生命周期。</span><br><span class="line">object NetworkModule &#123;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * @Provides 常用于被 @Module 注解标记类的内部的方法，并提供依赖项对象。</span><br><span class="line">     * @Singleton 提供单例</span><br><span class="line">     *&#x2F;</span><br><span class="line">    @Provides</span><br><span class="line">    @Singleton</span><br><span class="line">    fun provideOkHttpClient(): OkHttpClient &#123;</span><br><span class="line">        return OkHttpClient.Builder()</span><br><span class="line">            .build()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Provides</span><br><span class="line">    @Singleton</span><br><span class="line">    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit &#123;</span><br><span class="line">        return Retrofit.Builder()</span><br><span class="line">            .client(okHttpClient)</span><br><span class="line">            .baseUrl(&quot;https:&#x2F;&#x2F;api.github.com&#x2F;&quot;)</span><br><span class="line">            .addConverterFactory(GsonConverterFactory.create())</span><br><span class="line">            .build()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Provides</span><br><span class="line">    @Singleton</span><br><span class="line">    fun provideGitHubService(retrofit: Retrofit): GitHubService &#123;</span><br><span class="line">        return retrofit.create(GitHubService::class.java)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>@Module 常用于创建依赖类的对象(例如第三方库 OkHttp、Retrofit等等)。</li>
+<li>使用 @Module 注入的类，需要使用 @InstallIn 注解指定 module 的范围，会绑定到 Android 类对应的生命周期上。</li>
+<li>@Provides 常用于被 @Module 注解标记类的内部的方法，并提供依赖项对象。</li>
+</ul>
+<h3 id="Hilt-如何和-ViewModel-一起使用"><a href="#Hilt-如何和-ViewModel-一起使用" class="headerlink" title="Hilt 如何和 ViewModel 一起使用"></a>Hilt 如何和 ViewModel 一起使用</h3><p>在 App 模块中的 build.gradle 文件中添加以下代码。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">implementation &#39;androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha01&#39;</span><br><span class="line">kapt &#39;androidx.hilt:hilt-compiler:1.0.0-alpha01&#39;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong> 这个是在 Google 文档上没有提到的，如果使用的是 kotlin 的话需要额外在 App 模块中的 build.gradle 文件中添加以下代码，否则调用 <code>by viewModels()</code> 会编译不过。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; For Kotlin projects</span><br><span class="line">kotlinOptions &#123;</span><br><span class="line">    jvmTarget &#x3D; &quot;1.8&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在 ViewModel 对象的构造函数中使用 @ViewModelInject 注解提供一个 ViewModel。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class HiltViewModel @ViewModelInject constructor(</span><br><span class="line">) : ViewModel() &#123;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 在 LifeCycle 2.2.0 之后，可以用更精简的方法来完成，使用 LiveData 协程构造方法 (coroutine builder)。</span><br><span class="line">     * liveData 协程构造方法提供了一个协程代码块，产生的是一个不可变的 LiveData，emit() 方法则用来更新 LiveData 的数据。</span><br><span class="line">     *</span><br><span class="line">     * 具体可以查看之前写的这篇文章 [https:&#x2F;&#x2F;juejin.im&#x2F;post&#x2F;5ee998e8e51d4573d65df02b#heading-10] 有详细介绍</span><br><span class="line">     *&#x2F;</span><br><span class="line">    val mHitLiveData &#x3D; liveData &#123;</span><br><span class="line">        emit(&quot; i am a ViewModelInject&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@AndroidEntryPoint</span><br><span class="line">class MainActivity : AppCompatActivity() &#123;</span><br><span class="line"></span><br><span class="line">    private val mHitViewModule: HiltViewModel by viewModels()</span><br><span class="line">    </span><br><span class="line">        override fun onCreate(savedInstanceState: Bundle?) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_main)</span><br><span class="line">        </span><br><span class="line">        mHitViewModule.mHitLiveData.observe(this, Observer &#123;</span><br><span class="line">            tvResult.setText(it)</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在 HiltViewModel 里面使用了 LifeCycle 2.2.0 之后新增的方法，LiveData 协程构造方法提供了一个协程代码块，产生的是一个不可变的 LiveData，emit() 方法则用来更新 LiveData 的数据，具体可以查看之前写的这篇文章 <a href="https://juejin.im/post/5ee998e8e51d4573d65df02b">Jetpack 成员 Paging3 实践以及源码分析（一）</a> 里面有详细介绍。</p>
+<h3 id="Hilt-如何和-Room-一起使用"><a href="#Hilt-如何和-Room-一起使用" class="headerlink" title="Hilt 如何和 Room 一起使用"></a>Hilt 如何和 Room 一起使用</h3><p>这里需要用到 @Module 注解，使用 @Module 注解的普通类，在其中提供 Room 的实例。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@Module</span><br><span class="line">@InstallIn(ApplicationComponent::class)</span><br><span class="line">&#x2F;&#x2F; 这里使用了 ApplicationComponent，因此 NetworkModule 绑定到 Application 的生命周期。</span><br><span class="line">object RoomModule &#123;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * @Provides 常用于被 @Module 注解标记类的内部的方法，并提供依赖项对象。</span><br><span class="line">     * @Singleton 提供单例</span><br><span class="line">     *&#x2F;</span><br><span class="line">    @Provides</span><br><span class="line">    @Singleton</span><br><span class="line">    fun provideAppDataBase(application: Application): AppDataBase &#123;</span><br><span class="line">        return Room</span><br><span class="line">            .databaseBuilder(application, AppDataBase::class.java, &quot;dhl.db&quot;)</span><br><span class="line">            .fallbackToDestructiveMigration()</span><br><span class="line">            .allowMainThreadQueries()</span><br><span class="line">            .build()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Provides</span><br><span class="line">    @Singleton</span><br><span class="line">    fun providePersonDao(appDatabase: AppDataBase): PersonDao &#123;</span><br><span class="line">        return appDatabase.personDao()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>全文到这里就结束了，本篇文章的案例已经全部上传到了 GitHub：<a href="https://github.com/hi-dhl/AndroidX-Jetpack-Practice">HiltSimple</a>。</p>
+<p>这篇文章里面分别介绍了 @HiltAndroidApp、@AndroidEntryPoint、@Inject、@Module、@InstallIn、@Provides 的含义以及实战案例，下篇文章我们一起来分析一下 @EntryPoint，以及和其他 Jetpack 组件如何一起使用。</p>
+<p><strong>需要注意的是使用 Hilt 有三个需要注意的地方</strong></p>
+<ul>
+<li><p>如果注解非 ComponentActivity 子类，例如 Activity 则会抛出以下异常。</p>
+  <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Activities annotated with @AndroidEntryPoint must be a subclass of androidx.activity.ComponentActivity. (e.g. FragmentActivity, AppCompatActivity, etc.)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果使用 @AndroidEntryPoint 注解 Android 类，必须在它依赖的 Android 类添加同样的注解，例如在 Fragment 中添加 @AndroidEntryPoint 注解，必须在 Fragment 依赖的 Activity 上也添加 @AndroidEntryPoint 注解 , 否则会抛出以下异常。</p>
+  <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">java.lang.IllegalStateException: Hilt Fragments must be attached to an @AndroidEntryPoint Activity. Found: class com.hi.dhl.hilt.MainActivity</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>需要注意的是如果同时使用 hilt 和 data binding，Android Studio 的版本必须 &gt;= 4.0</p>
+<p>  所以还没有升级的朋友们，尽快升级吧，升级到 Android Studio 4.0 也会遇到一些坑，不过好在这些坑现在都有相应的解决方案了。</p>
+</li>
+</ul>
+<p><strong>Hilt 如果和 ViewModel 一起使用有点需要注意</strong></p>
+<p>这个是在 Google 文档上没有提到的，如果使用的是 kotlin 语言的话，需要额外在 App 模块中的 build.gradle 文件中添加以下代码，否则调用 <code>by viewModels()</code> 会编译不过。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kotlinOptions &#123;</span><br><span class="line">    jvmTarget &#x3D; &quot;1.8&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>计划建立一个最全、最新的 AndroidX Jetpack 相关组件的实战项目 以及 相关组件原理分析文章，正在逐渐增加 Jetpack 新成员，仓库持续更新，可以前去查看：<a href="https://github.com/hi-dhl/AndroidX-Jetpack-Practice">AndroidX-Jetpack-Practice</a>, 如果这个仓库对你有帮助，请在仓库右上角帮我点个赞，后面我会陆续完成更多 Jetpack 新成员的项目实践</p>
+</blockquote>
+</div><p style="height:10px"></p><!--!--><h1 class="title is-4 is-size-4-mobile"></h1></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2020/08/22/jetpack/05-hilt-app-startup/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">Jetpack 新成员 Hilt 实践之 App Startup（二）进阶篇</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2020/08/22/jetpack/03-Paging3/"><span class="level-item">Jetpack 新成员 Paging3 网络实践及原理分析（二）</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content template"><p>致力于分享一系列 Android 系统源码、逆向分析、算法、翻译、Jetpack 源码相关的文章，在技术的道路上一起前进</p><h3 class="title is-4">Android10 源码分析</h3><p>正在写一系列的 Android 10 源码分析的文章，了解系统源码，不仅有助于分析问题，在面试过程中，对我们也是非常有帮助的，如果你同我一样喜欢研究 Android 源码，可以关注我 GitHub 上的 <a href="https://github.com/hi-dhl/Android10-Source-Analysis">Android10-Source-Analysis</a>。</p><h3 class="title is-4">算法题库的归纳和总结</h3><p>由于 LeetCode 的题库庞大，每个分类都能筛选出数百道题，由于每个人的精力有限，不可能刷完所有题目，因此我按照经典类型题目去分类、和题目的难易程度去排序。</p><ul><li>数据结构： 数组、栈、队列、字符串、链表、树……</li><li>算法： 查找算法、搜索算法、位运算、排序、数学、……</li></ul><p>每道题目都会用 Java 和 kotlin 去实现，并且每道题目都有解题思路，如果你同我一样喜欢算法、LeetCode，可以关注我 GitHub 上的 LeetCode 题解：<a href="https://github.com/hi-dhl/Leetcode-Solutions-with-Java-And-Kotlin">Leetcode-Solutions-with-Java-And-Kotlin</a>。</p><h3 class="title is-4">精选国外的技术文章</h3><p>目前正在整理和翻译一系列精选国外的技术文章，不仅仅是翻译，很多优秀的英文技术文章提供了很好思路和方法，每篇文章都会有<strong>译者思考</strong>部分，对原文的更加深入的解读，可以关注我 GitHub 上的 <a href="https://github.com/hi-dhl/Technical-Article-Translation">Technical-Article-Translation</a>。</p><p></p></div></div><div class="card"><div class="card-content"><h3 class="title is-5">评论</h3><div class="content" id="valine-thread"></div><script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script><script src="https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js"></script><script>new Valine({
+            el: '#valine-thread' ,
+            notify: false,
+            verify: undefined,
+            appId: 'zfvr24HFhzQ5vtHkr4NQ1fmW-gzGzoHsz',
+            appKey: 'RChgr9mR005hgu4yiQ4WQU3O',
+            placeholder: '说点什么',
+            avatar: 'mm',
+            avatarForce: false,
+            meta: ["nick","mail","link"],
+            pageSize: 10,
+            visitor: false,
+            highlight: true,
+            recordIP: false
+        });</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1 is-sticky"><div class="card widget" id="toc" style="max-height: 500px;overflow: auto;"><div class="card-content"><div class="menu"><h3 class="menu-label">目录</h3><ul class="menu-list"><li><a class="is-flex" href="#前言"><span>前言</span></a></li><li><a class="is-flex" href="#为什么需要使用依赖注入库"><span>为什么需要使用依赖注入库</span></a></li><li><a class="is-flex" href="#Hilt-是什么？"><span>Hilt 是什么？</span></a></li><li><a class="is-flex" href="#Hilt-常用注解的含义"><span>Hilt 常用注解的含义</span></a><ul class="menu-list"><li><a class="is-flex" href="#HiltAndroidApp"><span>@HiltAndroidApp</span></a></li><li><a class="is-flex" href="#AndroidEntryPoint"><span>@AndroidEntryPoint</span></a></li><li><a class="is-flex" href="#Inject"><span>@Inject</span></a></li><li><a class="is-flex" href="#Module"><span>@Module</span></a></li><li><a class="is-flex" href="#InstallIn"><span>@InstallIn</span></a></li><li><a class="is-flex" href="#Provides"><span>@Provides</span></a></li><li><a class="is-flex" href="#EntryPoint"><span>@EntryPoint</span></a></li></ul></li><li><a class="is-flex" href="#如何使用-Hilt"><span>如何使用 Hilt</span></a></li><li><a class="is-flex" href="#如何使用-Hilt-进行依赖注入"><span>如何使用 Hilt 进行依赖注入</span></a><ul class="menu-list"><li><a class="is-flex" href="#Hilt-如何和-Android-组件一起使用"><span>Hilt 如何和 Android 组件一起使用</span></a></li><li><a class="is-flex" href="#Hilt-如何和第三方组件一起使用"><span>Hilt 如何和第三方组件一起使用</span></a></li><li><a class="is-flex" href="#Hilt-如何和-ViewModel-一起使用"><span>Hilt 如何和 ViewModel 一起使用</span></a></li><li><a class="is-flex" href="#Hilt-如何和-Room-一起使用"><span>Hilt 如何和 Room 一起使用</span></a></li></ul></li><li><a class="is-flex" href="#总结"><span>总结</span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content size-small"><p><time dateTime="2020-08-22T11:51:48.423Z">2020-08-22</time></p><p class="title is-6"><a class="link-muted" href="/2020/08/22/android/03-adb/">关于 adb 命令你所需要知道的</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-08-22T11:46:43.107Z">2020-08-22</time></p><p class="title is-6"><a class="link-muted" href="/2020/08/22/kotlin/03-sealed/">Kotlin Sealed 是什么？为什么 Google 都用</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-08-22T11:43:32.461Z">2020-08-22</time></p><p class="title is-6"><a class="link-muted" href="/2020/08/22/jetpack/10-remoteMediator/">Google 推荐在项目中使用 sealed 和 RemoteMediator</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-08-22T11:41:10.398Z">2020-08-22</time></p><p class="title is-6"><a class="link-muted" href="/2020/08/22/jetpack/09-kotlin-flow/">Google 推荐在 MVVM 架构中使用 Kotlin Flow</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-08-22T11:37:49.745Z">2020-08-22</time></p><p class="title is-6"><a class="link-muted" href="/2020/08/22/jetpack/08-PokemonGo/">神奇宝贝  眼前一亮的 Jetpack + MVVM 极简实战</a></p><p class="is-uppercase"></p></div></article></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile is-marginless" href="/categories/Android/"><span class="level-start"><span class="level-item">Android</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Android10/"><span class="level-start"><span class="level-item">Android10</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/AndroidStudio/"><span class="level-start"><span class="level-item">AndroidStudio</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Jetpack/"><span class="level-start"><span class="level-item">Jetpack</span></span><span class="level-end"><span class="level-item tag">9</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Jetpack-kotlin/"><span class="level-start"><span class="level-item">Jetpack,kotlin</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Kotlin/"><span class="level-start"><span class="level-item">Kotlin</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/LeetCode/"><span class="level-start"><span class="level-item">LeetCode</span></span><span class="level-end"><span class="level-item tag">25</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Linux/"><span class="level-start"><span class="level-item">Linux</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/offer-algorithms/"><span class="level-start"><span class="level-item">剑指Offer</span></span><span class="level-end"><span class="level-item tag">18</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E7%B2%BE%E9%80%89%E8%AF%91%E6%96%87/"><span class="level-start"><span class="level-item">精选译文</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E9%80%86%E5%90%91/"><span class="level-start"><span class="level-item">逆向</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E9%80%86%E5%90%91-AndroidStudio/"><span class="level-start"><span class="level-item">逆向,AndroidStudio</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/Android/"><span class="tag">Android</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E5%8C%85%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-包管理系统</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-窗口管理系统</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-资源管理系统</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/AndroidStudio/"><span class="tag">AndroidStudio</span><span class="tag is-grey-lightest">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android%E6%BA%90%E7%A0%81/"><span class="tag">Android源码</span><span class="tag is-grey-lightest">7</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Fragment/"><span class="tag">Fragment</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Jetpack/"><span class="tag">Jetpack</span><span class="tag is-grey-lightest">11</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Koin/"><span class="tag">Koin</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Kotlin/"><span class="tag">Kotlin</span><span class="tag is-grey-lightest">5</span></a></div><div class="control"><a class="tags has-addons" href="/tags/LeetCode/"><span class="tag">LeetCode</span><span class="tag is-grey-lightest">22</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Linux/"><span class="tag">Linux</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/RxJava/"><span class="tag">RxJava</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Shell/"><span class="tag">Shell</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/kotlin/"><span class="tag">kotlin</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/"><span class="tag">二分查找</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/"><span class="tag">二叉树</span><span class="tag is-grey-lightest">12</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E4%BD%8D%E8%BF%90%E7%AE%97/"><span class="tag">位运算</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%89%91%E6%8C%87Offer/"><span class="tag">剑指Offer</span><span class="tag is-grey-lightest">18</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/"><span class="tag">动态规划</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/"><span class="tag">字符串</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%B9%BF%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/"><span class="tag">广度优先搜索</span><span class="tag is-grey-lightest">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%95%B0%E5%AD%A6/"><span class="tag">数学</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%A0%88/"><span class="tag">栈</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/"><span class="tag">深度优先搜索</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%AF%91%E6%96%87/"><span class="tag">译文</span><span class="tag is-grey-lightest">7</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E9%93%BE%E8%A1%A8/"><span class="tag">链表</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E9%98%9F%E5%88%97/"><span class="tag">队列</span><span class="tag is-grey-lightest">1</span></a></div></div></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level-item"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img class="logo-img" src="/img/logo.png" alt="奔跑吧前中后浪" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="奔跑吧前中后浪" height="28"></a><p class="size-small"><span>&copy; 2020 Hi Dhl</span>  <a href="http://www.beian.miit.gov.cn/" target="_blank">京ICP备18050211号-2</a>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            site: {
+                url: 'https://hi-dhl.com',
+                external_link: {"enable":true,"exclude":[]}
+            },
+            article: {
+                highlight: {
+                    clipboard: false,
+                    fold: ''
+                }
+            }
+        };</script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><script src="https://s9.cnzz.com/z_stat.php?id=1278919895&amp;web_id=1278919895" async></script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><script src="/js/imaegoo/universe.js"></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>

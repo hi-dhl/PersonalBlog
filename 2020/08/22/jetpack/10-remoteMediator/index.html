@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="generator" content="Hexo 4.2.1"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Google 推荐在项目中使用 sealed 和 RemoteMediator - 奔跑吧前中后浪</title><meta description="之前有小伙们问过我，如何在 Flow 基础上封装成功或者失败处理逻辑，关于这个问题，其实 Google Android 团队建议我们使用 sealed，在 Paging3 源码里面也大量用到了 sealed"><meta property="og:type" content="blog"><meta property="og:title" content="Google 推荐在项目中使用 sealed 和 RemoteMediator"><meta property="og:url" content="https://hi-dhl.com/2020/08/22/jetpack/10-remoteMediator/"><meta property="og:site_name" content="奔跑吧前中后浪"><meta property="og:description" content="之前有小伙们问过我，如何在 Flow 基础上封装成功或者失败处理逻辑，关于这个问题，其实 Google Android 团队建议我们使用 sealed，在 Paging3 源码里面也大量用到了 sealed"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="http://cdn.51git.cn/2020-08-03-Google-releases-Jetpack-Compose-Developer-preview-with-Android-Studio-4.0.png"><meta property="article:published_time" content="2020-08-22T11:43:32.461Z"><meta property="article:modified_time" content="2020-08-22T11:46:26.629Z"><meta property="article:author" content="Hi Dhl"><meta property="article:tag" content="Android10"><meta property="article:tag" content="AndroidStudio"><meta property="article:tag" content="buildSrc"><meta property="article:tag" content="kotlin"><meta property="article:tag" content="run"><meta property="article:tag" content="with"><meta property="article:tag" content="let"><meta property="article:tag" content="also"><meta property="article:tag" content="apply"><meta property="article:tag" content="Jetpack"><meta property="article:tag" content="App Startup"><meta property="article:tag" content="Paging3"><meta property="article:tag" content="Hilt"><meta property="article:tag" content="Dagger"><meta property="article:tag" content="Koin"><meta property="article:tag" content="Jetpack"><meta property="article:tag" content="MVVM"><meta property="article:tag" content="Repository"><meta property="article:tag" content="Kotlin Flow"><meta property="article:tag" content="sealed"><meta property="article:tag" content="RemoteMediator"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="http://cdn.51git.cn/2020-08-03-Google-releases-Jetpack-Compose-Developer-preview-with-Android-Studio-4.0.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://hi-dhl.com/2020/08/22/jetpack/10-remoteMediator/"},"headline":"奔跑吧前中后浪","image":["http://cdn.51git.cn/2020-08-03-Google-releases-Jetpack-Compose-Developer-preview-with-Android-Studio-4.0.png"],"datePublished":"2020-08-22T11:43:32.461Z","dateModified":"2020-08-22T11:46:26.629Z","author":{"@type":"Person","name":"Hi Dhl"},"description":"之前有小伙们问过我，如何在 Flow 基础上封装成功或者失败处理逻辑，关于这个问题，其实 Google Android 团队建议我们使用 sealed，在 Paging3 源码里面也大量用到了 sealed"}</script><link rel="canonical" href="https://hi-dhl.com/2020/08/22/jetpack/10-remoteMediator/"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" defer></script><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script></head><body class="is-2-column"><script type="text/javascript" src="/js/imaegoo/night.js"></script><canvas id="universe"></canvas><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img class="logo-img" src="/img/logo.png" alt="奔跑吧前中后浪" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="奔跑吧前中后浪" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">首页</a><a class="navbar-item" href="/archives">时间轴</a><a class="navbar-item" href="/categories">分类</a><a class="navbar-item" href="/tags">标签</a><a class="navbar-item" href="/categories/Android10/">Android-10-源码</a><a class="navbar-item" href="/categories/LeetCode/">LeetCode</a><a class="navbar-item" href="/categories/offer-algorithms/">剑指Offer</a><a class="navbar-item" href="http://site.51git.cn/">国内外书签</a></div><div class="navbar-end"><a class="navbar-item night" id="night-nav" title="Night Mode" href="javascript:;"><i class="fas fa-moon" id="night-icon"></i></a><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/hi-dhl"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><div class="card-image"><span class="image is-7by3"><img class="thumbnail" src="http://cdn.51git.cn/2020-08-03-Google-releases-Jetpack-Compose-Developer-preview-with-Android-Studio-4.0.png" alt="Google 推荐在项目中使用 sealed 和 RemoteMediator"></span></div><article class="card-content article" role="article"><h1 class="title is-3 is-size-4-mobile"></h1><h1 class="title is-3 is-size-4-mobile">Google 推荐在项目中使用 sealed 和 RemoteMediator</h1><div class="article-meta size-small level is-mobile"><div class="level-left"><span class="mr-2"><i class="fa fa-calendar"></i></span><time class="level-item" dateTime="2020-08-22T11:43:32.461Z" title="2020-08-22T11:43:32.461Z">2020-08-22</time><span class="mr-2"> <i class="fa fa-folder"></i></span><span class="level-item"><a class="link-muted" href="/categories/Jetpack/">Jetpack</a></span><span class="mr-2"> <i class="fa fa-tag"></i></span><span class="level-item"><a class="link-muted" href="/tags/Jetpack/">Jetpack</a></span></div></div><div class="level-left article-meta size-small is-mobile"></div><h1 class="title is-3 is-size-4-mobile"></h1><div class="content"><p>之前分享过一篇 Jetpack + MVVM 综合实战应用 <a href="https://juejin.im/post/5f0d303e6fb9a07e76550d4c?utm_source=gold_browser_extension">神奇宝贝(PokemonGo)  眼前一亮的 Jetpack + MVVM 极简实战</a>  主要包了以下功能：</p>
+<ol>
+<li>自定义 RemoteMediator 实现 network + db 的混合使用 ( RemoteMediator 是 Paging3 当中重要成员 )</li>
+<li>使用 Data Mapper 分离数据源 和 UI</li>
+<li>Kotlin Flow 结合  Retrofit2 + Room 的混合使用</li>
+<li>Kotlin Flow 与 LiveData 的使用</li>
+<li>使用 Coil 加载图片</li>
+<li>使用 ViewModel、LiveData、DataBinding 协同工作</li>
+<li>使用 Motionlayout 做动画</li>
+<li>App Startup 与 Hilt 的使用</li>
+<li>在 Flow 基础上封装成功或者失败处理</li>
+</ol>
+<p>这篇文章是对 神奇宝贝(PokemonGo) 的部分功能做全面的分析，主要包含以下内容：</p>
+<ul>
+<li>如何在 Flow 基础上封装成功或者失败处理？</li>
+<li>如何自定义 RemoteMediator 实现 数据库 和 网络 加载数据？</li>
+<li>Paging3 当中的 RemoteMediator 和 PagingSource 的区别？</li>
+<li>Paging3 中的 cachedIn 是什么？它为我们解决了什么问题？</li>
+</ul>
+<p>在开始阅读本文之前，建议更新 PokemonGo 最新的代码，对照着代码一起看，为了节省篇幅，文中只会列出核心代码。</p>
+<h2 id="如何在-Flow-基础上封装成功或者失败处理"><a href="#如何在-Flow-基础上封装成功或者失败处理" class="headerlink" title="如何在 Flow 基础上封装成功或者失败处理"></a>如何在 Flow 基础上封装成功或者失败处理</h2><p>之前有小伙们问过我，如何在 Flow 基础上封装成功或者失败处理逻辑，关于这个问题，其实 Google Android 团队的工程师在 medium 上发表过一篇文章 <a href="https://medium.com/androiddevelopers/sealed-with-a-class-a906f28ab7b5">Sealed with a class</a> 建议我们使用 sealed，在 Paging3 源码里面也大量用到了 sealed。</p>
+<p>在分析封装逻辑之前，我们先来看一下 Paging3 源码是如何处理的，在 Paging3 中有个很重要的类 RemoteMediator，在 RemoteMediator 中有个重要的方法 <code>load()</code></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">abstract suspend fun load(loadType: LoadType, state: PagingState&lt;Key, Value&gt;): MediatorResult</span><br></pre></td></tr></table></figure>
+
+<p><code>load()</code> 方法返回值是 MediatorResult，我们来看一下 MediatorResult 源码的实现。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sealed class MediatorResult &#123;</span><br><span class="line">    class Error(val throwable: Throwable) : MediatorResult()</span><br><span class="line"></span><br><span class="line">    class Success(</span><br><span class="line">        @get:JvmName(&quot;endOfPaginationReached&quot;) val endOfPaginationReached: Boolean</span><br><span class="line">    ) : MediatorResult()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其实 MediatorResult 是一个密封类，密封类有两个子类分别为 <code>Error</code> 和 <code>Success</code> 封装了成功和失败处理逻辑。</p>
+<p>我们在来看一下另外一个类 LoadState，在 <a href="https://juejin.im/post/5eeefbf4e51d45742c53ddce#heading-9">Jetpack 新成员 Paging3 网络实践及原理分析（二）- 监听网路请求状态</a> 文章中也提到 refresh、prepend 和 append 都是 LoadState 的对象，我们来看一下 LoadState 源码实现。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sealed class LoadState( val endOfPaginationReached: Boolean) &#123;</span><br><span class="line">    class NotLoading( endOfPaginationReached: Boolean) :LoadState(endOfPaginationReached) &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    object Loading : LoadState(false) &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    class Error(val error: Throwable) : LoadState(false) &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>LoadState 是一个密封类，它有三个子类 <code>NotLoading</code> 、 <code>Loading</code> 、 <code>Error</code> 代表网络请求状态。</p>
+<table>
+<thead>
+<tr>
+<th>变量</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Error</td>
+<td>表示加载失败</td>
+</tr>
+<tr>
+<td>Loading</td>
+<td>表示正在加载</td>
+</tr>
+<tr>
+<td>NotLoading</td>
+<td>表示当前未加载</td>
+</tr>
+</tbody></table>
+<p>正如你所见在 Paging3 源码中对于成功和失败处理都用到了 sealed，我们可以仿照 Paging3 源码，使用 sealed 在 Flow 基础上封装成功或者失败处理。<br><strong>PokemonGo/app/src/main/java/com/hi/dhl/pokemon/data/remote/PokemonResult.kt</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sealed class PokemonResult&lt;out T&gt; &#123;</span><br><span class="line">    data class Success&lt;out T&gt;(val value: T) : PokemonResult&lt;T&gt;()</span><br><span class="line"></span><br><span class="line">    data class Failure(val throwable: Throwable?) : PokemonResult&lt;Nothing&gt;()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>PokemonResult 是一个密封类，同样它也有两个子类 <code>Success</code> 和 <code>Failure</code> 分别表示成功和失败，我们来看一下如何使用。<br><strong>PokemonGo/app/src/main/java/com/hi/dhl/pokemon/data/repository/PokemonRepositoryImpl.kt</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">override suspend fun featchPokemonInfo(name: String): Flow&lt;PokemonResult&lt;PokemonInfoModel&gt;&gt; &#123;</span><br><span class="line">    return flow &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            </span><br><span class="line">            emit(PokemonResult.Success(model)) &#x2F;&#x2F; 成功</span><br><span class="line">        &#125; catch (e: Exception) &#123;</span><br><span class="line">            emit(PokemonResult.Failure(e.cause)) &#x2F;&#x2F; 失败</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;.flowOn(Dispatchers.IO) &#x2F;&#x2F; 通过 flowOn 切换到 io 线程</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果请求成功返回 <code>PokemonResult.Success(model)</code></li>
+<li>如果出现错误返回 <code>PokemonResult.Failure(e.cause)</code></li>
+</ul>
+<p>这只是一个简单的封装，可以在这个基础上，针对于不同的场景进行二次封装，接下来看一下在 ViewModel 中如何处理。<br><strong>PokemonGo/app/src/main/java/com/hi/dhl/pokemon/ui/detail/DetailViewModel.kt</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">when (result) &#123;</span><br><span class="line">    is PokemonResult.Failure -&gt; &#123;</span><br><span class="line">        _failure.value &#x3D; result.throwable?.message ?: &quot;failure&quot;</span><br><span class="line">    &#125;</span><br><span class="line">    is PokemonResult.Success -&gt; &#123;</span><br><span class="line">        _pokemon.postValue(result.value)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用强大的 when 表达式，针对于成功或者失败进行不同的处理，在 Pokemon 项目中，如果没有网，进入详情页，会弹出一个失败的 toast。</p>
+<p>when 表达式虽然强大，但是有一个问题，在一个项目中进行网络请求的地方会有很多，如果每次都要写 when 表达式，就会出现很多重复的代码，那么如何减少这样的模板代码呢，可以利用 Kotlin 提供的强大的扩展函数，代码如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">inline fun &lt;reified T&gt; PokemonResult&lt;T&gt;.doSuccess(success: (T) -&gt; Unit) &#123;</span><br><span class="line">    if (this is PokemonResult.Success) &#123;</span><br><span class="line">        success(value)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">inline fun &lt;reified T&gt; PokemonResult&lt;T&gt;.doFailure(failure: (Throwable?) -&gt; Unit) &#123;</span><br><span class="line">    if (this is PokemonResult.Failure) &#123;</span><br><span class="line">        failure(throwable)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用扩展函数进一步封装的目的是减少模板代码，我们重新修改一下之前使用 when 表达式的地方。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">result.doFailure &#123; throwable -&gt;</span><br><span class="line">    _failure.value &#x3D; throwable?.message ?: &quot;failure&quot;</span><br><span class="line">&#125;</span><br><span class="line">result.doSuccess &#123; value -&gt;</span><br><span class="line">    _pokemon.postValue(value)</span><br><span class="line">    emit(value)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果在其他地方也需要进行成功 或者 失败处理，只需要调用对应的扩展函数即可，到这里关于如何在 Flow 基础上封装成功或者失败处理就分析完了。</p>
+<p>接下来我们一起来分析一下今天的主角 <strong>如何自定义 RemoteMediator 实现 数据库 和 网络 加载数据</strong>，建议在了解这部分内容之前，先看一下之前的两篇文章，因为它们都是关联在一起的。</p>
+<ul>
+<li><a href="https://juejin.im/post/5ee998e8e51d4573d65df02b">Jetpack 成员 Paging3 数据库的实践以及源码分析（一）</a></li>
+<li><a href="https://juejin.im/post/5eeefbf4e51d45742c53ddce">Jetpack 新成员 Paging3 网络实践及原理分析（二）</a></li>
+</ul>
+<p>RemoteMediator 主要用来实现加载网络分页数据并更新到数据库中，在开始分析之前，我们先来了解一下基本概念。</p>
+<p><strong>Paging3 类的职能</strong></p>
+<ul>
+<li><code>PagingData</code> ：用于分页数据的容器，每次数据刷新都有一个单独的对应 <code>PagingData</code></li>
+<li><code>Pager</code> ：是 Paging3 的主要的入口，在其构造方法中接受 <code>PagingConfig</code> 、<code>initialKey</code> 、<code>remoteMediator</code> 、<code>pagingSourceFactory</code></li>
+<li><code>Pager.flow</code> ：将会构建一个 <code>Flow&lt;PagingData&gt;</code>，在 <code>PagingConfig</code> 构造方法中定义了 pageSize、prefetchDistance、initialLoadSize 等等</li>
+<li><code>PagingDataAdapter</code> ：是一个处理分页数据的可回收视图适配器，可以使用 AsyncPagingDataDiffer 组件来构建自己的自定义适配器</li>
+<li><code>PagingSource</code> ：每个 <code>PagingSource</code> 对象定义一个数据源以及如何从该数据源查找数据</li>
+<li><code>RemoteMediator</code> ：<code>RemoteMediator</code> 实现加载网络分页数据并更新到数据库中</li>
+</ul>
+<p>到这里小伙伴们应该会有一个疑惑 RemoteMediator 和 PagingSource 都是用来加载数据源的数据，那么它们有什么区别？</p>
+<h2 id="RemoteMediator-和-PagingSource-的区别"><a href="#RemoteMediator-和-PagingSource-的区别" class="headerlink" title="RemoteMediator 和 PagingSource 的区别"></a>RemoteMediator 和 PagingSource 的区别</h2><ul>
+<li>RemoteMediator：实现加载网络分页数据并更新到数据库中，但是数据源的变动不能直接映射到 UI 上</li>
+<li>PagingSource：实现单一数据源以及如何从该数据源中查找数据，例如 Room，数据源的变动会直接映射到 UI 上</li>
+</ul>
+<p><img src="http://cdn.51git.cn/2020-07-27-15956727954847.jpg" alt="使用分层数据源的分页实现"></p>
+<p>上图来自 Google 官网，正如你所见，使用 RemoteMediator 实现从网络加载分页数据更新到数据库中，使用 PagingSource 从数据库中查找数据并显示在 UI 上。</p>
+<p><strong>在项目中如何进行选择？</strong></p>
+<ul>
+<li><code>PagingSource</code>：用于加载有限的数据集（本地数据库）例如手机通讯录等等 ，可以参考 <a href="https://juejin.im/post/5ee998e8e51d4573d65df02b">Jetpack 成员 Paging3 数据库的实践以及源码分析（一）</a> 这篇文章的实现</li>
+<li><code>RemoteMediator</code>：主要用来加载网络分页数据并更新到数据库中，当我们没有更多的数据时，我们向网络请求更多的数据，结合 <code>PagingSource</code> 当保存更多数据时会直接映射到 UI 上</li>
+</ul>
+<p><strong>注意：</strong></p>
+<ol>
+<li><p><code>RemoteMediator</code> 目前是实验性的 API ，所有实现 <code>RemoteMediator</code> 的类都需要添加 <code>@OptIn(ExperimentalPagingApi::class)</code> 注解。</p>
+</li>
+<li><p>当我们使用 <code>OptIn</code> 注解，需要在 App 模块下的 build.gradle 文件内添加以下代码</p>
+ <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">android &#123;</span><br><span class="line">    kotlinOptions &#123;</span><br><span class="line">        freeCompilerArgs +&#x3D; [&quot;-Xopt-in&#x3D;kotlin.RequiresOptIn&quot;]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>当我们了解完基本概念之后，接下来一起来分析一下如何实现 <code>RemoteMediator</code>，<strong>在这里建议更新 PokemonGo 最新代码，对照着项目中的代码一起看</strong>，为了节省篇幅文章中只会列出核心代码。</p>
+<h2 id="三步实现-RemoteMediator"><a href="#三步实现-RemoteMediator" class="headerlink" title="三步实现 RemoteMediator"></a>三步实现 RemoteMediator</h2><p><img src="http://cdn.51git.cn/2020-07-27-15956727954847.jpg" alt="使用分层数据源的分页实现"></p>
+<p>如上面图片所示在 Repository 中通过 RemoteMediator 获取网络分页数据并更新到数据库中，<code>PagingSource</code> 当保存更多数据时会直接映射到 UI 上。</p>
+<p>其实实现一个 RemoteMediator 贯穿了数据源、Repository、ViewModel，接下来我们来分析一下如何在每层中，分三步实现一个 RemoteMediator。</p>
+<h3 id="1-定义数据源"><a href="#1-定义数据源" class="headerlink" title="1. 定义数据源"></a>1. 定义数据源</h3><p>使用 Room 作为本地的数据源，将网络分页数据存储在本地数据库中。<br><strong>PokemonGo/app/src/main/java/com/hi/dhl/pokemon/data/local/PokemonDao.kt</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@Dao</span><br><span class="line">interface PokemonDao &#123;</span><br><span class="line"></span><br><span class="line">    @Insert(onConflict &#x3D; OnConflictStrategy.REPLACE)</span><br><span class="line">    suspend fun insertPokemon(pokemonList: List&lt;PokemonEntity&gt;)</span><br><span class="line"></span><br><span class="line">    @Query(&quot;SELECT * FROM PokemonEntity&quot;)</span><br><span class="line">    fun getPokemon(): PagingSource&lt;Int, PokemonEntity&gt;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在 Paging3 中使用的是 Flow，所以 <code>insertPokemon</code> 方法前需要添加 suspend 修饰符。</li>
+<li>需要注意的是 <code>getPokemon()</code> 方法返回了一个 <code>PagingSource&lt;Key, Value&gt;</code>，意味着数据源更新时会映射到 UI 上，其中 Key 和 Value 和实现 RemoteMediator 有很大关系，后面会提到。</li>
+</ul>
+<h3 id="2-在-Repository-中实现-RemoteMediator"><a href="#2-在-Repository-中实现-RemoteMediator" class="headerlink" title="2. 在 Repository 中实现 RemoteMediator"></a>2. 在 Repository 中实现 RemoteMediator</h3><p>RemoteMediator 和 PagingSource 相似，都需要覆盖 load() 方法，但是不同的是 RemoteMediator 不是加载分页数据到 RecyclerView 列表上，而是获取网络分页数据并更新到数据库中。<br><strong>PokemonGo/app/src/main/java/com/hi/dhl/pokemon/data/repository/PokemonRemoteMediator.kt</strong></p>
+<p><strong>注意：</strong></p>
+<p>刚才我们在数据源中定义 <code>getPokemon()</code> 方法，其返回值是 <code>PagingSource&lt;Int, PokemonEntity&gt;</code>，那我们在实现 <code>RemoteMediator&lt;Key, Value&gt;</code> 的时候，其中 Key 和 Value，应该和 <code>PagingSource&lt;Int, PokemonEntity&gt;</code> Key 和 Value 相同，代码如下所示。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@OptIn(ExperimentalPagingApi::class)</span><br><span class="line">class PokemonRemoteMediator(</span><br><span class="line">    val api: PokemonService,</span><br><span class="line">    val db: AppDataBase</span><br><span class="line">) : RemoteMediator&lt;Int, PokemonEntity&gt;() &#123;</span><br><span class="line"></span><br><span class="line">    override suspend fun load(</span><br><span class="line">        loadType: LoadType,</span><br><span class="line">        state: PagingState&lt;Int, PokemonEntity&gt;</span><br><span class="line">    ): MediatorResult &#123;</span><br><span class="line">       &#x2F;**</span><br><span class="line">         * 在这个方法内将会做三件事</span><br><span class="line">         *</span><br><span class="line">         * 1. 参数 LoadType 有个三个值，关于这三个值如何进行判断</span><br><span class="line">         *      LoadType.REFRESH</span><br><span class="line">         *      LoadType.PREPEND</span><br><span class="line">         *      LoadType.APPEND</span><br><span class="line">         *</span><br><span class="line">         * 2. 请问网络数据</span><br><span class="line">         *</span><br><span class="line">         * 3. 将网络数据插入到本地数据库中</span><br><span class="line">         *&#x2F;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>load()</code> 方法有两个重要的参数，它们的意思如下所示：</p>
+<ul>
+<li><p>PagingState：这个类当中有两个重要的变量</p>
+<ul>
+<li><code>pages: List&lt;Page&lt;Key, Value&gt;&gt;</code> 返回的上一页的数据，主要用来获取上一页最后一条数据作为下一页的开始位置</li>
+<li><code>config: PagingConfig</code> 返回的初始化设置的 PagingConfig 包含了 pageSize、prefetchDistance、initialLoadSize 等等</li>
+</ul>
+</li>
+<li><p>LoadType 是一个枚举类，里面定义了三个值，如下所示</p>
+<table>
+<thead>
+<tr>
+<th>类名</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>LoadType.Refresh</td>
+<td>在初始化刷新的使用</td>
+</tr>
+<tr>
+<td>LoadType.Append</td>
+<td>在加载更多的时候使用</td>
+</tr>
+<tr>
+<td>LoadType.Prepend</td>
+<td>在当前列表头部添加数据的时候使用</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<p><code>load()</code> 的返回值 MediatorResult，MediatorResult 是一个密封类，根据不同的结果返回不同的值</p>
+<ul>
+<li>请求出现错误，返回 <code>MediatorResult.Error(e)</code></li>
+<li>请求成功且有数据，返回 <code>MediatorResult.Success(endOfPaginationReached = true)</code></li>
+<li>请求成功但是没有数据，返回 <code>MediatorResult.Success(endOfPaginationReached = false)</code></li>
+<li>参数 endOfPaginationReached 表示是否还有更多数据</li>
+</ul>
+<p>在 <code>load()</code> 方法里面将会做三件事 <strong>1. 如何判断参数 LoadType</strong> 、<strong>2. 请问网络数据</strong> 、<strong>3. 将网络数据插入到本地数据库中</strong></p>
+<p><strong>1. 如何判断参数 LoadType</strong></p>
+ <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"> val pageKey &#x3D; when (loadType) &#123;</span><br><span class="line">    &#x2F;&#x2F; 首次访问 或者调用 PagingDataAdapter.refresh()</span><br><span class="line">    LoadType.REFRESH -&gt; null</span><br><span class="line">    &#x2F;&#x2F; 在当前加载的数据集的开头加载数据时</span><br><span class="line">    LoadType.PREPEND -&gt; return MediatorResult.Success(endOfPaginationReached &#x3D; true)</span><br><span class="line">    LoadType.APPEND -&gt; &#123; &#x2F;&#x2F; 下来加载更多时触发</span><br><span class="line">        &#x2F;**</span><br><span class="line">         * 方式一：这种方式比较简单，当前页面最后一条数据是下一页的开始位置</span><br><span class="line">         * 通过 load 方法的参数 state 获取当页面最后一条数据</span><br><span class="line">         *&#x2F;</span><br><span class="line">&#x2F;&#x2F;       val lastItem &#x3D; state.lastItemOrNull()</span><br><span class="line">&#x2F;&#x2F;       if (lastItem &#x3D;&#x3D; null) &#123;</span><br><span class="line">&#x2F;&#x2F;           return MediatorResult.Success(</span><br><span class="line">&#x2F;&#x2F;             endOfPaginationReached &#x3D; true</span><br><span class="line">&#x2F;&#x2F;          )</span><br><span class="line">&#x2F;&#x2F;         &#125;</span><br><span class="line">&#x2F;&#x2F;        lastItem.page</span><br><span class="line"></span><br><span class="line">        &#x2F;**</span><br><span class="line">         * 方式二：比较麻烦，当前分页数据没有对应的远程 key，这个时候需要我们自己建表</span><br><span class="line">         *&#x2F;</span><br><span class="line">        val remoteKey &#x3D; db.withTransaction &#123;</span><br><span class="line">            db.remoteKeysDao().getRemoteKeys(remotePokemon)</span><br><span class="line">        &#125;</span><br><span class="line">        if (remoteKey &#x3D;&#x3D; null || remoteKey.nextKey &#x3D;&#x3D; null) &#123;</span><br><span class="line">            return MediatorResult.Success(endOfPaginationReached &#x3D; true)</span><br><span class="line">        &#125;</span><br><span class="line">        remoteKey.nextKey</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>LoadType.REFRESH</code>：<strong>首次访问</strong> 或者调用 <strong>PagingDataAdapter.refresh()</strong> 触发，加载第一页数据，这里不需要做任何操作，返回 null 就可以。</li>
+<li><code>LoadType.PREPEND</code>：在当前列表头部添加数据的时候时触发，需要注意的是当 <code>LoadType.REFRESH</code> 触发了，<code>LoadType.PREPEND</code> 也会触发，所以为了避免重复请求，直接返回  <code>MediatorResult.Success(endOfPaginationReached = true)</code> 即可</li>
+<li><code>LoadType.APPEND</code>：下拉加载更多时触发，这里获取下一页的 key，如果 key 不存在，直接返回 <code>MediatorResult.Success(endOfPaginationReached = true)</code> 不会在进行请求 </li>
+</ul>
+<p><strong>2. 请问网络数据</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">val page &#x3D; pageKey ?: 0</span><br><span class="line">val result &#x3D; api.fetchPokemonList(</span><br><span class="line">    state.config.pageSize,</span><br><span class="line">    page * state.config.pageSize</span><br><span class="line">).results</span><br></pre></td></tr></table></figure>
+
+<p>这里不需要调用 <code>withContext(Dispatcher.IO) { ... }</code> 因为 Retrofit 的协程是发生在 worker thread 中的</p>
+<p><strong>3. 将网络分页数据并更新到数据库中</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">remoteKeysDao.insertAll(entity)</span><br><span class="line">pokemonDao.insertPokemon(item)</span><br></pre></td></tr></table></figure>
+
+<p>所有实现 RemoteMediator 的类都需要重写 <code>load()</code> 方法，在 <code>load()</code>  方法内按照如上三步实现即可，具体逻辑需要根据需求而定。</p>
+<p>PokemonRemoteMediator 完整代码太长了，这里就不贴了，可以点击 <a href="https://github.com/hi-dhl/PokemonGo/blob/master/app/src/main/java/com/hi/dhl/pokemon/data/repository/PokemonRemoteMediator.kt">PokemonRemoteMediator</a> 前去查看。</p>
+<h3 id="3-在-Repository-中构建-Pager"><a href="#3-在-Repository-中构建-Pager" class="headerlink" title="3. 在 Repository 中构建 Pager"></a>3. 在 Repository 中构建 Pager</h3><p>Pager 是 Paging3 的主要的入口，是从数据源获取数据的入口，其构造方法接受 pagingConfig 、initialKey 、remoteMediator 、pagingSourceFactory，其中 initialKey、remoteMediator 是可选的，pageConfig 和 pagingSourceFactory 必填的，代码如下所示。<br><strong>PokemonGo/app/src/main/java/com/hi/dhl/pokemon/data/repository/PokemonRepositoryImpl.kt</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Pager(</span><br><span class="line">    config &#x3D; pageConfig,</span><br><span class="line">    remoteMediator &#x3D; PokemonRemoteMediator(api, db)</span><br><span class="line">) &#123;</span><br><span class="line">    db.pokemonDao().getPokemon()</span><br><span class="line">&#125;.flow.map &#123; pagingData -&gt;</span><br><span class="line">    pagingData.map &#123; mapper2ItemMolde.map(it) &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>config</code> ：初始化 Pager 参数 pageSize、prefetchDistance、initialLoadSize 等等</li>
+<li><code>remoteMediator</code> ：提供 RemoteMediator 的实现类，这里是 PokemonRemoteMediator</li>
+<li><code>pagingSourceFactory</code> ：是一个 lambda 表达式，在 Kotlin 中可以直接用花括号表示，在花括号内执行加载分页数据，这里直接调用 <code>db.pokemonDao().getPokemon()</code>。</li>
+<li>调用 <code>getPokemon()</code> 方法返回的是一个 PagingSource，在 PokemonRemoteMediator 中获取网络分页数据，更新数据库的时候，这里返回的是你请求的网络分页数据</li>
+</ul>
+<p>到这里关于 <strong>如何自定义 RemoteMediator 实现 数据库 和 网络 加载数据</strong> 就分析完了，接下来就是在 ViewModel 中调用 Repository 获取数据。</p>
+<h3 id="4-在-ViewModel-获取数据"><a href="#4-在-ViewModel-获取数据" class="headerlink" title="4. 在 ViewModel 获取数据"></a>4. 在 ViewModel 获取数据</h3><p>在 ViewModel 中调用 Repository 请求数据，通过构建 Pager 加载网络分页数据并更新到数据库中，当数据库更新时，会映射到 UI 上。<br><strong>PokemonGo/app/src/main/java/com/hi/dhl/pokemon/ui/main/MainViewModel.kt</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">fun postOfData(): LiveData&lt;PagingData&lt;PokemonItemModel&gt;&gt; &#x3D;</span><br><span class="line">    polemonRepository.featchPokemonList().cachedIn(viewModelScope).asLiveData()</span><br></pre></td></tr></table></figure>
+
+<p>正如你所见在 ViewModel 中就两行代码，结合着 DataBinding 一起使用，在 Activity 或者 Fragment 只需要不到 20 行代码甚至更少。</p>
+<p><strong>注意：</strong> 在 ViewModel 中的 postOfData 方法中调用了 <code>cachedIn()</code> 方法</p>
+<p><strong>Paging3 中的 cachedIn 是什么？它为我们解决了什么问题？</strong></p>
+<p><code>cachedIn()</code> 是 <code>Flow&lt;PagingData&gt;</code> 的扩展方法，主要用来缓存 <code>Flow&lt;PagingData&gt;</code> 返回的内容，当我们在使用 Flow 进行 <code>map</code> 或者 <code>filter</code> 操作后调用 <code>cachedIn()</code> 是为了确保不需要再次触发它们，我们来看一下 <code>cachedIn()</code> 方法的源码。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">fun &lt;T : Any&gt; Flow&lt;PagingData&lt;T&gt;&gt;.cachedIn(</span><br><span class="line">    scope: CoroutineScope</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>正如你所见 <code>cachedIn()</code> 是 <code>Flow&lt;PagingData&gt;</code> 的扩展方法，<code>cachedIn()</code> 方法接受一个 CoroutineScope，CoroutineScope 表示协程的作用域，在 ViewModel 中对应的是 <code>androidx.lifecycle.viewModelScope.</code>，也就意味在作用域内防止不需要再次触发它们，在屏幕旋转的时候也可以复用。</p>
+<p>全文到这里就结束了，在这里强烈建议至少体验一次，结合 Kotlin Flow + DataBinding + Jetpack + MVVM</p>
+<p>神奇宝贝 (PokemonGo) 基于 Jetpack + MVVM + Repository + Data Mapper + Kotlin Flow 的实战项目，我也正在为 PokemonGo 项目设计更多的场景，也会加入更多的 Jetpack 成员，在 PokemonGo 项目首页增加了更新记录，可以点击下方链接前往查看 PokemonGo 项目的更新记录。</p>
+<p><a href="https://github.com/hi-dhl/PokemonGo">PokemonGo GitHub 地址：https://github.com/hi-dhl/PokemonGo</a></p>
+<p><img src="http://cdn.51git.cn/2020-07-23-Pokemon12.png" alt="PokemonGo"></p>
+<blockquote>
+<p>正在建立一个最全、最新的 AndroidX Jetpack 相关组件的实战项目 以及 相关组件原理分析文章，目前已经包含了 App Startup、Paging3、Hilt 等等，正在逐渐增加其他 Jetpack 新成员，仓库持续更新，可以前去查看：<a href="https://github.com/hi-dhl/AndroidX-Jetpack-Practice">AndroidX-Jetpack-Practice</a>, 如果这个仓库对你有帮助，请仓库右上角帮我点个赞</p>
+</blockquote>
+</div><p style="height:10px"></p><!--!--><h1 class="title is-4 is-size-4-mobile"></h1></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2020/08/22/kotlin/03-sealed/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">Kotlin Sealed 是什么？为什么 Google 都用</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2020/08/22/jetpack/09-kotlin-flow/"><span class="level-item">Google 推荐在 MVVM 架构中使用 Kotlin Flow</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content template"><p>致力于分享一系列 Android 系统源码、逆向分析、算法、翻译、Jetpack 源码相关的文章，在技术的道路上一起前进</p><h3 class="title is-4">Android10 源码分析</h3><p>正在写一系列的 Android 10 源码分析的文章，了解系统源码，不仅有助于分析问题，在面试过程中，对我们也是非常有帮助的，如果你同我一样喜欢研究 Android 源码，可以关注我 GitHub 上的 <a href="https://github.com/hi-dhl/Android10-Source-Analysis">Android10-Source-Analysis</a>。</p><h3 class="title is-4">算法题库的归纳和总结</h3><p>由于 LeetCode 的题库庞大，每个分类都能筛选出数百道题，由于每个人的精力有限，不可能刷完所有题目，因此我按照经典类型题目去分类、和题目的难易程度去排序。</p><ul><li>数据结构： 数组、栈、队列、字符串、链表、树……</li><li>算法： 查找算法、搜索算法、位运算、排序、数学、……</li></ul><p>每道题目都会用 Java 和 kotlin 去实现，并且每道题目都有解题思路，如果你同我一样喜欢算法、LeetCode，可以关注我 GitHub 上的 LeetCode 题解：<a href="https://github.com/hi-dhl/Leetcode-Solutions-with-Java-And-Kotlin">Leetcode-Solutions-with-Java-And-Kotlin</a>。</p><h3 class="title is-4">精选国外的技术文章</h3><p>目前正在整理和翻译一系列精选国外的技术文章，不仅仅是翻译，很多优秀的英文技术文章提供了很好思路和方法，每篇文章都会有<strong>译者思考</strong>部分，对原文的更加深入的解读，可以关注我 GitHub 上的 <a href="https://github.com/hi-dhl/Technical-Article-Translation">Technical-Article-Translation</a>。</p><p></p></div></div><div class="card"><div class="card-content"><h3 class="title is-5">评论</h3><div class="content" id="valine-thread"></div><script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script><script src="https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js"></script><script>new Valine({
+            el: '#valine-thread' ,
+            notify: false,
+            verify: undefined,
+            appId: 'zfvr24HFhzQ5vtHkr4NQ1fmW-gzGzoHsz',
+            appKey: 'RChgr9mR005hgu4yiQ4WQU3O',
+            placeholder: '说点什么',
+            avatar: 'mm',
+            avatarForce: false,
+            meta: ["nick","mail","link"],
+            pageSize: 10,
+            visitor: false,
+            highlight: true,
+            recordIP: false
+        });</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1 is-sticky"><div class="card widget" id="toc" style="max-height: 500px;overflow: auto;"><div class="card-content"><div class="menu"><h3 class="menu-label">目录</h3><ul class="menu-list"><li><a class="is-flex" href="#如何在-Flow-基础上封装成功或者失败处理"><span>如何在 Flow 基础上封装成功或者失败处理</span></a></li><li><a class="is-flex" href="#RemoteMediator-和-PagingSource-的区别"><span>RemoteMediator 和 PagingSource 的区别</span></a></li><li><a class="is-flex" href="#三步实现-RemoteMediator"><span>三步实现 RemoteMediator</span></a><ul class="menu-list"><li><a class="is-flex" href="#1-定义数据源"><span>1. 定义数据源</span></a></li><li><a class="is-flex" href="#2-在-Repository-中实现-RemoteMediator"><span>2. 在 Repository 中实现 RemoteMediator</span></a></li><li><a class="is-flex" href="#3-在-Repository-中构建-Pager"><span>3. 在 Repository 中构建 Pager</span></a></li><li><a class="is-flex" href="#4-在-ViewModel-获取数据"><span>4. 在 ViewModel 获取数据</span></a></li></ul></li></ul></div></div></div><div class="card widget"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content size-small"><p><time dateTime="2020-08-22T11:51:48.423Z">2020-08-22</time></p><p class="title is-6"><a class="link-muted" href="/2020/08/22/android/03-adb/">关于 adb 命令你所需要知道的</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-08-22T11:46:43.107Z">2020-08-22</time></p><p class="title is-6"><a class="link-muted" href="/2020/08/22/kotlin/03-sealed/">Kotlin Sealed 是什么？为什么 Google 都用</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-08-22T11:43:32.461Z">2020-08-22</time></p><p class="title is-6"><a class="link-muted" href="/2020/08/22/jetpack/10-remoteMediator/">Google 推荐在项目中使用 sealed 和 RemoteMediator</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-08-22T11:41:10.398Z">2020-08-22</time></p><p class="title is-6"><a class="link-muted" href="/2020/08/22/jetpack/09-kotlin-flow/">Google 推荐在 MVVM 架构中使用 Kotlin Flow</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-08-22T11:37:49.745Z">2020-08-22</time></p><p class="title is-6"><a class="link-muted" href="/2020/08/22/jetpack/08-PokemonGo/">神奇宝贝  眼前一亮的 Jetpack + MVVM 极简实战</a></p><p class="is-uppercase"></p></div></article></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile is-marginless" href="/categories/Android/"><span class="level-start"><span class="level-item">Android</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Android10/"><span class="level-start"><span class="level-item">Android10</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/AndroidStudio/"><span class="level-start"><span class="level-item">AndroidStudio</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Jetpack/"><span class="level-start"><span class="level-item">Jetpack</span></span><span class="level-end"><span class="level-item tag">9</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Jetpack-kotlin/"><span class="level-start"><span class="level-item">Jetpack,kotlin</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Kotlin/"><span class="level-start"><span class="level-item">Kotlin</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/LeetCode/"><span class="level-start"><span class="level-item">LeetCode</span></span><span class="level-end"><span class="level-item tag">25</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Linux/"><span class="level-start"><span class="level-item">Linux</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/offer-algorithms/"><span class="level-start"><span class="level-item">剑指Offer</span></span><span class="level-end"><span class="level-item tag">18</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E7%B2%BE%E9%80%89%E8%AF%91%E6%96%87/"><span class="level-start"><span class="level-item">精选译文</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E9%80%86%E5%90%91/"><span class="level-start"><span class="level-item">逆向</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E9%80%86%E5%90%91-AndroidStudio/"><span class="level-start"><span class="level-item">逆向,AndroidStudio</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/Android/"><span class="tag">Android</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E5%8C%85%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-包管理系统</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-窗口管理系统</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-资源管理系统</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/AndroidStudio/"><span class="tag">AndroidStudio</span><span class="tag is-grey-lightest">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android%E6%BA%90%E7%A0%81/"><span class="tag">Android源码</span><span class="tag is-grey-lightest">7</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Fragment/"><span class="tag">Fragment</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Jetpack/"><span class="tag">Jetpack</span><span class="tag is-grey-lightest">11</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Koin/"><span class="tag">Koin</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Kotlin/"><span class="tag">Kotlin</span><span class="tag is-grey-lightest">5</span></a></div><div class="control"><a class="tags has-addons" href="/tags/LeetCode/"><span class="tag">LeetCode</span><span class="tag is-grey-lightest">22</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Linux/"><span class="tag">Linux</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/RxJava/"><span class="tag">RxJava</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Shell/"><span class="tag">Shell</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/kotlin/"><span class="tag">kotlin</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/"><span class="tag">二分查找</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/"><span class="tag">二叉树</span><span class="tag is-grey-lightest">12</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E4%BD%8D%E8%BF%90%E7%AE%97/"><span class="tag">位运算</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%89%91%E6%8C%87Offer/"><span class="tag">剑指Offer</span><span class="tag is-grey-lightest">18</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/"><span class="tag">动态规划</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/"><span class="tag">字符串</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%B9%BF%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/"><span class="tag">广度优先搜索</span><span class="tag is-grey-lightest">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%95%B0%E5%AD%A6/"><span class="tag">数学</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%A0%88/"><span class="tag">栈</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/"><span class="tag">深度优先搜索</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%AF%91%E6%96%87/"><span class="tag">译文</span><span class="tag is-grey-lightest">7</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E9%93%BE%E8%A1%A8/"><span class="tag">链表</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E9%98%9F%E5%88%97/"><span class="tag">队列</span><span class="tag is-grey-lightest">1</span></a></div></div></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level-item"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img class="logo-img" src="/img/logo.png" alt="奔跑吧前中后浪" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="奔跑吧前中后浪" height="28"></a><p class="size-small"><span>&copy; 2020 Hi Dhl</span>  <a href="http://www.beian.miit.gov.cn/" target="_blank">京ICP备18050211号-2</a>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            site: {
+                url: 'https://hi-dhl.com',
+                external_link: {"enable":true,"exclude":[]}
+            },
+            article: {
+                highlight: {
+                    clipboard: false,
+                    fold: ''
+                }
+            }
+        };</script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><script src="https://s9.cnzz.com/z_stat.php?id=1278919895&amp;web_id=1278919895" async></script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><script src="/js/imaegoo/universe.js"></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>
