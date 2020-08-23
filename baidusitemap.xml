@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://hi-dhl.com/2020/08/09/LeetCode/stack/01-min-stack/</loc>
+    <lastmod>2020-08-23</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/08/23/LeetCode/other/01-reverse-stack/</loc>
+    <lastmod>2020-08-23</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/06/28/LeetCode/binary-tree/07-minimum-depth-of-binary-tree/</loc>
+    <lastmod>2020-08-23</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/06/28/LeetCode/binary-tree/06-maximum-depth-of-binary-tree/</loc>
+    <lastmod>2020-08-23</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/06/28/LeetCode/binary-tree/01-binary-tree-preorder/</loc>
+    <lastmod>2020-08-23</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/06/28/LeetCode/binary-tree/03-binary-tree-postorder/</loc>
+    <lastmod>2020-08-23</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/06/28/LeetCode/binary-tree/02-binary-tree-inorder/</loc>
+    <lastmod>2020-08-23</lastmod>
+  </url>  <url>
     <loc>https://hi-dhl.com/2020/05/30/AndroidStudio/02-smalidea/</loc>
     <lastmod>2020-08-22</lastmod>
   </url>  <url>
@@ -109,9 +130,6 @@
     <loc>https://hi-dhl.com/2020/08/13/LeetCode/stack/02-valid-parentheses/</loc>
     <lastmod>2020-08-13</lastmod>
   </url>  <url>
-    <loc>https://hi-dhl.com/2020/08/09/LeetCode/stack/01-min-stack/</loc>
-    <lastmod>2020-08-09</lastmod>
-  </url>  <url>
     <loc>https://hi-dhl.com/2020/08/08/LeetCode/offer/19-zheng-ze-biao-da-shi-pi-pei/</loc>
     <lastmod>2020-08-08</lastmod>
   </url>  <url>
@@ -196,25 +214,10 @@
     <loc>https://hi-dhl.com/2020/06/28/LeetCode/binary-tree/08-balanced-binary-tree/</loc>
     <lastmod>2020-08-01</lastmod>
   </url>  <url>
-    <loc>https://hi-dhl.com/2020/06/28/LeetCode/binary-tree/07-minimum-depth-of-binary-tree/</loc>
-    <lastmod>2020-08-01</lastmod>
-  </url>  <url>
-    <loc>https://hi-dhl.com/2020/06/28/LeetCode/binary-tree/06-maximum-depth-of-binary-tree/</loc>
-    <lastmod>2020-08-01</lastmod>
-  </url>  <url>
     <loc>https://hi-dhl.com/2020/06/28/LeetCode/binary-tree/05-binary-tree-construct/</loc>
     <lastmod>2020-08-01</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/2020/06/28/LeetCode/binary-tree/04-binary-tree-level-order/</loc>
-    <lastmod>2020-08-01</lastmod>
-  </url>  <url>
-    <loc>https://hi-dhl.com/2020/06/28/LeetCode/binary-tree/03-binary-tree-postorder/</loc>
-    <lastmod>2020-08-01</lastmod>
-  </url>  <url>
-    <loc>https://hi-dhl.com/2020/06/28/LeetCode/binary-tree/02-binary-tree-inorder/</loc>
-    <lastmod>2020-08-01</lastmod>
-  </url>  <url>
-    <loc>https://hi-dhl.com/2020/06/28/LeetCode/binary-tree/01-binary-tree-preorder/</loc>
     <lastmod>2020-08-01</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/2020/05/24/LeetCode/binary-search/03-find-letter/</loc>

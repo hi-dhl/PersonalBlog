@@ -10801,19 +10801,16 @@ article.article .content h6 {
 article.article .content pre {
   font-size: 0.85em;
 }
-article.article .content p,
-article.article .content blockquote,
-article.article .content ul,
-article.article .content ol,
-article.article .content dl,
-article.article .content table,
-article.article .content pre {
-  margin-top: 0;
-  margin-bottom: 16px;
+article.article ul,
+article.article ol,
+article.article dl,
+article.article table,
+article.article p {
+  margin-top: 8px;
+  margin-bottom: 8px;
 }
 article.article .content table {
   display: block;
-  width: 100%;
   overflow: auto;
   word-break: normal;
   word-break: keep-all;
@@ -10821,37 +10818,37 @@ article.article .content table {
 article.article .content table th {
   font-weight: bold;
 }
-article.article .content table th,
+article.article table th,
 article.article table td {
   padding: 6px 13px;
   border: 1px solid #ddd;
 }
-article .title {
+article.article .title {
   font-weight: 500;
 }
-article .title code {
+article.article .title code {
   padding: 0;
   background: transparent;
   overflow-wrap: break-word;
 }
-article blockquote.pullquote {
+article.article blockquote.pullquote {
   float: right;
   max-width: 50%;
   font-size: 1.15rem;
   position: relative;
 }
-article a img {
+article.article a img {
   margin: auto;
   display: block;
 }
-article a img footer strong + cite {
+article.article a img footer strong + cite {
   margin-left: 0.5em;
 }
-article a .message.message-immersive {
+article.article a .message.message-immersive {
   border-radius: 0;
   margin: 0 -1.5rem 1.5rem -1.5rem;
 }
-article a .message.message-immersive .message-body {
+article.article a .message.message-immersive .message-body {
   border: none;
 }
 .rtl {
@@ -10888,6 +10885,26 @@ article a .message.message-immersive .message-body {
   left: 0;
   width: 100%;
   height: 100%;
+}
+.template h2 {
+  font-weight: bold;
+  padding-bottom: 0.3em;
+  font-size: 1.75em;
+  line-height: 1.225;
+  border-bottom: 1px solid #eee;
+}
+.template h3 {
+  font-weight: bold;
+  font-size: 1.5em;
+  line-height: 1.43;
+}
+.template ul,
+ol,
+dl,
+table,
+p {
+  margin-top: 8px;
+  margin-bottom: 8px;
 }
 .navbar-main {
   box-shadow: none;
