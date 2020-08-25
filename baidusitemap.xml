@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://hi-dhl.com/2020/07/19/LeetCode/offer/07-zhong-jian-er-cha-shu-lcof/</loc>
+    <lastmod>2020-08-24</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/06/28/LeetCode/binary-tree/05-binary-tree-construct/</loc>
+    <lastmod>2020-08-24</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/06/28/LeetCode/binary-tree/04-binary-tree-level-order/</loc>
+    <lastmod>2020-08-24</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/06/28/LeetCode/binary-tree/09-binary-tree-level-order-traversal/</loc>
+    <lastmod>2020-08-24</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/06/28/LeetCode/binary-tree/11-same-tree/</loc>
+    <lastmod>2020-08-24</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/06/28/LeetCode/binary-tree/08-balanced-binary-tree/</loc>
+    <lastmod>2020-08-24</lastmod>
+  </url>  <url>
     <loc>https://hi-dhl.com/2020/08/09/LeetCode/stack/01-min-stack/</loc>
     <lastmod>2020-08-23</lastmod>
   </url>  <url>
@@ -93,9 +111,6 @@
   </url>  <url>
     <loc>https://hi-dhl.com/2020/06/15/LeetCode/offer/09-yong-liang-ge-zhan-shi-xian-dui-lie/</loc>
     <lastmod>2020-08-20</lastmod>
-  </url>  <url>
-    <loc>https://hi-dhl.com/2020/07/19/LeetCode/offer/07-zhong-jian-er-cha-shu-lcof/</loc>
-    <lastmod>2020-08-19</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/2020/05/24/LeetCode/offer/03-number/</loc>
     <lastmod>2020-08-17</lastmod>
@@ -202,22 +217,7 @@
     <loc>https://hi-dhl.com/2020/07/29/LeetCode/character/01-longest-common-prefix/</loc>
     <lastmod>2020-08-01</lastmod>
   </url>  <url>
-    <loc>https://hi-dhl.com/2020/06/28/LeetCode/binary-tree/11-same-tree/</loc>
-    <lastmod>2020-08-01</lastmod>
-  </url>  <url>
     <loc>https://hi-dhl.com/2020/06/28/LeetCode/binary-tree/10-count-complete-tree-nodes/</loc>
-    <lastmod>2020-08-01</lastmod>
-  </url>  <url>
-    <loc>https://hi-dhl.com/2020/06/28/LeetCode/binary-tree/09-binary-tree-level-order-traversal/</loc>
-    <lastmod>2020-08-01</lastmod>
-  </url>  <url>
-    <loc>https://hi-dhl.com/2020/06/28/LeetCode/binary-tree/08-balanced-binary-tree/</loc>
-    <lastmod>2020-08-01</lastmod>
-  </url>  <url>
-    <loc>https://hi-dhl.com/2020/06/28/LeetCode/binary-tree/05-binary-tree-construct/</loc>
-    <lastmod>2020-08-01</lastmod>
-  </url>  <url>
-    <loc>https://hi-dhl.com/2020/06/28/LeetCode/binary-tree/04-binary-tree-level-order/</loc>
     <lastmod>2020-08-01</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/2020/05/24/LeetCode/binary-search/03-find-letter/</loc>
