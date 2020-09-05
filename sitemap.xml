@@ -2,9 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://hi-dhl.com/2020/06/07/android10/window-manager/07-WindowManagerService/</loc>
+    
+    <lastmod>2020-09-05T16:28:11.265Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://hi-dhl.com/2020/06/07/android10/window-manager/06-Window-WindowManager/</loc>
     
-    <lastmod>2020-09-05T15:37:37.007Z</lastmod>
+    <lastmod>2020-09-05T16:12:57.258Z</lastmod>
     
   </url>
   
@@ -453,13 +460,6 @@
     <loc>https://hi-dhl.com/2020/08/01/LeetCode/search/02-perfect-squares/</loc>
     
     <lastmod>2020-08-01T04:44:05.388Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://hi-dhl.com/2020/06/07/android10/window-manager/07-WindowManagerService/</loc>
-    
-    <lastmod>2020-08-01T04:42:14.711Z</lastmod>
     
   </url>
   
