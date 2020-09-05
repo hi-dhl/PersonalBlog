@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://hi-dhl.com/2020/06/07/android10/window-manager/06-Window-WindowManager/</loc>
+    <lastmod>2020-09-05</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/06/07/android10/resource-manager/03-APK-resource/</loc>
+    <lastmod>2020-09-05</lastmod>
+  </url>  <url>
     <loc>https://hi-dhl.com/2020/09/01/LeetCode/offer/28-dui-cheng-de-er-cha-shu/</loc>
     <lastmod>2020-09-01</lastmod>
   </url>  <url>
@@ -193,16 +199,10 @@
     <loc>https://hi-dhl.com/2020/06/07/android10/window-manager/07-WindowManagerService/</loc>
     <lastmod>2020-08-01</lastmod>
   </url>  <url>
-    <loc>https://hi-dhl.com/2020/06/07/android10/window-manager/06-Window-WindowManager/</loc>
-    <lastmod>2020-08-01</lastmod>
-  </url>  <url>
     <loc>https://hi-dhl.com/2020/06/07/android10/window-manager/05-Dialog/</loc>
     <lastmod>2020-08-01</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/2020/06/07/android10/resource-manager/04-APK-resource2/</loc>
-    <lastmod>2020-08-01</lastmod>
-  </url>  <url>
-    <loc>https://hi-dhl.com/2020/06/07/android10/resource-manager/03-APK-resource/</loc>
     <lastmod>2020-08-01</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/2020/06/07/android10/package-manager/02-APK-install/</loc>
