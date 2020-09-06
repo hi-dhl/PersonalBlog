@@ -2,6 +2,41 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://hi-dhl.com/2020/08/22/kotlin/03-sealed/</loc>
+    
+    <lastmod>2020-09-06T10:40:07.300Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://hi-dhl.com/2020/08/22/jetpack/09-kotlin-flow/</loc>
+    
+    <lastmod>2020-09-06T10:39:43.694Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://hi-dhl.com/2020/08/22/jetpack/06-hilt-dagger/</loc>
+    
+    <lastmod>2020-09-06T10:04:24.198Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://hi-dhl.com/2020/08/22/jetpack/01-app-startup/</loc>
+    
+    <lastmod>2020-09-06T06:44:28.547Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://hi-dhl.com/2020/08/22/android/01-screenVideo/</loc>
+    
+    <lastmod>2020-09-06T04:29:02.724Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://hi-dhl.com/2020/06/07/android10/window-manager/07-WindowManagerService/</loc>
     
     <lastmod>2020-09-05T16:28:11.265Z</lastmod>
@@ -212,13 +247,6 @@
   </url>
   
   <url>
-    <loc>https://hi-dhl.com/2020/08/22/jetpack/01-app-startup/</loc>
-    
-    <lastmod>2020-08-22T12:02:34.694Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://hi-dhl.com/2020/08/22/jetpack/02-Paging3/</loc>
     
     <lastmod>2020-08-22T12:02:27.057Z</lastmod>
@@ -247,13 +275,6 @@
   </url>
   
   <url>
-    <loc>https://hi-dhl.com/2020/08/22/jetpack/06-hilt-dagger/</loc>
-    
-    <lastmod>2020-08-22T12:02:04.252Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://hi-dhl.com/2020/08/22/jetpack/07-hilt-koin/</loc>
     
     <lastmod>2020-08-22T12:01:52.249Z</lastmod>
@@ -268,13 +289,6 @@
   </url>
   
   <url>
-    <loc>https://hi-dhl.com/2020/08/22/jetpack/09-kotlin-flow/</loc>
-    
-    <lastmod>2020-08-22T12:01:31.223Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://hi-dhl.com/2020/08/22/jetpack/10-remoteMediator/</loc>
     
     <lastmod>2020-08-22T12:01:27.712Z</lastmod>
@@ -285,13 +299,6 @@
     <loc>https://hi-dhl.com/2020/08/22/android/02-composing-builds/</loc>
     
     <lastmod>2020-08-22T11:54:04.055Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://hi-dhl.com/2020/08/22/kotlin/03-sealed/</loc>
-    
-    <lastmod>2020-08-22T11:51:11.600Z</lastmod>
     
   </url>
   
@@ -320,13 +327,6 @@
     <loc>https://hi-dhl.com/2020/08/22/AndroidStudio/03-androidstudio-1/</loc>
     
     <lastmod>2020-08-22T10:58:49.838Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://hi-dhl.com/2020/08/22/android/01-screenVideo/</loc>
-    
-    <lastmod>2020-08-22T10:52:57.014Z</lastmod>
     
   </url>
   
