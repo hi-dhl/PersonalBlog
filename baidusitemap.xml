@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://hi-dhl.com/2020/08/22/jetpack/10-remoteMediator/</loc>
+    <lastmod>2020-09-27</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/06/28/LeetCode/binary-tree/04-binary-tree-level-order/</loc>
+    <lastmod>2020-09-24</lastmod>
+  </url>  <url>
     <loc>https://hi-dhl.com/2020/08/22/kotlin/03-sealed/</loc>
-    <lastmod>2020-09-06</lastmod>
+    <lastmod>2020-09-08</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/08/22/kotlin/02-kotlin/</loc>
+    <lastmod>2020-09-08</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/08/22/kotlin/01-kotlin/</loc>
+    <lastmod>2020-09-08</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/2020/08/22/jetpack/09-kotlin-flow/</loc>
     <lastmod>2020-09-06</lastmod>
@@ -64,9 +76,6 @@
     <loc>https://hi-dhl.com/2020/06/28/LeetCode/binary-tree/05-binary-tree-construct/</loc>
     <lastmod>2020-08-24</lastmod>
   </url>  <url>
-    <loc>https://hi-dhl.com/2020/06/28/LeetCode/binary-tree/04-binary-tree-level-order/</loc>
-    <lastmod>2020-08-24</lastmod>
-  </url>  <url>
     <loc>https://hi-dhl.com/2020/06/28/LeetCode/binary-tree/09-binary-tree-level-order-traversal/</loc>
     <lastmod>2020-08-24</lastmod>
   </url>  <url>
@@ -124,16 +133,7 @@
     <loc>https://hi-dhl.com/2020/08/22/jetpack/08-PokemonGo/</loc>
     <lastmod>2020-08-22</lastmod>
   </url>  <url>
-    <loc>https://hi-dhl.com/2020/08/22/jetpack/10-remoteMediator/</loc>
-    <lastmod>2020-08-22</lastmod>
-  </url>  <url>
     <loc>https://hi-dhl.com/2020/08/22/android/02-composing-builds/</loc>
-    <lastmod>2020-08-22</lastmod>
-  </url>  <url>
-    <loc>https://hi-dhl.com/2020/08/22/kotlin/02-kotlin/</loc>
-    <lastmod>2020-08-22</lastmod>
-  </url>  <url>
-    <loc>https://hi-dhl.com/2020/08/22/kotlin/01-kotlin/</loc>
     <lastmod>2020-08-22</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/2020/08/22/AndroidStudio/03-androidstudio-2/</loc>

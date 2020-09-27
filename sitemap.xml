@@ -2,9 +2,37 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://hi-dhl.com/2020/08/22/jetpack/10-remoteMediator/</loc>
+    
+    <lastmod>2020-09-27T08:10:54.260Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://hi-dhl.com/2020/06/28/LeetCode/binary-tree/04-binary-tree-level-order/</loc>
+    
+    <lastmod>2020-09-24T08:52:13.697Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://hi-dhl.com/2020/08/22/kotlin/03-sealed/</loc>
     
-    <lastmod>2020-09-06T10:40:07.300Z</lastmod>
+    <lastmod>2020-09-08T00:50:08.696Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://hi-dhl.com/2020/08/22/kotlin/02-kotlin/</loc>
+    
+    <lastmod>2020-09-08T00:50:01.871Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://hi-dhl.com/2020/08/22/kotlin/01-kotlin/</loc>
+    
+    <lastmod>2020-09-08T00:49:54.598Z</lastmod>
     
   </url>
   
@@ -149,13 +177,6 @@
   </url>
   
   <url>
-    <loc>https://hi-dhl.com/2020/06/28/LeetCode/binary-tree/04-binary-tree-level-order/</loc>
-    
-    <lastmod>2020-08-24T17:12:43.480Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://hi-dhl.com/2020/06/28/LeetCode/binary-tree/09-binary-tree-level-order-traversal/</loc>
     
     <lastmod>2020-08-24T17:11:44.859Z</lastmod>
@@ -289,30 +310,9 @@
   </url>
   
   <url>
-    <loc>https://hi-dhl.com/2020/08/22/jetpack/10-remoteMediator/</loc>
-    
-    <lastmod>2020-08-22T12:01:27.712Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://hi-dhl.com/2020/08/22/android/02-composing-builds/</loc>
     
     <lastmod>2020-08-22T11:54:04.055Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://hi-dhl.com/2020/08/22/kotlin/02-kotlin/</loc>
-    
-    <lastmod>2020-08-22T11:18:36.058Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://hi-dhl.com/2020/08/22/kotlin/01-kotlin/</loc>
-    
-    <lastmod>2020-08-22T11:13:06.680Z</lastmod>
     
   </url>
   
