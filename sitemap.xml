@@ -2,9 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://hi-dhl.com/2020/08/22/kotlin/03-sealed/</loc>
+    
+    <lastmod>2020-09-27T08:20:07.826Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://hi-dhl.com/2020/08/22/jetpack/10-remoteMediator/</loc>
     
-    <lastmod>2020-09-27T08:10:54.260Z</lastmod>
+    <lastmod>2020-09-27T08:19:48.503Z</lastmod>
     
   </url>
   
@@ -12,13 +19,6 @@
     <loc>https://hi-dhl.com/2020/06/28/LeetCode/binary-tree/04-binary-tree-level-order/</loc>
     
     <lastmod>2020-09-24T08:52:13.697Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://hi-dhl.com/2020/08/22/kotlin/03-sealed/</loc>
-    
-    <lastmod>2020-09-08T00:50:08.696Z</lastmod>
     
   </url>
   

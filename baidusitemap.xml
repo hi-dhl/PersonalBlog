@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://hi-dhl.com/2020/08/22/kotlin/03-sealed/</loc>
+    <lastmod>2020-09-27</lastmod>
+  </url>  <url>
     <loc>https://hi-dhl.com/2020/08/22/jetpack/10-remoteMediator/</loc>
     <lastmod>2020-09-27</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/2020/06/28/LeetCode/binary-tree/04-binary-tree-level-order/</loc>
     <lastmod>2020-09-24</lastmod>
-  </url>  <url>
-    <loc>https://hi-dhl.com/2020/08/22/kotlin/03-sealed/</loc>
-    <lastmod>2020-09-08</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/2020/08/22/kotlin/02-kotlin/</loc>
     <lastmod>2020-09-08</lastmod>
