@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="generator" content="Hexo 4.2.1"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Kotlin StateFlow 搜索功能的实践 DB + NetWork - dhl</title><meta description="StateFlow 实现了 Flow 接口，它仅仅表示一种可读的状态，它的值是不变的，用于外部调用，StateFlow 提供了一个可变的版本 MutableStateFlow，它的值是可变的，用于内部调用"><meta property="og:type" content="blog"><meta property="og:title" content="Kotlin StateFlow 搜索功能的实践 DB + NetWork"><meta property="og:url" content="https://hi-dhl.com/2020/09/29/kotlin/04-StateFlow/"><meta property="og:site_name" content="dhl"><meta property="og:description" content="StateFlow 实现了 Flow 接口，它仅仅表示一种可读的状态，它的值是不变的，用于外部调用，StateFlow 提供了一个可变的版本 MutableStateFlow，它的值是可变的，用于内部调用"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="http://cdn.51git.cn/2020-09-29-flow_channel.004.jpeg"><meta property="article:published_time" content="2020-09-29T07:01:24.740Z"><meta property="article:modified_time" content="2020-09-29T07:04:30.244Z"><meta property="article:author" content="dhl"><meta property="article:tag" content="Android10"><meta property="article:tag" content="AndroidStudio"><meta property="article:tag" content="buildSrc"><meta property="article:tag" content="kotlin"><meta property="article:tag" content="run"><meta property="article:tag" content="with"><meta property="article:tag" content="let"><meta property="article:tag" content="also"><meta property="article:tag" content="apply"><meta property="article:tag" content="Jetpack"><meta property="article:tag" content="App Startup"><meta property="article:tag" content="Paging3"><meta property="article:tag" content="Hilt"><meta property="article:tag" content="Dagger"><meta property="article:tag" content="Koin"><meta property="article:tag" content="Jetpack"><meta property="article:tag" content="MVVM"><meta property="article:tag" content="Repository"><meta property="article:tag" content="Kotlin Flow"><meta property="article:tag" content="sealed"><meta property="article:tag" content="RemoteMediator"><meta property="article:tag" content="StateFlow"><meta property="article:tag" content="Flow"><meta property="article:tag" content="Channel"><meta property="article:tag" content="BroadcastChannels"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="http://cdn.51git.cn/2020-09-29-flow_channel.004.jpeg"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://hi-dhl.com/2020/09/29/kotlin/04-StateFlow/"},"headline":"dhl","image":[],"datePublished":"2020-09-29T07:01:24.740Z","dateModified":"2020-09-29T07:04:30.244Z","author":{"@type":"Person","name":"dhl"},"description":"StateFlow 实现了 Flow 接口，它仅仅表示一种可读的状态，它的值是不变的，用于外部调用，StateFlow 提供了一个可变的版本 MutableStateFlow，它的值是可变的，用于内部调用"}</script><link rel="canonical" href="https://hi-dhl.com/2020/09/29/kotlin/04-StateFlow/"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" defer></script><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script></head><body class="is-2-column"><script type="text/javascript" src="/js/imaegoo/night.js"></script><canvas id="universe"></canvas><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img class="logo-img" src="/img/logo.png" alt="dhl" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="dhl" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">首页</a><a class="navbar-item" href="/categories">分类</a><a class="navbar-item" href="/categories/Jetpack">Jetpack</a><a class="navbar-item" href="/categories/Android10/">Android-10-源码</a><a class="navbar-item" href="/categories/translated/">精选译文</a><a class="navbar-item" href="https://leetcode.hi-dhl.com">LeetCode</a><a class="navbar-item" href="https://offer.hi-dhl.com">剑指Offer</a><a class="navbar-item" href="https://site.51git.cn/">国内外书签</a></div><div class="navbar-end"><a class="navbar-item night" id="night-nav" title="Night Mode" href="javascript:;"><i class="fas fa-moon" id="night-icon"></i></a><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/hi-dhl"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><div class="card-image"><span class="image is-7by3"><img class="thumbnail" src="http://cdn.51git.cn/2020-09-29-flow_channel.004.jpeg" alt="Kotlin StateFlow 搜索功能的实践 DB + NetWork"></span></div><article class="card-content article" role="article"><h1 class="title is-3 is-size-4-mobile"></h1><h1 class="title is-3 is-size-4-mobile">Kotlin StateFlow 搜索功能的实践 DB + NetWork</h1><div class="article-meta size-small level is-mobile"><div class="level-left"><span class="mr-2"><i class="fa fa-calendar"></i></span><time class="level-item" dateTime="2020-09-29T07:01:24.740Z" title="2020-09-29T07:01:24.740Z">2020-09-29</time><span class="mr-2"> <i class="fa fa-folder"></i></span><span class="level-item"><a class="link-muted" href="/categories/Kotlin/">Kotlin</a></span><span class="mr-2"> <i class="fa fa-tag"></i></span><span class="level-item"><a class="link-muted" href="/tags/Jetpack/">Jetpack</a><span> , </span><a class="link-muted" href="/tags/kotlin/">kotlin</a></span></div></div><div class="level-left article-meta size-small is-mobile"></div><h1 class="title is-3 is-size-4-mobile"></h1><div class="content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在之前分享过一篇文章 <a href="https://juejin.im/post/6854573211930066951">Google 推荐在 MVVM 架构中使用 Kotlin Flow</a> ，在这篇文章中分析了如何在 MVVM 架构中使用 Kotlin Flow，以及 Kotlin Flow 为我们解决了以下问题：</p>
+<ul>
+<li><p>LiveData 是一个生命周期感知组件，最好在 View 和 ViewModel 层中使用它，如果在 Repositories 或者 DataSource 中使用会有几个问题</p>
+<ul>
+<li>它不支持线程切换，其次不支持背压，也就是在一段时间内<strong>发送</strong>数据的速度 &gt; <strong>接受</strong>数据的速度，LiveData 无法正确的处理这些请求</li>
+<li>使用 LiveData 的最大问题是所有数据转换都将在主线程上完成</li>
+</ul>
+</li>
+<li><p>RxJava 虽然支持线程切换和背压，但是 RxJava 那么多傻傻分不清楚的操作符，实际上在项目中常用的可能只有几个例如 <code>Observable</code> 、 <code>Flowable</code>  、 <code>Single</code> 等等，如果我们不去了解背后的原理，造成内存泄露是很正常的事，大家可以从 StackOverflow 上查看一下，有很多因为 RxJava 造成内存泄露的例子</p>
+</li>
+<li><p>RxJava 入门的门槛很高，学习过的朋友们，我相信能够体会到从入门到放弃是什么感觉</p>
+</li>
+<li><p>解决回调地狱的问题</p>
+</li>
+</ul>
+<p><strong>而相对于以上的不足，Flow 有以下优点：</strong></p>
+<ul>
+<li>Flow 支持线程切换、背压</li>
+<li>Flow 入门的门槛很低，没有那么多傻傻分不清楚的操作符</li>
+<li>简单的数据转换与操作符，如 map 等等</li>
+<li>Flow 是对 Kotlin 协程的扩展，让我们可以像运行同步代码一样运行异步代码，使得代码更加简洁，提高了代码的可读性</li>
+<li>易于做单元测试</li>
+</ul>
+<p>而这篇文章主要来分析一下 <a href="https://github.com/hi-dhl/PokemonGo">PokemonGo</a> 搜索功能的实践，主要包含以下几个方面的内容：</p>
+<ul>
+<li>Kotlin Flow 是什么？以及如何使用？</li>
+<li>如何区分末端操作符还是中间操作符？</li>
+<li>Kotlin Channel 是什么？以及如何使用？</li>
+<li>Kotlin Channel 都有那几种类型？</li>
+<li><code>BroadcastChannels</code> 是什么？以及如何在项目中使用？</li>
+<li><code>StateFlow</code> 是什么？以及如何在项目中使用？</li>
+<li>Kotlin 常用操作符 <code>debounce</code> 、<code>filter</code> 、<code>flatMapLatest</code> 、 <code>distinctUntilChanged</code> 解析？</li>
+</ul>
+<p>之前有很多朋友跟我反馈，如何使用 Flow 实现搜索功能，所以我在 <a href="https://github.com/hi-dhl/PokemonGo">PokemonGo</a> 项目中增加了两种搜索场景，分别演示 <code>BroadcastChannels</code> 和 <code>StateFlow</code> 的用法。</p>
+<ul>
+<li>使用 ConflatedBroadcastChannel 实现 DB 搜索</li>
+<li>使用 StateFlow 实现 NetWork 搜索</li>
+</ul>
+<p>在分析这两种实现方式之前，需要先了解几个基本概念， Flow 和 Channel 是什么，以及常用的操作符 <code>debounce</code> 、<code>filter</code> 、<code>flatMapLatest</code> 、 <code>distinctUntilChanged</code> 等等的使用，Flow 和 Channel 是一个比较大的概念，后面我会花好几篇文章来分析它们，本文只会概述它们之间的区别。</p>
+<h2 id="Kotlin-Flow-是什么"><a href="#Kotlin-Flow-是什么" class="headerlink" title="Kotlin Flow 是什么"></a>Kotlin Flow 是什么</h2><p>先来看看 Kotlin 官方文档是如何介绍 <a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/-flow/index.html">Flow</a></p>
+<p><img src="http://cdn.51git.cn/2020-09-26-16005981273398.jpg" alt=""></p>
+<p>将上面这段话，简单的总结一下：</p>
+<ul>
+<li>Flow 是非阻塞的，以挂起的方式执行，只有遇到末端操作符，才会触发所有操作的执行</li>
+<li>所有操作都在相同的代码块内顺序执行</li>
+<li>发射出来的值都是顺序执行的，只有在某一时刻结束（遇到 <strong>末端操作符</strong> 或者出现异常）</li>
+<li><code>map</code> , <code>filter</code> , <code>take</code> , <code>zip</code> 等等是中间操作符，<code>collect</code> , <code>collectLatest</code> , <code>single</code> , <code>reduce</code> , <code>toList</code> 等等末端操作符</li>
+<li>中间操作符构建了一个待执行的调用链，如下图所示：</li>
+</ul>
+<p><img src="http://cdn.51git.cn/2020-09-26-16010898973740.jpg" alt=""></p>
+<p><strong>不阻塞，以挂起的方式执行</strong> ：也就是协程作用域被挂起, 当前线程中协程作用域之外的代码不会阻塞</p>
+<p>接下来我们来看一段示例：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">suspend fun printValue() &#x3D; flow&lt;Int&gt; &#123;</span><br><span class="line">    for (index in 1..10) &#123;</span><br><span class="line">        emit(index)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;.map &#123; it -&gt; it * it &#125; &#x2F;&#x2F; map, filter, take, zip 等等是中间操作符</span><br><span class="line">.filter &#123; it -&gt; it &gt; 5 &#125; </span><br><span class="line">.toList() &#x2F;&#x2F; 只有遇到末端操作符 collect, collectLatest,single, reduce, toList 等等才会触发所有操作的执行</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>遇到中间操作符，并不会执行任何操作，也不会挂起函数本身，这些操作符构建了一个待执行的调用链</li>
+<li>末端操作符是可挂起函数，遇到末端操作符会触发所有操作的执行</li>
+</ul>
+<h3 id="如何区分末端操作符还是中间操作符"><a href="#如何区分末端操作符还是中间操作符" class="headerlink" title="如何区分末端操作符还是中间操作符"></a>如何区分末端操作符还是中间操作符</h3><p>区分末端操作符还是中间操作符，可以按照<strong>是否是挂起函数</strong>来区分，我个人觉得按照挂起函数来区分，方便去记忆上面提到的 Flow 的几个特点，当然也可以按照其他方式来区分，我们一起来分析一下源码。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; 中间操作符是 Flow 的扩展函数，它们最后都是通过 emit 来发射数据</span><br><span class="line">public inline fun &lt;T&gt; Flow&lt;T&gt;.filter(crossinline predicate: suspend (T) -&gt; Boolean): Flow&lt;T&gt; &#x3D; transform &#123; value -&gt;</span><br><span class="line">    if (predicate(value)) return@transform emit(value)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 末端操作符是一个挂起函数</span><br><span class="line">&#x2F;&#x2F; 末端操作符无论是 collectLatest,single, reduce, toList 最后都是调用 collect</span><br><span class="line">public suspend fun &lt;T&gt; Flow&lt;T&gt;.toList(destination: MutableList&lt;T&gt; &#x3D; ArrayList()): List&lt;T&gt; &#x3D; toCollection(destination)</span><br><span class="line"></span><br><span class="line">public suspend fun &lt;T, C : MutableCollection&lt;in T&gt;&gt; Flow&lt;T&gt;.toCollection(destination: C): C &#123;</span><br><span class="line">    collect &#123; value -&gt;</span><br><span class="line">        destination.add(value)</span><br><span class="line">    &#125;</span><br><span class="line">    return destination</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>中间操作符是 Flow 的扩展函数，它们最后都是通过 <code>emit</code> 来发射数据</li>
+<li>末端操作符是一个挂起函数</li>
+<li>末端操作符无论是 <code>collectLatest</code> , <code>single</code> , <code>reduce</code> , <code>toList</code> 最后都是调用 <code>collect</code></li>
+</ul>
+<h2 id="Kotlin-Channel-是什么"><a href="#Kotlin-Channel-是什么" class="headerlink" title="Kotlin Channel 是什么"></a>Kotlin Channel 是什么</h2><p>来看看 Kotlin 官方文档是如何介绍 <a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-channel/">Channel</a></p>
+<p><img src="http://cdn.51git.cn/2020-09-26-16006207759185.jpg" alt="Channel"></p>
+<p>将上面这段话，简单的总结一下：</p>
+<ul>
+<li>Channel 是非阻塞的，它用于发送方 (SendChannel) 和接收方 (ReceiveChannel) 之间通信</li>
+<li>Channel 实现了 SendChannel 和 ReceiveChannel 接口，所以既可以发送数据又可以接受数据</li>
+<li>Channel 和 Java 中的 BlockingQueue 类似，不同之处在于 BlockingQueue 是阻塞的，而 Channel 是挂起的</li>
+<li>发送方 (SendChannel) 和接收方 (ReceiveChannel) 之间通过缓冲区进行同步的，如下图所示：</li>
+</ul>
+<p><img src="http://cdn.51git.cn/2020-09-26-16011121582604.jpg" alt=""></p>
+<ul>
+<li>通过发送方 (SendChannel) 将数据发送到缓冲区</li>
+<li>通过接收方 (ReceiveChannel) 从缓冲区获取数据</li>
+<li>发送方 (SendChannel) 和 接收方 (ReceiveChannel) 之间有一个通道，也就是缓冲区</li>
+<li>缓冲区的作用帮我们同步发送方 (SendChannel) 和 接收方 (ReceiveChannel) 发送和接受的数据，也就意味着多个协程可以向同一个 channel 发送数据, 一个 channel 的数据也可以被多个协程接收</li>
+</ul>
+<p>我们来实现一个简易的消息发送和接受的例子：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">val channel &#x3D; Channel&lt;Int&gt;()</span><br><span class="line">&#x2F;&#x2F; 接受消息</span><br><span class="line">suspend fun receiveEvent() &#123;</span><br><span class="line">    coroutineScope &#123;</span><br><span class="line">        while (!channel.isClosedForReceive) &#123;</span><br><span class="line"></span><br><span class="line">            &#x2F;&#x2F; receive()方法异步获取元素，如果缓冲区是空，receive() 调用者将被挂起，直到一个新值被发送到缓冲区</span><br><span class="line">            &#x2F;&#x2F; receive() 是一个挂起函数，用于同步发送方和接收方的一种机制</span><br><span class="line">             channel.receive()</span><br><span class="line"></span><br><span class="line">            &#x2F;&#x2F; poll()方法同步获取一个元素，如果缓冲区是空的，则返回null</span><br><span class="line">            &#x2F;&#x2F; channel.poll()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 发送消息</span><br><span class="line">suspend fun postEvent() &#123;</span><br><span class="line">    coroutineScope &#123;</span><br><span class="line">        if (!channel.isClosedForSend) &#123;</span><br><span class="line">            (1..10).forEach &#123;</span><br><span class="line"></span><br><span class="line">                &#x2F;&#x2F; 如果缓冲区没有满，则立即添加元素，</span><br><span class="line">                &#x2F;&#x2F; 如果缓冲区满了调用者会被挂起</span><br><span class="line">                &#x2F;&#x2F; send() 是一个挂起函数，用于同步发送方和接收方的一种机制</span><br><span class="line">                channel.send(it)</span><br><span class="line"></span><br><span class="line">                &#x2F;&#x2F; offer()：如果缓冲区存在并且没有满立即向缓冲区添加一个元素</span><br><span class="line">                &#x2F;&#x2F; 如果添加成功会返回true, 失败会返回 false</span><br><span class="line">                &#x2F;&#x2F; channel.offer(it)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>正如你所看到的 <strong>发送</strong> 和 <strong>接受</strong> 都有两个方法，分别来分析一下他们的区别。</p>
+<p><strong>send() 和 offer() 的区别：</strong></p>
+<ul>
+<li><code>send(element: E)</code> ：如果缓冲区没有满，则立即添加元素， 如果缓冲区满了调用者会被挂起，<code>send()</code> 方法是一个挂起函数，用于同步发送方和接收方的一种机制</li>
+<li><code>offer(element: E): Boolean</code> ：如果缓冲区存在并且没有满立即向缓冲区添加一个元素，添加成功会返回 true, 失败会返回 false</li>
+</ul>
+<p><strong>receive() 和 poll() 的区别：</strong></p>
+<ul>
+<li><code>receive(): E</code> ：异步获取元素，如果缓冲区是空时调用者会被挂起，直到一个新值被发送到缓冲区，<code>receive()</code> 方法是一个挂起函数，用于同步发送方和接收方的一种机制</li>
+<li><code>poll(): E?</code>：用于同步获取一个元素，如果缓冲区是空的，则返回 null</li>
+</ul>
+<p><strong>Flow 与 Channel 的区别：</strong></p>
+<ul>
+<li>Flow ：中间操作符 (<code>map</code> , <code>filter</code> 等等) 会构建了一个待执行的调用链，只有遇到末端操作符 (<code>collect</code> , <code>toList</code> 等等) 才会触发所有操作的执行，所以 Flow 也被称为冷数据流</li>
+<li>Channel ：发送方 (SendChannel) 发送数据，并不依赖于接受方（ReceiveChannel），所以 Channel 也被称为冷数据流</li>
+</ul>
+<h3 id="Channel-的不同类型"><a href="#Channel-的不同类型" class="headerlink" title="Channel 的不同类型"></a>Channel 的不同类型</h3><p>Channel 对应着有四种不同的类型：</p>
+<ul>
+<li><code>RendezvousChannel</code> ：这是默认的类型，大小为 0 的缓冲区，只有当 <code>send()</code> 方法和 <code>receive()</code> 方法都调用的时候，元素才会从发送方传输到接收方，否则将会被挂起</li>
+<li><code>LinkedListChannel</code> ：会创建一个容量无限的缓冲区 (受限于内存的大小) ，<code>send()</code> 方法远不会挂起，<code>offer()</code> 方法始终返回 true</li>
+<li><code>ConflatedChannel</code> ：最多缓冲一个元素，新元素会覆盖掉旧元素，只会接收最后发送的元素，之前的元素都会丢失，<code>send()</code> 方法永远不会挂起，<code>offer()</code> 方法始终返回 true</li>
+<li><code>UnlimitedChannel</code> ：会创建一个固定容量的数组缓冲区，<code>send()</code> 方法仅在缓冲区满时挂起，<code>receive()</code> 方法仅在缓冲区为空时挂起</li>
+</ul>
+<p>创建四种不同类型 channel 的方式:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">val rendezvousChannel &#x3D; Channel&lt;Int&gt;()</span><br><span class="line">val bufferedChannel &#x3D; Channel&lt;Int&gt;(30)</span><br><span class="line">val conflatedChannel &#x3D; Channel&lt;Int&gt;(Channel.Factory.CONFLATED)</span><br><span class="line">val unlimitedChannel &#x3D; Channel&lt;Int&gt;(Channel.Factory.UNLIMITED)</span><br></pre></td></tr></table></figure>
+
+<h3 id="BroadcastChannels-是什么"><a href="#BroadcastChannels-是什么" class="headerlink" title="BroadcastChannels 是什么"></a>BroadcastChannels 是什么</h3><p>来看看 Kotlin 官方文档是如何介绍 <a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-broadcast-channel/index.html">BroadcastChannels</a></p>
+<p><img src="http://cdn.51git.cn/2020-09-26-16006914337267.jpg" alt=""></p>
+<ul>
+<li>BroadcastChannels 是非阻塞的，它用于发送方 (SendChannel) 和接收方 (ReceiveChannel) 之间通信</li>
+<li>BroadcastChannels 实现了 SendChannel 接口，所以只可以发送数据</li>
+<li>BroadcastChannels 提供了 <code>openSubscription</code> 方法，会返回一个新的 ReceiveChannel，可以从缓冲区获取数据</li>
+<li>通过 BroadcastChannels 发送的数据，所有接收方 (ReceiveChannel) 都会收到，如下图所示</li>
+</ul>
+<p><img src="http://cdn.51git.cn/2020-09-26-16011129293072.jpg" alt=""></p>
+<p>BroadcastChannels 是一个接口，而它的子类有 ConflatedBroadcastChannel、ArrayBroadcastChannel，这里主要介绍一下 ConflatedBroadcastChannel，ConflatedBroadcastChannel 重写了 <code>openSubscription</code> 方法。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public override fun openSubscription(): ReceiveChannel&lt;E&gt; &#123;</span><br><span class="line">    val subscriber &#x3D; Subscriber(this)</span><br><span class="line">    ...... &#x2F;&#x2F; 省略很多无关的代码</span><br><span class="line">    return subscriber</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>openSubscription</code> 方法返回一个 ReceiveChannel 作为接受者</li>
+<li>在 <code>openSubscription</code> 方法内，创建了一个 Subscriber 的实例</li>
+</ul>
+<p>Subscriber 其实是 ConflatedBroadcastChannel 的内部类，它实现了 ReceiveChannel 接口。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">private class Subscriber&lt;E&gt;(</span><br><span class="line">    private val broadcastChannel: ConflatedBroadcastChannel&lt;E&gt;</span><br><span class="line">) : ConflatedChannel&lt;E&gt;(), ReceiveChannel&lt;E&gt;</span><br></pre></td></tr></table></figure>
+
+<p>正如你所见 Subscriber 继承 ConflatedChannel 同时实现了 ReceiveChannel 接口，而 ConflatedChannel 在上文介绍过了，最多缓冲一个元素，新元素会覆盖掉旧元素，只会接收最后发送的元素，之前的元素都会丢失，所以 ConflatedBroadcastChannel 适合用来实现搜索相关的功能，因为用户只对最后一次搜索结果感兴趣。</p>
+<blockquote>
+<p><strong>注意：</strong> StateFlow 将会取代 ConflatedBroadcastChannel 下文有介绍</p>
+</blockquote>
+<h3 id="使用-ConflatedBroadcastChannel-实现-DB-搜索"><a href="#使用-ConflatedBroadcastChannel-实现-DB-搜索" class="headerlink" title="使用 ConflatedBroadcastChannel 实现 DB 搜索"></a>使用 ConflatedBroadcastChannel 实现 DB 搜索</h3><p>我在 <a href="https://github.com/hi-dhl/PokemonGo">PokemonGo</a> 项目中增加了两种搜索场景，分别通过 <code>BroadcastChannels</code> 和 <code>StateFlow</code> 来实现，通过 ConflatedBroadcastChannel 实现 DB 搜索，只需要两步</p>
+<p><strong>1.在 Activity 中监听 ConflatedBroadcastChannel 的变化</strong><br><strong>src/main/java/com/hi/dhl/pokemon/ui/main/MainActivity.kt</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; searchView 是一个 AppCompatEditText，当然你可以使用 androidx.appcompat.widget.SearchView，或者其他</span><br><span class="line">searchView.addTextChangedListener &#123;</span><br><span class="line">                val result &#x3D; it.toString()</span><br><span class="line">                &#x2F;&#x2F; 调用 queryParamterForDb 方法过滤用户的输入，并查询数据库</span><br><span class="line">                mViewModel.queryParamterForDb(result)</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 监听查询结果</span><br><span class="line">mViewModel.searchResultForDb.observe(this, Observer &#123;</span><br><span class="line">    mPokemonAdapter.submitData(lifecycle, it)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>接受用户输入的数据，并调用 <code>queryParamterForDb</code> 方法过滤用户的输入，然后查询数据库</li>
+<li>通过 <code>searchResultForDb.observe</code> 方法监听查询结果</li>
+</ul>
+<p><strong>2. 在 MainViewModel 中实现 queryParamterForDb 方法</strong><br><strong>src/main/java/com/hi/dhl/pokemon/ui/main/MainViewModel.kt</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; 根据关键词搜索</span><br><span class="line">fun queryParamterForDb(paramter: String) &#x3D; mChanncel.offer(paramter)</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 使用 ConflatedBroadcastChannel 进行搜索</span><br><span class="line">val searchResultForDb &#x3D; mChanncel.asFlow()</span><br><span class="line">    &#x2F;&#x2F; 避免在单位时间内，快输入造成大量的请求</span><br><span class="line">    .debounce(200)</span><br><span class="line">    &#x2F;&#x2F;  避免重复的搜索请求。假设正在搜索 dhl，用户删除了 l  然后输入 l。最后的结果还是 dhl。它就不会再执行搜索查询 dhl</span><br><span class="line">    &#x2F;&#x2F; distinctUntilChanged 对于 StateFlow 任何实例是没有效果的</span><br><span class="line">    .distinctUntilChanged()</span><br><span class="line">    .flatMapLatest &#123; search -&gt; &#x2F;&#x2F; 只显示最后一次搜索的结果，忽略之前的请求</span><br><span class="line">        pokemonRepository.fetchPokemonByParameter(search).cachedIn(viewModelScope)</span><br><span class="line">    &#125;</span><br><span class="line">    .catch &#123; throwable -&gt;</span><br><span class="line">        &#x2F;&#x2F;  异常捕获</span><br><span class="line">    &#125;.asLiveData()</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>通过 <code>mChanncel.offer</code> 发送数据</li>
+<li>通过 <code>mChanncel.asFlow()</code> 方法，将 Channel 转换为 Flow 并调用 <code>debounce</code> 、 <code>distinctUntilChanged</code> 、 <code>flatMapLatest</code> 过掉用户的输入数据，<strong>这些操作符在后文会详细分析</strong></li>
+<li>最后查询数据库，返回结果，项目中使用的是通过 Paging3 查询本地数据库，关于如何实现可以查看另外一篇文章 <a href="https://juejin.im/post/5ee998e8e51d4573d65df02b">Jetpack 成员 Paging3 数据实践以及源码分析（一）</a></li>
+</ul>
+<p><strong>重点：</strong> 在 Kotlin coroutines library (1.3.6) 版本中增加了一个新类 StateFlow，它的设计和 ConflatedBroadcastChannel 相同，将来计划完全取代 ConflatedBroadcastChannel</p>
+<h3 id="StateFlow-是什么"><a href="#StateFlow-是什么" class="headerlink" title="StateFlow 是什么"></a>StateFlow 是什么</h3><p>在前面的内容提到了很多次 StateFlow，那么 StateFlow 是什么，它与 Flows 和 Channels 有什么关系呢，来看看 Kotlin 官方文档是如何介绍 <a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/-state-flow/index.html">StateFlow</a></p>
+<p><img src="http://cdn.51git.cn/2020-09-26-16007790212338.jpg" alt=""></p>
+<p>将上面这段话，简单的总结一下：</p>
+<ul>
+<li><p>StateFlow 实现了 Flow 接口，它仅仅表示一种可读的状态，它的值是不变的，用于外部调用</p>
+  <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public interface StateFlow&lt;out T&gt; : Flow&lt;T&gt; &#123;</span><br><span class="line">    public val value: T &#x2F;&#x2F;  val 关键字表示不可变的</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>StateFlow 提供了一个可变的版本 MutableStateFlow，它的值是可变的，用于内部调用</p>
+  <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public interface MutableStateFlow&lt;T&gt; : StateFlow&lt;T&gt; &#123;</span><br><span class="line">    public override var value: T &#x2F;&#x2F; var 表示可变的</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>StateFlow 与 Flow 的不同之处在于，StateFlow 仅仅表示一种状态，不依赖于特定的上下文，而 Flow 操作执行是在 CoroutineScope 内的，换句话说 StateFlow 不需要在协程的作用域内，它也可以执行</p>
+</li>
+</ul>
+<p>刚才我们提到 StateFlow 的出现是为了取代 ConflatedBroadcastChannel，那么它与 ConflatedBroadcastChannel 有什么不同之处：</p>
+<ul>
+<li><p>StateFlow 实现更加简单，不需要实现所有 Channel API，而 ConflatedBroadcastChannel 在其内部封装了 ConflatedChannel 和 BroadcastChannels</p>
+</li>
+<li><p>StateFlow 内部有个变量 value，无论任何时候都可以安全的访问</p>
+</li>
+<li><p>StateFlow 实现读写分离，StateFlow 用来读而 MutableStateFlow 用来写</p>
+</li>
+<li><p>StateFlow 内部使用 <code>Any.equals</code> 来比较新值与旧值，和 distinctUntilChanged 方式相同，所以在 StateFlow 上应用 distinctUntilChanged 是没有效果的</p>
+<p>  <strong>StateFlow 源码：</strong></p>
+  <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">if (oldState &#x3D;&#x3D; newState) return &#x2F;&#x2F; 如果值没有改变，不会做任何事</span><br></pre></td></tr></table></figure>
+
+<p>  <strong>distinctUntilChanged 源码</strong></p>
+  <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public fun &lt;T, K&gt; Flow&lt;T&gt;.distinctUntilChangedBy(keySelector: (T) -&gt; K): Flow&lt;T&gt; &#x3D;</span><br><span class="line">    distinctUntilChangedBy(keySelector &#x3D; keySelector, areEquivalent &#x3D; &#123; old, new -&gt; old &#x3D;&#x3D; new &#125;)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="使用-StateFlow-实现-NetWork-搜索"><a href="#使用-StateFlow-实现-NetWork-搜索" class="headerlink" title="使用 StateFlow 实现 NetWork 搜索"></a>使用 StateFlow 实现 NetWork 搜索</h3><p>StateFlow 和 ConflatedBroadcastChannel 一样，实现搜索功能只需要两步</p>
+<p><strong>1.在 Activity 中监听 ConflatedBroadcastChannel 的变化</strong><br><strong>src/main/java/com/hi/dhl/pokemon/ui/main/MainActivity.kt</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; searchView 是一个 AppCompatEditText，当然你可以使用 androidx.appcompat.widget.SearchView 或者其他</span><br><span class="line">searchView.addTextChangedListener &#123;</span><br><span class="line">    val result &#x3D; it.toString()</span><br><span class="line">    &#x2F;&#x2F; 调用 queryParamterForNetWork 方法过滤用户的输入，并查询网络</span><br><span class="line">    mViewModel.queryParamterForNetWork(result)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">mViewModel.searchResultMockNetWork.observe(this, Observer &#123;</span><br><span class="line">    &#x2F;&#x2F; 网络搜索回调监听</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>接受用户输入的数据，并调用 queryParamterForNetWork 方法过滤用户的输入，通过网络查询关键字</li>
+<li>通过 <code>searchResultMockNetWork.observe</code> 方法监听查询结果</li>
+</ul>
+<p><strong>2. 在 MainViewModel 中实现 queryParamterForNetWork 方法</strong><br><strong>src/main/java/com/hi/dhl/pokemon/ui/main/MainViewModel.kt</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; 根据关键词搜索</span><br><span class="line">fun queryParamterForNetWork(paramter: String) &#123;</span><br><span class="line">    _stateFlow.value &#x3D; paramter</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 因为没有合适的搜索接口，在这里模拟进行网络搜索</span><br><span class="line">val searchResultMockNetWork &#x3D;</span><br><span class="line">    &#x2F;&#x2F; 避免在单位时间内，快输入造成大量的请求</span><br><span class="line">    stateFlow.debounce(200)</span><br><span class="line">        .filter &#123; result -&gt;</span><br><span class="line">            if (result.isEmpty()) &#123; &#x2F;&#x2F; 过滤掉空字符串等等无效输入</span><br><span class="line">                return@filter false</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                return@filter true</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        .flatMapLatest &#123; &#x2F;&#x2F; 只显示最后一次搜索的结果，忽略之前的请求</span><br><span class="line">            &#x2F;&#x2F; 网络请求，这里替换自己的实现即可</span><br><span class="line">        &#125;</span><br><span class="line">        .catch &#123; throwable -&gt;</span><br><span class="line">            &#x2F;&#x2F;  异常捕获</span><br><span class="line">        &#125;</span><br><span class="line">        .asLiveData()</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>通过 <code>_stateFlow.value</code> 更新数据</li>
+<li>调用 <code>debounce</code> 、<code>filter</code> 、<code>flatMapLatest</code> 等等操作符过滤掉无效的请求</li>
+</ul>
+<h2 id="常用操作符解析"><a href="#常用操作符解析" class="headerlink" title="常用操作符解析"></a>常用操作符解析</h2><p>在 <a href="https://github.com/hi-dhl/PokemonGo">PokemonGo</a> 项目中使用 <code>debounce</code> 、<code>filter</code> 、<code>flatMapLatest</code> 、 <code>distinctUntilChanged</code> 等等操作符，一起来详细的分析一下这些操作符的含义，以及如何使用。</p>
+<h3 id="debounce"><a href="#debounce" class="headerlink" title="debounce"></a>debounce</h3><p><img src="http://cdn.51git.cn/2020-09-26-16010020859640.jpg" alt=""></p>
+<p><code>debounce</code> 也叫做防抖动函数，当用户在很短的时间内输入 “d”，”dh”，”dhl”，但是用户可能只对 “dhl” 的搜索结果感兴趣，因此我们必须舍弃 “d”，”dh” 过滤掉不需要的请求，针对于这个情况，我们可以使用 <code>debounce</code> 函数，在指定时间内出现多个字符串，<code>debounce</code> 始终只会发出最后一个字符串，我们来看个例子。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">val result &#x3D; flow &#123;</span><br><span class="line">    emit(&quot;h&quot;)</span><br><span class="line">    emit(&quot;i&quot;)</span><br><span class="line">    emit(&quot;d&quot;)</span><br><span class="line">    delay(90)</span><br><span class="line">    emit(&quot;dh&quot;)</span><br><span class="line">    emit(&quot;dhl&quot;)</span><br><span class="line">&#125;.debounce(200).toList()</span><br><span class="line">println(result) &#x2F;&#x2F; 最后输出：dhl</span><br></pre></td></tr></table></figure>
+
+<h3 id="filter"><a href="#filter" class="headerlink" title="filter"></a>filter</h3><p><img src="http://cdn.51git.cn/2020-09-26-16010050925038.jpg" alt=""></p>
+<p><code>filter</code> 操作符用于过滤不需要的字符串，在 <a href="https://github.com/hi-dhl/PokemonGo">PokemonGo</a> 项目中只过滤了空字符串，我们来看个例子。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">val result &#x3D; flow &#123;</span><br><span class="line">    emit(&quot;h&quot;)</span><br><span class="line">    emit(&quot;i&quot;)</span><br><span class="line">    emit(&quot;d&quot;)</span><br><span class="line">    delay(90)</span><br><span class="line">    emit(&quot;dh&quot;)</span><br><span class="line">    emit(&quot;dhl&quot;)</span><br><span class="line">&#125;.filter &#123; result -&gt;</span><br><span class="line">    if (!result.equals(&quot;dhl&quot;)) &#123;</span><br><span class="line">        return@filter false</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        return@filter true</span><br><span class="line">    &#125;</span><br><span class="line">&#125;.toList()</span><br><span class="line">println(result) &#x2F;&#x2F; 最后输出：dhl</span><br></pre></td></tr></table></figure>
+
+<h3 id="flatMapLatest"><a href="#flatMapLatest" class="headerlink" title="flatMapLatest"></a>flatMapLatest</h3><p><img src="http://cdn.51git.cn/2020-09-26-16010058543787.jpg" alt=""></p>
+<p><code>flatMapLatest</code> 避免向用户展示不需要的结果，只提供最后一个搜索查询（最新）的结果，例如，正在查询 “dh”，然后用户输入 “dhl”, 这个时候用户对 “dh” 的结果不感兴趣，可能只对 “dhl” 的结果感兴趣，这个时候可以使用 <code>flatMapLatest</code>，我们来看个例子。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">flow &#123;</span><br><span class="line">    emit(&quot;dh&quot;)</span><br><span class="line">    emit(&quot;dhl&quot;)</span><br><span class="line">&#125;.flatMapLatest &#123; value -&gt;</span><br><span class="line"></span><br><span class="line">    flow&lt;String&gt; &#123;</span><br><span class="line">        delay(100)</span><br><span class="line">        println(&quot;collected $value&quot;) &#x2F;&#x2F; 最后输出 collected dhl</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;.collect()</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong> <code>flatMapLatest</code> 在 Kotlin coroutines library (1.3.20) 以下版本使用会出现以下错误。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">IllegalStateException crash: call to &#39;resume&#39; before &#39;invoke&#39; with coroutine</span><br></pre></td></tr></table></figure>
+
+<p>Kotlin 团队在 Kotlin coroutines library (1.3.20) 以上修复了这个问题，如果出现这个问题，将版本升级到 1.3.20 以上即可 <a href="https://github.com/Kotlin/kotlinx.coroutines/issues/864">issues 地址</a>。</p>
+<h3 id="DistinctUntilChanged"><a href="#DistinctUntilChanged" class="headerlink" title="DistinctUntilChanged"></a>DistinctUntilChanged</h3><p><img src="http://cdn.51git.cn/2020-09-26-16010090036701.jpg" alt=""></p>
+<ul>
+<li><code>distinctUntilChanged</code> 操作符用来过滤掉重复的请求，只有当前值与最后一个值不同时才将其发出，我们来看个例子。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">val result &#x3D; flow &#123;</span><br><span class="line">    emit(&quot;d&quot;)</span><br><span class="line">    emit(&quot;d&quot;)</span><br><span class="line">    emit(&quot;d&quot;)</span><br><span class="line">    emit(&quot;d&quot;)</span><br><span class="line">    emit(&quot;dhl&quot;)</span><br><span class="line">    emit(&quot;dhl&quot;)</span><br><span class="line">    emit(&quot;dhl&quot;)</span><br><span class="line">    emit(&quot;dhl&quot;)</span><br><span class="line">&#125;.distinctUntilChanged().toList()</span><br><span class="line">println(result) &#x2F;&#x2F; 输出 [d, dhl]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>StateFlow 内部已经实现了类似于 <code>distinctUntilChanged</code> 操作符的功能，因此 distinctUntilChanged 应用在 StateFlow 上是没有效果的</li>
+</ul>
+<p>我们一起来分析 <code>distinctUntilChanged</code> 操作符源码是如何实现的</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public fun &lt;T&gt; Flow&lt;T&gt;.distinctUntilChanged(): Flow&lt;T&gt; &#x3D;</span><br><span class="line">    when (this) &#123;</span><br><span class="line">        is StateFlow&lt;*&gt; -&gt; this</span><br><span class="line">        else -&gt; distinctUntilChangedBy &#123; it &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>distinctUntilChanged</code> 是 Flow 的扩展函数</li>
+<li>如果当前对象是 StateFlow，直接返回调用者本身</li>
+<li>如果不是 StateFlow 就会调用 <code>distinctUntilChangedBy</code> 方法</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public fun &lt;T, K&gt; Flow&lt;T&gt;.distinctUntilChangedBy(keySelector: (T) -&gt; K): Flow&lt;T&gt; &#x3D;</span><br><span class="line">    distinctUntilChangedBy(keySelector &#x3D; keySelector, areEquivalent &#x3D; &#123; old, new -&gt; old &#x3D;&#x3D; new &#125;)</span><br></pre></td></tr></table></figure>
+
+<p>最后会调用 <code>areEquivalent</code> 方法进行比较，会过滤掉所有相同值的</p>
+<p>全文到这里就结束了，效果图如下所示，如果效果图无法查看，请点击这里查看 <a href="http://cdn.51git.cn/2020-09-27-16011420144605.gif">效果图</a></p>
+<p><img src="http://cdn.51git.cn/2020-09-27-16011420144605.gif" alt=""></p>
+<p>文章中提到的 PokemonGo(神奇宝贝) 是基于 Jetpack + MVVM + Data Mapper + Repository + Paging3 + App Startup + Hilt + Kotlin Flow + Motionlayout + Coil 等等技术综合实战项目，<a href="https://github.com/hi-dhl/PokemonGo">点击这里前往查看</a></p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li><a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/index.html">kotlinx.coroutines.channels</a></li>
+<li><a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/index.html">kotlinx.coroutines.flow</a></li>
+<li><a href="https://medium.com/@shivamdhuria/implementing-search-filter-using-kotlin-channels-and-flows-in-your-android-application-df7c96e58b19">Implementing Search Filter using Kotlin</a></li>
+<li><a href="https://proandroiddev.com/going-deep-on-flows-channels-part-1-streams-5ae8b8491ac4">Going deep on Flows &amp; Channels</a></li>
+<li><a href="https://blog.mindorks.com/instant-search-using-kotlin-flow-operators">Implement Instant Search Using Kotlin Flow Operators</a></li>
+</ul>
+</div><p style="height:10px"></p><!--!--><h1 class="title is-4 is-size-4-mobile"></h1></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2020/08/22/android/03-adb/"><span class="level-item">关于 adb 命令你所需要知道的</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content template"><p align="center"><img src="http://cdn.51git.cn/2020-10-07-bytecode.png"></p><p>致力于分享一系列 Android 系统源码、逆向分析、算法、翻译、Jetpack 源码相关的文章，在技术的道路上一起前进</p><h3 class="title is-4">Android10 源码分析</h3><p>正在写一系列的 Android 10 源码分析的文章，了解系统源码，不仅有助于分析问题，在面试过程中，对我们也是非常有帮助的，如果你同我一样喜欢研究 Android 源码，可以关注我 GitHub 上的 <a href="https://github.com/hi-dhl/Android10-Source-Analysis">Android10-Source-Analysis</a>。</p><h3 class="title is-4">算法题库的归纳和总结</h3><p>由于 LeetCode 的题库庞大，每个分类都能筛选出数百道题，由于每个人的精力有限，不可能刷完所有题目，因此我按照经典类型题目去分类、和题目的难易程度去排序。</p><ul><li>数据结构： 数组、栈、队列、字符串、链表、树……</li><li>算法： 查找算法、搜索算法、位运算、排序、数学、……</li></ul><p>每道题目都会用 Java 和 kotlin 去实现，并且每道题目都有解题思路，如果你同我一样喜欢算法、LeetCode，可以关注我 GitHub 上的 LeetCode 题解：<a href="https://github.com/hi-dhl/Leetcode-Solutions-with-Java-And-Kotlin">Leetcode-Solutions-with-Java-And-Kotlin</a>。</p><h3 class="title is-4">精选国外的技术文章</h3><p>目前正在整理和翻译一系列精选国外的技术文章，不仅仅是翻译，很多优秀的英文技术文章提供了很好思路和方法，每篇文章都会有<strong>译者思考</strong>部分，对原文的更加深入的解读，可以关注我 GitHub 上的 <a href="https://github.com/hi-dhl/Technical-Article-Translation">Technical-Article-Translation</a>。</p><p></p></div></div><div class="card"><div class="card-content"><h3 class="title is-5">评论</h3><div class="content" id="valine-thread"></div><script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script><script src="https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js"></script><script>new Valine({
+            el: '#valine-thread' ,
+            notify: false,
+            verify: undefined,
+            appId: 'zfvr24HFhzQ5vtHkr4NQ1fmW-gzGzoHsz',
+            appKey: 'RChgr9mR005hgu4yiQ4WQU3O',
+            placeholder: '说点什么',
+            avatar: 'mm',
+            avatarForce: false,
+            meta: ["nick","mail","link"],
+            pageSize: 10,
+            visitor: false,
+            highlight: true,
+            recordIP: false
+        });</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1 is-sticky"><div class="card widget" id="toc" style="max-height: 500px;overflow: auto;"><div class="card-content"><div class="menu"><h3 class="menu-label">目录</h3><ul class="menu-list"><li><a class="is-flex" href="#前言"><span>前言</span></a></li><li><a class="is-flex" href="#Kotlin-Flow-是什么"><span>Kotlin Flow 是什么</span></a><ul class="menu-list"><li><a class="is-flex" href="#如何区分末端操作符还是中间操作符"><span>如何区分末端操作符还是中间操作符</span></a></li></ul></li><li><a class="is-flex" href="#Kotlin-Channel-是什么"><span>Kotlin Channel 是什么</span></a><ul class="menu-list"><li><a class="is-flex" href="#Channel-的不同类型"><span>Channel 的不同类型</span></a></li><li><a class="is-flex" href="#BroadcastChannels-是什么"><span>BroadcastChannels 是什么</span></a></li><li><a class="is-flex" href="#使用-ConflatedBroadcastChannel-实现-DB-搜索"><span>使用 ConflatedBroadcastChannel 实现 DB 搜索</span></a></li><li><a class="is-flex" href="#StateFlow-是什么"><span>StateFlow 是什么</span></a></li><li><a class="is-flex" href="#使用-StateFlow-实现-NetWork-搜索"><span>使用 StateFlow 实现 NetWork 搜索</span></a></li></ul></li><li><a class="is-flex" href="#常用操作符解析"><span>常用操作符解析</span></a><ul class="menu-list"><li><a class="is-flex" href="#debounce"><span>debounce</span></a></li><li><a class="is-flex" href="#filter"><span>filter</span></a></li><li><a class="is-flex" href="#flatMapLatest"><span>flatMapLatest</span></a></li><li><a class="is-flex" href="#DistinctUntilChanged"><span>DistinctUntilChanged</span></a></li></ul></li><li><a class="is-flex" href="#参考文献"><span>参考文献</span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content size-small"><p><time dateTime="2020-09-29T07:01:24.740Z">2020-09-29</time></p><p class="title is-6"><a class="link-muted" href="/2020/09/29/kotlin/04-StateFlow/">Kotlin StateFlow 搜索功能的实践 DB + NetWork</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-08-22T11:51:48.423Z">2020-08-22</time></p><p class="title is-6"><a class="link-muted" href="/2020/08/22/android/03-adb/">关于 adb 命令你所需要知道的</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-08-22T11:46:43.107Z">2020-08-22</time></p><p class="title is-6"><a class="link-muted" href="/2020/08/22/kotlin/03-sealed/">Kotlin Sealed 是什么？为什么 Google 都用</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-08-22T11:43:32.461Z">2020-08-22</time></p><p class="title is-6"><a class="link-muted" href="/2020/08/22/jetpack/10-remoteMediator/">Google 推荐在项目中使用 sealed 和 RemoteMediator</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-08-22T11:41:10.398Z">2020-08-22</time></p><p class="title is-6"><a class="link-muted" href="/2020/08/22/jetpack/09-kotlin-flow/">Google 推荐在 MVVM 架构中使用 Kotlin Flow</a></p><p class="is-uppercase"></p></div></article></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile is-marginless" href="/categories/Android/"><span class="level-start"><span class="level-item">Android</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Android10/"><span class="level-start"><span class="level-item">Android10</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/AndroidStudio/"><span class="level-start"><span class="level-item">AndroidStudio</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Jetpack/"><span class="level-start"><span class="level-item">Jetpack</span></span><span class="level-end"><span class="level-item tag">10</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Kotlin/"><span class="level-start"><span class="level-item">Kotlin</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Linux/"><span class="level-start"><span class="level-item">Linux</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/translated/"><span class="level-start"><span class="level-item">精选译文</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/Android/"><span class="tag">Android</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E5%8C%85%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-包管理系统</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-窗口管理系统</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-资源管理系统</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/AndroidStudio/"><span class="tag">AndroidStudio</span><span class="tag is-grey-lightest">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android%E6%BA%90%E7%A0%81/"><span class="tag">Android源码</span><span class="tag is-grey-lightest">7</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Fragment/"><span class="tag">Fragment</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Jetpack/"><span class="tag">Jetpack</span><span class="tag is-grey-lightest">12</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Koin/"><span class="tag">Koin</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Kotlin/"><span class="tag">Kotlin</span><span class="tag is-grey-lightest">5</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Linux/"><span class="tag">Linux</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/RxJava/"><span class="tag">RxJava</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Shell/"><span class="tag">Shell</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/kotlin/"><span class="tag">kotlin</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%AF%91%E6%96%87/"><span class="tag">译文</span><span class="tag is-grey-lightest">7</span></a></div></div></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level-item"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img class="logo-img" src="/img/logo.png" alt="dhl" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="dhl" height="28"></a><p class="size-small"><span>&copy; 2020 dhl</span>  <a href="http://www.beian.miit.gov.cn/" target="_blank">京ICP备18050211号-2</a>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            site: {
+                url: 'https://hi-dhl.com',
+                external_link: {"enable":true,"exclude":[]}
+            },
+            article: {
+                highlight: {
+                    clipboard: false,
+                    fold: ''
+                }
+            }
+        };</script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><script src="https://s9.cnzz.com/z_stat.php?id=1278919895&amp;web_id=1278919895" async></script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><script src="/js/imaegoo/universe.js"></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>
