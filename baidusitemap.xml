@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://hi-dhl.com/2020/08/22/jetpack/03-Paging3/</loc>
+    <lastmod>2020-10-21</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/08/22/jetpack/02-Paging3/</loc>
+    <lastmod>2020-10-21</lastmod>
+  </url>  <url>
     <loc>https://hi-dhl.com/2020/10/19/jetpack/11-DataStore/</loc>
-    <lastmod>2020-10-19</lastmod>
+    <lastmod>2020-10-21</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/2020/09/29/kotlin/04-StateFlow/</loc>
     <lastmod>2020-10-16</lastmod>
@@ -122,12 +128,6 @@
     <lastmod>2020-08-22</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/2020/08/22/android/03-adb/</loc>
-    <lastmod>2020-08-22</lastmod>
-  </url>  <url>
-    <loc>https://hi-dhl.com/2020/08/22/jetpack/02-Paging3/</loc>
-    <lastmod>2020-08-22</lastmod>
-  </url>  <url>
-    <loc>https://hi-dhl.com/2020/08/22/jetpack/03-Paging3/</loc>
     <lastmod>2020-08-22</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/2020/08/22/jetpack/04-hilt/</loc>
