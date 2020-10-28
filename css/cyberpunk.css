@@ -10834,7 +10834,7 @@ article.article .title code {
 article.article blockquote.pullquote {
   float: right;
   max-width: 50%;
-  font-size: 1.15rem;
+  font-size: 1rem;
   position: relative;
 }
 article.article a img {
@@ -10905,6 +10905,28 @@ table,
 p {
   margin-top: 8px;
   margin-bottom: 8px;
+}
+.page-copyright {
+  margin: 2em 0 0;
+  padding: 0.5em 1em;
+  border-left: 3px solid #ff1700;
+  background-color: #f9f9f9;
+  list-style: none;
+}
+.page-copyright li {
+  line-height: 30px;
+  font-size: 1em;
+}
+.page-blockquote {
+  margin: 0.5em 0 0;
+  padding: 0.5em 0.5em;
+  border-left: 3px solid #49b1f5;
+  background-color: #f9f9f9;
+  list-style: none;
+}
+.page-blockquote li {
+  line-height: 30px;
+  font-size: 1em;
 }
 .navbar-main {
   box-shadow: none;
