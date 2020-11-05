@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://hi-dhl.com/2020/08/22/jetpack/07-hilt-koin/</loc>
+    <lastmod>2020-11-05</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/07/31/translate/02-fragment-data/</loc>
+    <lastmod>2020-11-04</lastmod>
+  </url>  <url>
     <loc>https://hi-dhl.com/2020/10/28/android/04-probuff-ubuntu/</loc>
     <lastmod>2020-10-28</lastmod>
   </url>  <url>
@@ -145,9 +151,6 @@
     <loc>https://hi-dhl.com/2020/08/22/android/03-adb/</loc>
     <lastmod>2020-08-22</lastmod>
   </url>  <url>
-    <loc>https://hi-dhl.com/2020/08/22/jetpack/07-hilt-koin/</loc>
-    <lastmod>2020-08-22</lastmod>
-  </url>  <url>
     <loc>https://hi-dhl.com/2020/08/22/jetpack/08-PokemonGo/</loc>
     <lastmod>2020-08-22</lastmod>
   </url>  <url>
@@ -182,9 +185,6 @@
     <lastmod>2020-08-16</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/2020/08/04/translate/03-dagger-koin/</loc>
-    <lastmod>2020-08-16</lastmod>
-  </url>  <url>
-    <loc>https://hi-dhl.com/2020/07/31/translate/02-fragment-data/</loc>
     <lastmod>2020-08-16</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/2020/06/10/translate/01-fragment/</loc>
