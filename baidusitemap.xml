@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://hi-dhl.com/2020/11/08/jetpack/12-porot-datastore/</loc>
+    <lastmod>2020-11-08</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/10/19/jetpack/11-DataStore/</loc>
+    <lastmod>2020-11-08</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/11/08/translate/08-java-or-kotlin/</loc>
+    <lastmod>2020-11-08</lastmod>
+  </url>  <url>
     <loc>https://hi-dhl.com/2020/08/22/jetpack/07-hilt-koin/</loc>
     <lastmod>2020-11-05</lastmod>
   </url>  <url>
@@ -18,9 +27,6 @@
   </url>  <url>
     <loc>https://hi-dhl.com/2020/08/22/jetpack/05-hilt-app-startup/</loc>
     <lastmod>2020-10-28</lastmod>
-  </url>  <url>
-    <loc>https://hi-dhl.com/2020/10/19/jetpack/11-DataStore/</loc>
-    <lastmod>2020-10-27</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/2020/08/22/jetpack/04-hilt/</loc>
     <lastmod>2020-10-27</lastmod>

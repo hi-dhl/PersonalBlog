@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="generator" content="Hexo 4.2.1"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Google | 再见 SharedPreferences 拥抱 Jetpack DataStore(二) - dhl</title><meta description="Jetpack DataStore 另外一种实现方式 Proto DataStore"><meta property="og:type" content="blog"><meta property="og:title" content="Google | 再见 SharedPreferences 拥抱 Jetpack DataStore(二)"><meta property="og:url" content="https://hi-dhl.com/2020/11/08/jetpack/12-porot-datastore/"><meta property="og:site_name" content="dhl"><meta property="og:description" content="Jetpack DataStore 另外一种实现方式 Proto DataStore"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="http://img.hi-dhl.com/DataStore-Preferences.001.png"><meta property="article:published_time" content="2020-11-08T08:19:47.188Z"><meta property="article:modified_time" content="2020-11-08T08:23:39.720Z"><meta property="article:author" content="dhl"><meta property="article:tag" content="Android10"><meta property="article:tag" content="AndroidStudio"><meta property="article:tag" content="buildSrc"><meta property="article:tag" content="kotlin"><meta property="article:tag" content="run"><meta property="article:tag" content="with"><meta property="article:tag" content="let"><meta property="article:tag" content="also"><meta property="article:tag" content="apply"><meta property="article:tag" content="Jetpack"><meta property="article:tag" content="App Startup"><meta property="article:tag" content="Paging3"><meta property="article:tag" content="Hilt"><meta property="article:tag" content="Dagger"><meta property="article:tag" content="Koin"><meta property="article:tag" content="Jetpack"><meta property="article:tag" content="MVVM"><meta property="article:tag" content="Repository"><meta property="article:tag" content="Kotlin Flow"><meta property="article:tag" content="sealed"><meta property="article:tag" content="RemoteMediator"><meta property="article:tag" content="SharedPreferences"><meta property="article:tag" content="Jetpack DataStore"><meta property="article:tag" content="Proto DataStore"><meta property="article:tag" content="Protobuf"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="http://img.hi-dhl.com/DataStore-Preferences.001.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://hi-dhl.com/2020/11/08/jetpack/12-porot-datastore/"},"headline":"dhl","image":["http://img.hi-dhl.com/DataStore-Preferences.001.png"],"datePublished":"2020-11-08T08:19:47.188Z","dateModified":"2020-11-08T08:23:39.720Z","author":{"@type":"Person","name":"dhl"},"description":"Jetpack DataStore 另外一种实现方式 Proto DataStore"}</script><link rel="canonical" href="https://hi-dhl.com/2020/11/08/jetpack/12-porot-datastore/"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" defer></script><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script></head><body class="is-2-column"><script type="text/javascript" src="/js/imaegoo/night.js"></script><canvas id="universe"></canvas><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img class="logo-img" src="/img/logo.png" alt="dhl" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="dhl" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">首页</a><a class="navbar-item" href="/categories">分类</a><a class="navbar-item" href="/categories/Jetpack">Jetpack</a><a class="navbar-item" href="/categories/Android10/">Android-10-源码</a><a class="navbar-item" href="/categories/translated/">精选译文</a><a class="navbar-item" href="https://leetcode.hi-dhl.com">LeetCode</a><a class="navbar-item" href="https://offer.hi-dhl.com">剑指Offer</a><a class="navbar-item" href="https://site.51git.cn/">国内外书签</a></div><div class="navbar-end"><a class="navbar-item night" id="night-nav" title="Night Mode" href="javascript:;"><i class="fas fa-moon" id="night-icon"></i></a><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/hi-dhl"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><div class="card-image"><span class="image is-7by3"><img class="thumbnail" src="http://img.hi-dhl.com/DataStore-Preferences.001.png" alt="Google | 再见 SharedPreferences 拥抱 Jetpack DataStore(二)"></span></div><article class="card-content article" role="article"><h1 class="title is-3 is-size-4-mobile"></h1><h1 class="title is-3 is-size-4-mobile">Google | 再见 SharedPreferences 拥抱 Jetpack DataStore(二)</h1><div class="article-meta size-small level is-mobile"><div class="level-left"><span class="mr-2"><i class="fa fa-calendar"></i></span><time class="level-item" dateTime="2020-11-08T08:19:47.188Z" title="2020-11-08T08:19:47.188Z">2020-11-08</time><span class="mr-2"> <i class="fa fa-folder"></i></span><span class="level-item"><a class="link-muted" href="/categories/Jetpack/">Jetpack</a></span><span class="mr-2"> <i class="fa fa-tag"></i></span><span class="level-item"><a class="link-muted" href="/tags/Jetpack/">Jetpack</a></span></div></div><div class="level-left article-meta size-small is-mobile"></div><div><p style="height:15px"></p><ul class="page-blockquote"><li>本文首发于公众号：ByteCode</li><li>致力于分享一系列 Android 系统源码、逆向分析、算法、翻译、Kotlin、Jetpack 源码相关的文章</li><li>如果评论区没有及时回复，欢迎来公众号：ByteCode 咨询</li></ul><p style="height:15px"></p></div><div class="content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Google 增加了一个新 Jetpack 的成员 DataStore，主要用来替换 SharedPreferences， 而 Jetpack DataStore 有两种实现方式：</p>
+<ul>
+<li>Proto DataStore：存储类的对象（typed objects ），通过 protocol buffers 将对象序列化存储在本地</li>
+<li>Preferences DataStore：以键值对的形式存储在本地和 SharedPreferences 类似</li>
+</ul>
+<p>在上一篇文章 <a href="https://mp.weixin.qq.com/s/gp3xAafc7hP2f3NHrfAFPg">[Google] 再见 SharedPreferences 拥抱 Jetpack DataStore</a> 中介绍了 SharedPreferences 都有那些坑，以及 Preferences DataStore 为我们解决了什么问题。</p>
+<p>而今天这篇文章主要来介绍 Proto DataStore，Proto DataStore 通过 protocol buffers 将对象序列化存储在本地，所以首先需要安装 Protobuf 编译 proto 文件，Protobuf 编译大致分为 Gradle 插件编译和命令行编译，这两种方式已经发布到了博客上，欢迎点击下方链接前往查看。</p>
+<ul>
+<li><a href="https://hi-dhl.com/2020/10/28/jetpack/05-probuff-AndroidStudio">Protobuf | 安装 Gradle 插件编译 proto 文件</a></li>
+<li><a href="https://hi-dhl.com/2020/10/28/android/04-probuff-ubuntu">Protobuf | 如何在 ubuntu 上安装 Protobuf 编译 proto 文件</a></li>
+<li><a href="https://hi-dhl.com/2020/10/28/android/05-probuff-mac">Protobuf | 如何在 MAC 上安装 Protobuf 编译 proto 文件</a></li>
+</ul>
+<p>由于目前主要在 MAC 和 ubuntu 上开发，所以只提供了这两种命令行编译方式，如果在 Win 上开发的同学，可以使用 Gradle 插件编译的方式。</p>
+<p>这篇文章相关示例，已经上传到 GitHub 欢迎前去仓库 <code>AndroidX-Jetpack-Practice/DataStoreSimple</code> 切换到 <code>datastore_proto</code> 分支查看。</p>
+<p><a href="https://github.com/hi-dhl/AndroidX-Jetpack-Practice">GitHub 地址：https://github.com/hi-dhl/AndroidX-Jetpack-Practice</a></p>
+<p><strong>通过这篇文章你将学习到以下内容：</strong></p>
+<ul>
+<li>为何要有 Proto DataStore?</li>
+<li>什么序列化？什么是对象序列化？什么是数据的序列化？</li>
+<li>什么是 Protocol Buffer？为什么需要它？为我们解决了什么问题？</li>
+<li>如何在项目中使用 Proto DataStore？</li>
+<li>如何迁移 SharedPreferences 到 Proto DataStore？</li>
+<li>proto2 和 proto3 语法如何选择？</li>
+<li>常用 proto3 语法解析？</li>
+<li>MAD Skills 是什么？</li>
+</ul>
+<h2 id="为何要有-Proto-DataStore"><a href="#为何要有-Proto-DataStore" class="headerlink" title="为何要有 Proto DataStore"></a>为何要有 Proto DataStore</h2><p>既生 Preference DataStore 何生 Proto DataStore，它们之间有什么区别？</p>
+<ul>
+<li>Preference DataStore 主要是为了解决 SharedPreferences 所带来的性能问题</li>
+<li>Proto DataStore 比 Preference DataStore  更加灵活，支持更多的类型<ul>
+<li>Preference DataStore 支持 <code>Int</code> 、 <code>Long</code> 、 <code>Boolean</code> 、 <code>Float</code> 、 <code>String</code></li>
+<li>protocol buffers 支持的类型，Proto DataStore 都支持</li>
+</ul>
+</li>
+<li>Preference DataStore 以 XML 的形式存储 key-value 数据，可读性很好</li>
+<li>Proto DataStore 使用了二进制编码压缩，体积更小，速度比 XML 更快</li>
+</ul>
+<p><strong>从源码的角度</strong></p>
+<p>如果源码部分不是很了解，可以先忽略，继续往下看，之后回过头在来看就能理解了。</p>
+<ul>
+<li><p>Preference DataStore 源码里定义了一个 proto 文件，通过 <code>PreferencesSerializer</code>  将每一对 <code>key-value</code> 数据映射到  proto 文件定义的 message 类型，proto 文件内容如下：</p>
+  <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">syntax &#x3D; &quot;proto2&quot;;</span><br><span class="line">......</span><br><span class="line">message PreferenceMap &#123;</span><br><span class="line">    map&lt;string, Value&gt; preferences &#x3D; 1;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">message Value &#123;</span><br><span class="line">  oneof valueName &#123;</span><br><span class="line">    bool boolean &#x3D; 1;</span><br><span class="line">    float float &#x3D; 2;</span><br><span class="line">    int32 integer &#x3D; 3;</span><br><span class="line">    int64 long &#x3D; 4;</span><br><span class="line">    string string &#x3D; 5;</span><br><span class="line">    double double &#x3D; 7;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>  在 DataStore 中使用的是 proto2 语法，将 XML 中 <code>key-value</code> 数据映射到 Map 中，并且在 proto 文件中只定义了 <code>Int</code> 、 <code>Long</code> 、 <code>Boolean</code> 、 <code>Float</code> 、 <code>String</code> 这几种类型。</p>
+</li>
+<li><p>Proto DataStore 我们可以自定义 proto 文件，并实现了 <code>Serializer&lt;T&gt;</code> 接口，所以更加灵活，支持更多的类型</p>
+</li>
+</ul>
+<p>刚才说到 Proto DataStore 通过 protocol buffers 使用了二进制编码压缩，将对象序列化存储在本地，那么序列化到底是什么？我们先来了解一些基本概念，方便我们对后续的内容有更好的理解。</p>
+<h2 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h2><p>序列化：将一个对象转换成可存储或可传输的状态，数据可能存储在本地或者在蓝牙、网络间进行传输。序列化大概分为对象序列化、数据序列化。</p>
+<h3 id="对象的序列化"><a href="#对象的序列化" class="headerlink" title="对象的序列化"></a>对象的序列化</h3><p><strong>Java 对象序列化</strong> 将一个存储在内存中的对象转化为可传输的字节序列，便于在蓝牙、网络间进行传输或者存储在本地。把字节序列还原为存储在内存中的 Java 对象的过程称为<strong>反序列化</strong>。</p>
+<p>在 Android 中可以通过 <code>Serializable</code> 和 <code>Parcelable</code> 两种方式实现对象序列化。</p>
+<p><strong>Serializable</strong></p>
+<p><code>Serializable</code> 是 Java 原生序列化的方式，主要通过 ObjectInputStream 和 ObjectOutputStream 来实现对象序列化和反序列化，但是在整个过程中用到了大量的反射和临时变量，会频繁的触发 GC，序列化的性能会非常差，但是实现方式非常简单，来看一下 ObjectInputStream 和 ObjectOutputStream 源码里有很多反射的地方。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ObjectOutputStream.java</span><br><span class="line">private void writeObject0(Object obj, boolean unshared)</span><br><span class="line">        throws IOException&#123;</span><br><span class="line">        ......</span><br><span class="line">        Class&lt;?&gt; cl &#x3D; obj.getClass();</span><br><span class="line">        ......</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ObjectInputStream.java</span><br><span class="line">void readFields() throws IOException &#123;</span><br><span class="line">    ......</span><br><span class="line">    ObjectStreamField[] fields &#x3D; desc.getFields(false);</span><br><span class="line">    for (int i &#x3D; 0; i &lt; objVals.length; i++) &#123;</span><br><span class="line">        objVals[i] &#x3D;</span><br><span class="line">            readObject0(fields[numPrimFields + i].isUnshared());</span><br><span class="line">        objHandles[i] &#x3D; passHandle;</span><br><span class="line">    &#125;</span><br><span class="line">    ......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在 Android 中存在大量跨进程通信，由于 Serializable 性能差的原因，所以 Android 需要更加轻量且高效的对象序列化和反序列化机制，因此 <code>Parcelable</code> 出现了。</p>
+<p><strong>Parcelable</strong></p>
+<p><code>Parcelable</code> 的出现解决了 Android 中跨进程通信性能差的问题，而且 <code>Parcelable</code> 比 <code>Serializable</code> 要快很多，因为写入和读取的时候都是采用自定义序列化存储的方式，通过 <code>writeToParcel()</code> 方法和 <code>describeContents()</code> 方法来实现，不需要使用反射来推断它，因此性能得到提升，但是使用起来比 <code>Serializable</code> 要复杂很多。</p>
+<p>为了解决复杂性问题， AndroidStudio 也有对应插件简化使用过程，如果是 Java 语言可以使用 <code>android parcelable code generator</code> 插件， 如果 Kotlin 语言的话可以使用 <code>@Parcelize</code> 注解，快速的实现 Parcelable 序列化。</p>
+<p>用一张表格汇总一下 Serializable 和 Parcelable 的区别</p>
+<p><img src="http://img.hi-dhl.com/16038887521767.jpg" alt=""></p>
+<h3 id="数据序列化"><a href="#数据序列化" class="headerlink" title="数据序列化"></a>数据序列化</h3><p>对象序列化记录了很多信息，包括 Class 信息、继承关系信息、变量信息等等，但是数据序列化相比于对象序列化就没有这么多沉余信息，数据序列化常用的方式有 JSON、Protocol Buffers、FlatBuffers。</p>
+<ul>
+<li><p>JSON ：是一种轻量级的数据交互格式，支持跨平台、跨语言，被广泛用在网络间传输，JSON 的可读性很强，但是序列化和反序列化性能却是最差的，解析过程中，要产生大量的临时变量，会频繁的触发 GC，为了保证可读性，并没有进行二进制压缩，当数据量很大的时候，性能上会差一点。</p>
+</li>
+<li><p>Protocol Buffers ：它是 Google 开源的跨语言编码协议，可以应用到 <code>C++</code> 、<code>C#</code> 、<code>Dart</code> 、<code>Go</code> 、<code>Java</code> 、<code>Python</code> 等等语言，Google 内部几乎所有 RPC 都在使用这个协议，使用了二进制编码压缩，体积更小，速度比 JSON 更快，但是缺点是牺牲了可读性</p>
+<blockquote>
+<p>RPC 指的是跨进程远程调用，即一个进程调用另外一个进程的方法。</p>
+</blockquote>
+</li>
+<li><p>FlatBuffers ：同  Protocol Buffers 一样是 Google 开源的跨平台数据序列化库，可以应用到 <code>C++</code> 、 <code>C#</code> , <code>Go</code> 、 <code>Java</code> 、 <code>JavaScript</code> 、 <code>PHP</code> 、 <code>Python</code> 等等语言，空间和时间复杂度上比其他的方式都要好，在使用过程中，不需要额外的内存，几乎接近原始数据在内存中的大小，但是缺点是牺牲了可读性</p>
+</li>
+</ul>
+<p>最后我们用一张图来分析一下 JSON、Protocol Buffers、FlatBuffers 它们序列化和反序列的性能，数据来源于 <a href="https://codeburst.io/json-vs-protocol-buffers-vs-flatbuffers-a4247f8bda6f">JSON vs Protocol Buffers vs FlatBuffers</a></p>
+<p><img src="http://img.hi-dhl.com/16036161645946.jpg" alt=""></p>
+<p>FlatBuffers 和 Protocol Buffers 无论是序列化还是反序列都完胜 JSON，FlatBuffers 最初是 Google 为游戏或者其他对性能要求很高的应用开发的，接下来我们来看一下今天主角 Protocol Buffer。</p>
+<h3 id="Protocol-Buffer"><a href="#Protocol-Buffer" class="headerlink" title="Protocol Buffer"></a>Protocol Buffer</h3><p>Protocol Buffer ( 简称 Protobuf ) 它是 Google 开源的跨语言编码协议，可以应用到 <code>C++</code> 、<code>C#</code> 、<code>Dart</code> 、<code>Go</code> 、<code>Java</code> 、<code>Python</code> 等等语言，Google 内部几乎所有 RPC 都在使用这个协议，使用了二进制编码压缩，体积更小，速度比 JSON 更快。</p>
+<blockquote>
+<p>从 <a href="https://github.com/protocolbuffers/protobuf/releases/tag/v3.0.0-alpha-1">Proto3.0.0 Release Note</a> 得知： protocol buffers 最初开源时，它实现了 Protocol Buffers 语言版本 2（称为 proto2）, 这也是为什么版本数从 <code>v2.0.0</code> 开始，从 <code>v3.0.0</code> 开始， 引入新的语言版本（proto3），而旧的版本（proto2）继续被支持。所以到目前为止 Protobuf 共两个版本 proto2 和 proto3。</p>
+</blockquote>
+<p><strong>proto2 和 proto3 应该学习那个版本？</strong></p>
+<p>proto3 简化了 proto2 的语法，提高了开发的效率，因此也带来了版本不兼容的问题，因为 2019 年的时候才发布 proto3 稳定版本，所以在这之前使用 Protocol Buffer 的公司，大部分项目都是使用 proto2 的版本，从上文的源码分析部分可知，在 DataStore 中使用了 proto2 语法，所以 proto2 和 proto3 这两种语法都同时在使用。</p>
+<p>对于初学者而言直接学习 proto3 语法就可以了，为了适应技术迭代的变化，当掌握 proto3 语法之后，可以顺带了解一下 proto2 语法以及 proto3 和 proto2 语法的区别，这样可以更好的理解其他的开源项目。</p>
+<p>为了避免混淆 proto3 和 proto2 语法，在本文仅仅分析 proto3 语法，当我们了解完这些基本概念之后，我们开始分析 <strong>如何在项目中使用 Proto DataStore</strong>。</p>
+<h2 id="如何在项目中使用-Proto-DataStore"><a href="#如何在项目中使用-Proto-DataStore" class="headerlink" title="如何在项目中使用 Proto DataStore"></a>如何在项目中使用 Proto DataStore</h2><p>Proto DataStore 同 Preferences DataStore 一样主要应用在 MVVM 当中的 Repository 层，在项目中使用 Proto DataStore 非常简单。</p>
+<p><strong>1. 添加 Proto DataStore 依赖</strong></p>
+<p>在 <strong>app 模块</strong> build.gradle 文件内，添加以下依赖</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; Proto DataStore</span><br><span class="line">implementation &quot;androidx.datastore:datastore-core:1.0.0-alpha01&quot;</span><br><span class="line">&#x2F;&#x2F; protobuf</span><br><span class="line">implementation &quot;com.google.protobuf:protobuf-javalite:3.10.0&quot;</span><br></pre></td></tr></table></figure>
+
+<p>Google 推荐 Android 开发使用 <code>protobuf-javalite</code> 因为它的代码更小，做了大量的优化。</p>
+<p>当添加完依赖之后需要新建 proto 文件，在本文示例项目中新建了一个 <code>common-protobuf</code> 模块，将新建的 person.proto 文件，放到了 <code>common-protobuf</code> 模块 <code>src/main/proto</code> 目录下。</p>
+<blockquote>
+<p>proto 文件默认存放路径 <code>src/main/proto</code>，也可以通过修改 gradle 的配置，来修改默认存放路径</p>
+</blockquote>
+<p>在 <strong>common-protobuf</strong> 模块，build.gradle 文件内，添加以下依赖</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">implementation &quot;com.google.protobuf:protobuf-javalite:3.10.0&quot;</span><br></pre></td></tr></table></figure>
+
+<p><strong>2. 新建 <code>Person.proto</code> 文件，添加以下内容</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">syntax &#x3D; &quot;proto3&quot;;</span><br><span class="line"></span><br><span class="line">option java_package &#x3D; &quot;com.hi.dhl.datastore.protobuf&quot;;</span><br><span class="line">option java_outer_classname &#x3D; &quot;PersonProtos&quot;;</span><br><span class="line"></span><br><span class="line">message Person &#123;</span><br><span class="line">    &#x2F;&#x2F; 格式：字段类型 + 字段名称 + 字段编号</span><br><span class="line">    string name &#x3D; 1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>syntax</code> ：指定 protobuf 的版本，如果没有指定默认使用 proto2，<strong>必须是.proto文件的除空行和注释内容之外的第一行</strong></li>
+<li><code>option</code> ：表示一个可选字段<ul>
+<li><code>java_package</code> ： 指定生成 java 类所在的包名</li>
+<li><code>java_outer_classname</code> ： 指定生成 java 类的名字</li>
+</ul>
+</li>
+<li><code>message</code> 中包含了一个 string 类型的字段(name)。<strong>注意</strong> ：<code>=</code> 号后面都跟着一个字段编号</li>
+<li>每个字段由三部分组成：字段类型 + 字段名称 + 字段编号，在 Java 中每个字段会被编译成 Java 对象</li>
+</ul>
+<p>在这里只需要了解这些 proto 语法即可，在文章后面会更详细的介绍这些语法。</p>
+<p><strong>3. 执行 protoc ，编译 proto 文件</strong></p>
+<p>以输出 Java 文件为例，执行以下命令即可输出对应的 Java 文件，如果配置了 Gradle 插件，可以忽略这一步，直接点击 <strong>Build -&gt; Rebuild Project</strong> 即可生成对应的 Java 文件。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">protoc --java_out&#x3D;.&#x2F;src&#x2F;main&#x2F;java -I&#x3D;.&#x2F;src&#x2F;main&#x2F;proto  .&#x2F;src&#x2F;main&#x2F;proto&#x2F;*.proto</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>--java_out</code> ： 指定输出 Java 文件所在的目录</li>
+<li><code>-I</code> ：指定 proto 文件所在的目录</li>
+<li><code>*.proto</code> ： 表示在 <code>-I</code> 指定的目录下查找以 <code>.proto</code> 结尾的文件</li>
+</ul>
+<p><strong>4. 构建 DataStore</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">object PersonSerializer : Serializer&lt;PersonProtos.Person&gt; &#123;</span><br><span class="line">    override fun readFrom(input: InputStream): PersonProtos.Person &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            return PersonProtos.Person.parseFrom(input) &#x2F;&#x2F; 是编译器自动生成的，用于读取并解析 input 的消息</span><br><span class="line">        &#125; catch (exception: Exception) &#123;</span><br><span class="line">            throw CorruptionException(&quot;Cannot read proto.&quot;, exception)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    override fun writeTo(t: PersonProtos.Person, output: OutputStream) &#x3D; t.writeTo(output) &#x2F;&#x2F; t.writeTo(output) 是编译器自动生成的，用于写入序列化消息</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>实现了 <code>Serializer&lt;T&gt;</code> 接口，这是为了告诉 DataStore 如何从 proto 文件中读写数据</li>
+<li><code>PersonProtos.Person</code> 是通过编译 proto 文件生成的 Java 类</li>
+<li><code>Person.parseFrom(input)</code> 是编译器自动生成的，用于读取并解析 input 的消息</li>
+<li><code>t.writeTo(output)</code> 是编译器自动生成的，用于写入序列化消息</li>
+</ul>
+<p><strong>5. 从 Proto DataStore 中读取数据</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">fun readData(): Flow&lt;PersonProtos.Person&gt; &#123;</span><br><span class="line">    return protoDataStore.data</span><br><span class="line">        .catch &#123;</span><br><span class="line">            if (it is IOException) &#123;</span><br><span class="line">                it.printStackTrace()</span><br><span class="line">                emit(PersonProtos.Person.getDefaultInstance())</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                throw it</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>DataStore 是基于 Flow 实现的，所以通过 <code>dataStore.data</code> 会返回一个 <code>Flow&lt;T&gt;</code>，每当数据变化的时候都会重新发出</li>
+<li><code>catch</code> 用来捕获异常，当读取数据出现异常时会抛出一个异常，如果是 <code>IOException</code> 异常，会发送一个 <code>PersonProtos.Person.getDefaultInstance()</code> 来重新使用，如果是其他异常，最好将它抛出去</li>
+</ul>
+<p><strong>4. 向 Proto DataStore 中写入数据</strong></p>
+<p>在 Proto DataStore 中是通过 <code>DataStore.updateData()</code> 方法写入数据的，<code>DataStore.updateData()</code> 是一个 suspend 函数，所以只能在协程体内使用，每当遇到 suspend 函数以挂起的方式运行，并不会阻塞主线程。</p>
+<p><strong>以挂起的方式运行，不会阻塞主线程</strong> ：也就是协程作用域被挂起, 当前线程中协程作用域之外的代码不会阻塞。</p>
+<p>首先我们需要创建一个 suspend 函数，然后调用 <code>DataStore.updateData()</code> 方法写入数据即可。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">suspend fun saveData(personModel: PersonModel) &#123;</span><br><span class="line">    protoDataStore.updateData &#123; person -&gt;</span><br><span class="line">        person.toBuilder().setAge(personModel.age).setName(personModel.name).build()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>person.toBuilder()</code> 是编译器为每个类生成 Builder 类，用于创建消息实例</p>
+<p>到这里关于 Proto DataStore 读取数据和写入数据已经全部分析完了，接下来分析一下如何<strong>迁移 SharedPreferences 到 Proto DataStore</strong>。</p>
+<h2 id="迁移-SharedPreferences-到-Proto-DataStore"><a href="#迁移-SharedPreferences-到-Proto-DataStore" class="headerlink" title="迁移 SharedPreferences 到 Proto DataStore"></a>迁移 SharedPreferences 到 Proto DataStore</h2><p>迁移 SharedPreferences 到 Proto DataStore  只需要 3 步</p>
+<p><strong>1. 创建映射关系</strong></p>
+<p>将 SharedPreferences 数据迁移到 Proto DataStore 中，需要实现一个映射关系，将 SharedPreferences 中每一对 <code>key-value</code> 数据映射到 proto 文件定义的 message 类型。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">private val shardPrefsMigration &#x3D;</span><br><span class="line">    SharedPreferencesMigration&lt;PersonProtos.Person&gt;(</span><br><span class="line">        context,</span><br><span class="line">        SharedPreferencesRepository.PREFERENCE_NAME</span><br><span class="line">    ) &#123; sharedPreferencesView, person -&gt;</span><br><span class="line">        </span><br><span class="line">        &#x2F;&#x2F; 获取 SharedPreferences 的数据</span><br><span class="line">        val follow &#x3D; sharedPreferencesView.getBoolean(</span><br><span class="line">            PreferencesKeys.KEY_ACCOUNT,</span><br><span class="line">            false</span><br><span class="line">        )</span><br><span class="line">        </span><br><span class="line">        &#x2F;&#x2F; 将 SharedPreferences 每一对 key-value 的数据映射到 Proto DataStore 中</span><br><span class="line">        &#x2F;&#x2F; 将 SP 文件中  ByteCode : true 数据映射到 Person 的成员变量 followAccount 中</span><br><span class="line">        person.toBuilder()</span><br><span class="line">            .setFollowAccount(follow)</span><br><span class="line">            .build()</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>获取 SharedPreferences 存储的 <code>key = ByteCode</code> 的值</li>
+<li>将 <code>key = ByteCode</code> 数据映射到 Person 的成员变量 followAccount 中</li>
+</ul>
+<p><strong>2. 构建 DataStore 并传入 shardPrefsMigration</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">protoDataStore &#x3D; context.createDataStore(</span><br><span class="line">    fileName &#x3D; FILE_NAME,</span><br><span class="line">    serializer &#x3D; PersonSerializer,</span><br><span class="line">    migrations &#x3D; listOf(shardPrefsMigration)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>当 DataStore 对象构建完了之后，需要执行一次读取或者写入操作，即可完成 SharedPreferences 迁移到  DataStore，当迁移成功之后，会自动删除 SharedPreferences 使用的文件，Proto DataStore 和 Preferences DataStore 文件存储路径都是一样的，如下图所示</li>
+</ul>
+<p><img src="http://img.hi-dhl.com/16035372097047.jpg" alt=""></p>
+<p>到这里关于 Jetpack DataStore 实现方式之一 Proto DataStore 全部都分析完了，我们一起来看一下 proto 语法。</p>
+<h2 id="常用的-proto3-语法"><a href="#常用的-proto3-语法" class="headerlink" title="常用的 proto3 语法"></a>常用的 proto3 语法</h2><p>我梳理了常用的 proto3 语法，应该能满足大部分情况，更多语法可以参考 <a href="https://developers.google.com/protocol-buffers/docs/proto3">Google 官方教程</a> ，当掌握 proto3 语法之后，可以顺带了解一下 Proto2 语法，Proto3 虽然简化了 Proto2 的使用，提高了开发的效率，但是因为版本兼容问题，对于早期使用 Protocol Buffer 的团队，大部分都是使用 Proto2 语法。</p>
+<h3 id="一个基本的消息类型"><a href="#一个基本的消息类型" class="headerlink" title="一个基本的消息类型"></a>一个基本的消息类型</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">syntax &#x3D; &quot;proto3&quot;;</span><br><span class="line"></span><br><span class="line">option java_package &#x3D; &quot;com.hi.dhl.datastore.protobuf&quot;;</span><br><span class="line">option java_outer_classname &#x3D; &quot;PersonProtos&quot;;</span><br><span class="line"></span><br><span class="line">message Person &#123;</span><br><span class="line">  &#x2F;&#x2F; 格式：字段类型 + 字段名称 + 字段编号</span><br><span class="line">    string name &#x3D; 1;</span><br><span class="line">    int32 age &#x3D; 2;</span><br><span class="line">    bool followAccount &#x3D; 3;</span><br><span class="line">    repeated string phone &#x3D; 4;</span><br><span class="line">    Address address &#x3D; 5;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">message Address&#123;</span><br><span class="line">    ......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>syntax</code> ：指定 protobuf 的版本，如果没有指定默认使用 proto2，<strong>必须是.proto文件的除空行和注释内容之外的第一行</strong></li>
+<li><code>option</code> ：表示一个可选字段<ul>
+<li><code>java_package</code> ： 指定生成 java 类所在的包名</li>
+<li><code>java_outer_classname</code> ： 指定生成 java 类的名字</li>
+</ul>
+</li>
+<li>在一个 proto 文件中，可以定义多个 message</li>
+<li><code>message</code> 中包含了 3 个字段：一个 string 类型(name)、一个整型类型(age)、一个 bool 类型(followAccount)。<strong>注意</strong> ：<code>=</code> 号后面都跟着一个字段编号</li>
+<li>每个字段由三部分组成：字段类型 + 字段名称 + 字段编号，在 Java 中每个字段会被编译成 Java 对象，其他语言会被编译其他语言类型</li>
+</ul>
+<p><strong>字段类型</strong></p>
+<p>每一个消息类型中包含了很多个消息字段，每个消息字段都有一个类型，接下里用一个表格展示 proto 文件中的类型，以及对应的 Java 类型，如果其他语言可以查看官方文档。</p>
+<table>
+<thead>
+<tr>
+<th>.proto Type</th>
+<th>Notes</th>
+<th>Java Type</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>double</td>
+<td></td>
+<td>double</td>
+</tr>
+<tr>
+<td>float</td>
+<td></td>
+<td>float</td>
+</tr>
+<tr>
+<td>int32</td>
+<td>使用变长编码，如果字段是负值，效率很低，使用 sint32 代替</td>
+<td>int</td>
+</tr>
+<tr>
+<td>int64</td>
+<td>使用变长编码。如果字段是负值，效率很低，使用 sint64 代替</td>
+<td>long</td>
+</tr>
+<tr>
+<td>sint32</td>
+<td>使用变长编码，如果是负值比普通的 int32 更高效</td>
+<td>int</td>
+</tr>
+<tr>
+<td>sint64</td>
+<td>使用变长编码，如果是负值比普通的 int64 更高效</td>
+<td>long</td>
+</tr>
+<tr>
+<td>bool</td>
+<td></td>
+<td>boolean</td>
+</tr>
+<tr>
+<td>string</td>
+<td>字符串必须始终包含 UTF-8 编码或 7-bit ASCII 文本，长度不能超过23</td>
+<td>String</td>
+</tr>
+</tbody></table>
+<p>以上类型是经常会用到的，当然还有其他类型：<code>uint32</code> 、 <code>uint64</code> 、 <code>fixed32</code> 、 <code>fixed64</code> 、 <code>sfixed32</code> 、 <code>sfixed64</code> 、 <code>bytes</code> 等等，更多编码类型可以点击这里查看 <a href="https://developers.google.com/protocol-buffers/docs/encoding?hl=zh-cn">Encoding</a></p>
+<p><strong>字段默认值</strong></p>
+<p>在 Proto3 中使用以下规则，编译成 Java 语言的默认值：</p>
+<ul>
+<li>对于 string 类型，默认值为空字符串（<code>&quot;&quot;</code>）</li>
+<li>对于 byte 类型，默认值是一个大小为 0 空 byte 数组</li>
+<li>对于 bool 类型，默认为 false</li>
+<li>对于数值类型，默认值为 0</li>
+<li>对于枚举类型，默认值是第一个定义的枚举值, 且这个值必须是 0 （这是为了兼容 proto2 语法）</li>
+<li>使用其他消息类型用作字段类型，默认值是 null （下文会详细分析）</li>
+<li>被 repeated 修饰字段，默认值是一个大小为 0 的空 List</li>
+</ul>
+<p><strong>字段编号</strong></p>
+<p>在每一个消息字段 = 号后面都跟着一个字段编号，如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">string name &#x3D; 1;</span><br></pre></td></tr></table></figure>
+
+<p>字段编号用于在消息的二进制格式中识别各个字段，<strong>字段编号非常重要，一旦开始使用就不能够再改变</strong>，字段编号的范围在 [1, 2^29 - 1] 之间，其中 [19000－19999] 作为 Protobuf 预留字段，不能使用。</p>
+<p><strong>注意</strong> ：在范围 [1, 15] 之间的字段编号在编码的时候会占用一个字节，包括字段编号和字段类型，在范围 [16, 2047] 之间的字段编号占用两个字节，因此，应该为频繁出现的消息字段保留 [1, 15] 之间的字段编号，<strong>一定要为将来频繁出现的元素留出一些空间</strong>。</p>
+<p><strong>repeated</strong></p>
+<p>在刚才的示例中，我给一个字段添加了 repeated 修饰符，如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">repeated string phone &#x3D; 4;</span><br></pre></td></tr></table></figure>
+
+<p>被 repeated 修饰的字段，对应 Java 类型中的 List，来看一下编译后的代码。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">private com.google.protobuf.Internal.ProtobufList&lt;java.lang.String&gt; phone_;</span><br></pre></td></tr></table></figure>
+
+<p>ProtobufList 其实是 List 子类，如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public static interface ProtobufList&lt;E&gt; extends List&lt;E&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>包含其他消息类型</strong></p>
+<p>消息字段除了可以使用 <code>int32</code> 、 <code>bool</code> 、<code>string</code> 等等作为字段类型，还可以使用<strong>其他消息类型作为字段类型</strong>，如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">message Person &#123;</span><br><span class="line">    &#x2F;&#x2F; 格式：字段类型 + 字段名称 + 字段编号</span><br><span class="line">    Address address &#x3D; 5;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">message Address&#123;</span><br><span class="line">    ......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="消息嵌套"><a href="#消息嵌套" class="headerlink" title="消息嵌套"></a>消息嵌套</h4><p>在一个 proto 文件中，可以定义多个 message 如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">message Person &#123;</span><br><span class="line">    &#x2F;&#x2F; 格式：字段类型 + 字段名称 + 字段编号</span><br><span class="line">    string name &#x3D; 1;</span><br><span class="line">    int32 age &#x3D; 2;</span><br><span class="line">    bool followAccount &#x3D; 3;</span><br><span class="line">    repeated string phone &#x3D; 4;</span><br><span class="line">    Address address &#x3D; 5;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">message Address&#123;</span><br><span class="line">    string city &#x3D; 1</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当然 message 也是可以层级嵌套的，来看个示例：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">message Person &#123;</span><br><span class="line">    &#x2F;&#x2F; 格式：字段类型 + 字段名称 + 字段编号</span><br><span class="line">    string name &#x3D; 1;</span><br><span class="line">    int32 age &#x3D; 2;</span><br><span class="line">    bool followAccount &#x3D; 3;</span><br><span class="line">    repeated string phone &#x3D; 4;</span><br><span class="line">    </span><br><span class="line">    message Address&#123;</span><br><span class="line">        string city &#x3D; 1;</span><br><span class="line">    &#125;</span><br><span class="line">    Address address &#x3D; 5;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这些 message 会被编译成静态内部类，如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public  static final class Address extends</span><br><span class="line">    com.google.protobuf.GeneratedMessageLite&lt;</span><br><span class="line">        Address, Address.Builder&gt; implements AddressOrBuilder &#123;</span><br><span class="line">   ......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="枚举类型"><a href="#枚举类型" class="headerlink" title="枚举类型"></a>枚举类型</h4><p>同样我们可以给 message 添加枚举类型，也可以使用枚举类型作为字段类型，如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">message Person &#123;    </span><br><span class="line">    string name &#x3D; 1;</span><br><span class="line">    message Address&#123;</span><br><span class="line">        string city &#x3D; 1;</span><br><span class="line">    &#125;</span><br><span class="line">    Address address &#x3D; 5;</span><br><span class="line">    </span><br><span class="line">    enum Weekday&#123;</span><br><span class="line">        SUN &#x3D; 0;</span><br><span class="line">        MON &#x3D; 1;</span><br><span class="line">        TUE &#x3D; 2;</span><br><span class="line">        WED &#x3D; 3;</span><br><span class="line">        THU &#x3D; 4;</span><br><span class="line">        FRI &#x3D; 5;</span><br><span class="line">        SAT &#x3D; 6;</span><br><span class="line">    &#125;</span><br><span class="line">    Weekday weekday &#x3D; 6;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>正如你所看到的，消息字段除了可以使用  <code>int32</code> 、 <code>bool</code> 、<code>string</code> 、其他消息类型作为字段类型之外，还可以使用<strong>枚举类型作为字段类型</strong>。</p>
+<p><strong>注意</strong> ：每一个枚举类型第一个枚举值必须为 0，因为：</p>
+<ul>
+<li>必须有一个 0 值，因为需要将 0 作为默认值</li>
+<li>值为 0 的元素必须是第一个枚举值，这是为了兼容 proto2 语法，在 proto2 中默认值总是第一个枚举值</li>
+</ul>
+<h4 id="oneof"><a href="#oneof" class="headerlink" title="oneof"></a>oneof</h4><p>根据 Google 文档分析 oneof 有两层意思：</p>
+<ul>
+<li>在 oneof 中声明多个字段，同时只有一个字段会被赋值，共享一块内存，主要用来节省内存</li>
+<li>如果 oneof 当中一个字段被赋值，然后在给其他字段赋值，会清除其他已赋值字段的值，最终 oneof 所有字段中只会有一个字段有值</li>
+</ul>
+<p>我们来看一下简单的示例</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">message PreferenceMap &#123;</span><br><span class="line">    map&lt;string, Value&gt; preferences &#x3D; 1;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">message Value &#123;</span><br><span class="line">  oneof valueName &#123;</span><br><span class="line">    bool boolean &#x3D; 1;</span><br><span class="line">    float float &#x3D; 2;</span><br><span class="line">    int32 integer &#x3D; 3;</span><br><span class="line">    int64 long &#x3D; 4;</span><br><span class="line">    string string &#x3D; 5;</span><br><span class="line">    double double &#x3D; 7;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在一个名为 valueName 的 oneof 中声明了很多个字段，这些字段会共享一块内存空间，同时只有一个字段会被赋值</li>
+<li>在名为 PreferenceMap 的 message 中声明了一个 map，Key 是字符串类型，Value 其实是 oneof 中声明的字段，同一时间，一个 Key 只会对应一个 Value</li>
+</ul>
+<p>其实在编译的时候，会为每个 oneof 生成一个 Java 枚举类型，代码如下所示</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public enum ValueNameCase &#123;</span><br><span class="line">  BOOLEAN(1),</span><br><span class="line">  FLOAT(2),</span><br><span class="line">  INTEGER(3),</span><br><span class="line">  LONG(4),</span><br><span class="line">  STRING(5),</span><br><span class="line">  DOUBLE(7),</span><br><span class="line">  VALUENAME_NOT_SET(0); &#x2F;&#x2F; 如果都没有赋值，会返回 &#96;VALUENAME_NOT_SET&#96;</span><br><span class="line">  private final int value;</span><br><span class="line">  private ValueNameCase(int value) &#123;</span><br><span class="line">    this.value &#x3D; value;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>编译器会自动生成 <code>getValueNameCase()</code> 方法，用来检查哪个字段被赋值了，如果都没有赋值，会返回 <code>VALUENAME_NOT_SET</code></p>
+<p>常用的 proto3 语法到这里就介绍完了，文章只列举了常用的语法，如果需要把 proto3 语法都分析完，至少需要 2 篇文章才有可能介绍完，因为篇幅原因，源码分析部分会在后续的文章中分析。</p>
+<h2 id="MAD-Skills-是什么"><a href="#MAD-Skills-是什么" class="headerlink" title="MAD Skills 是什么"></a>MAD Skills 是什么</h2><p>Google 近期发布了 MAD Skills（Modern Android Development）新系列教程，旨在帮助开发者使用最新的技术，开发更好的应用程序，以视频和文章形式介绍 MAD 各个部分，包括 Kotlin、Android Studio、Jetpack、App Bundles 等等, Google 仅仅提供了视频和文章，我在这基础上，我做了一些扩展：</p>
+<ul>
+<li>视频添加上了中英文字幕，帮助更好的学习</li>
+<li>视频的实战部分，将会提供对应的实战案例</li>
+<li>除了实战案例，还会提供对应的源码分析</li>
+</ul>
+<p>每隔几个星期 Google 会发布一系列教程，目前已经开始了一系列关于导航组件 (Navigation component) 的视频教程。双语视频已经同步到 GitHub 仓库 <a href="https://github.com/hi-dhl/MAD-Skills">MAD-Skills</a> 可以先看视频部分，文章以及案例正在火速赶来。</p>
+<p><strong>参考文章</strong></p>
+<ul>
+<li><a href="https://howtodoandroid.com/datastore-android-jetpack">Google-DataStore – Jetpack Alternative For SharedPreferences</a></li>
+<li><a href="https://developers.google.com/protocol-buffers/docs/proto3">Google-Language Guide (proto3)</a></li>
+<li><a href="https://github.com/protocolbuffers/protobuf">GitHub-protobuf</a></li>
+<li><a href="https://www.race604.com/flatbuffers-intro">FlatBuffers 体验</a></li>
+<li><a href="https://developer.ibm.com/zh/articles/j-5things1">Java 对象序列化</a></li>
+<li><a href="https://codeburst.io/json-vs-protocol-buffers-vs-flatbuffers-a4247f8bda6f">JSON vs Protocol Buffers vs FlatBuffers</a></li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>全文到这里就结束了，文章中相关的示例，已经上传到 GitHub 欢迎前去仓库 <code>AndroidX-Jetpack-Practice/DataStoreSimple</code> 切换到 <code>datastore_proto</code> 分支查看。</p>
+<p><a href="https://github.com/hi-dhl/AndroidX-Jetpack-Practice">GitHub 地址：https://github.com/hi-dhl/AndroidX-Jetpack-Practice</a></p>
+<p>当这篇文章写完时，已经写了 4 篇文章了，在准备写这篇文章之前，写了三篇文章介绍了 MAC 和 ubuntu 两种命令行编译方式以及 Gradle 插件的方式编译 proto 文件，因为看了下网上的方式都太老了，而且也不是很清楚，Gradle 插件的方式网上大部分都是 3.0.x ~ 3.7.x 的配置方式，当 <code>protoc &gt;= 3.8</code> 之后有一些不同之处，所以重新写了这三种编译方式，以及记录了在这个过程中遇到的问题。</p>
+<ul>
+<li><a href="https://hi-dhl.com/2020/10/28/jetpack/05-probuff-AndroidStudio">Protobuf | 安装 Gradle 插件编译 proto 文件</a></li>
+<li><a href="https://hi-dhl.com/2020/10/28/android/04-probuff-ubuntu">Protobuf | 如何在 ubuntu 上安装 Protobuf 编译 proto 文件</a></li>
+<li><a href="https://hi-dhl.com/2020/10/28/android/05-probuff-mac">Protobuf | 如何在 MAC 上安装 Protobuf 编译 proto 文件</a></li>
+</ul>
+<p>由于目前主要在 MAC 和 ubuntu 上开发，所以只提供了这两种命令行编译方式，如果在 Win 上开发的同学，可以使用 Gradle 插件编译的方式，如果有帮助 <strong>点个赞</strong> 就是对我最大的鼓励！</p>
+</div><div><p style="height:15px"></p><ul class="page-copyright"><li><strong>本文作者：</strong>hi-dhl</li><li><strong>本文标题：</strong>Google | 再见 SharedPreferences 拥抱 Jetpack DataStore(二)</li><li><strong>本文链接：</strong><a href="" title="{page.title}">https://hi-dhl.com/2020/11/08/jetpack/12-porot-datastore/</a></li><li><strong>版权声明：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://hi-dhl.com" title="{page.title}">hi-dhl</a></li></ul><p style="height:15px"></p></div><!--!--><h1 class="title is-4 is-size-4-mobile"></h1></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2020/11/08/translate/08-java-or-kotlin/"><span class="level-item">「译」Google 官方正解是否应该学习 Kotlin</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content template"><p align="center"><img src="http://cdn.51git.cn/2020-10-07-bytecode.png"></p><p>致力于分享一系列 Android 系统源码、逆向分析、算法、翻译、Jetpack 源码相关的文章，在技术的道路上一起前进</p><h3 class="title is-4">Android10 源码分析</h3><p>正在写一系列的 Android 10 源码分析的文章，了解系统源码，不仅有助于分析问题，在面试过程中，对我们也是非常有帮助的，如果你同我一样喜欢研究 Android 源码，可以关注我 GitHub 上的 <a href="https://github.com/hi-dhl/Android10-Source-Analysis">Android10-Source-Analysis</a>。</p><h3 class="title is-4">算法题库的归纳和总结</h3><p>由于 LeetCode 的题库庞大，每个分类都能筛选出数百道题，由于每个人的精力有限，不可能刷完所有题目，因此我按照经典类型题目去分类、和题目的难易程度去排序。</p><ul><li>数据结构： 数组、栈、队列、字符串、链表、树……</li><li>算法： 查找算法、搜索算法、位运算、排序、数学、……</li></ul><p>每道题目都会用 Java 和 kotlin 去实现，并且每道题目都有解题思路，如果你同我一样喜欢算法、LeetCode，可以关注我 GitHub 上的 LeetCode 题解：<a href="https://github.com/hi-dhl/Leetcode-Solutions-with-Java-And-Kotlin">Leetcode-Solutions-with-Java-And-Kotlin</a>。</p><h3 class="title is-4">精选国外的技术文章</h3><p>目前正在整理和翻译一系列精选国外的技术文章，不仅仅是翻译，很多优秀的英文技术文章提供了很好思路和方法，每篇文章都会有<strong>译者思考</strong>部分，对原文的更加深入的解读，可以关注我 GitHub 上的 <a href="https://github.com/hi-dhl/Technical-Article-Translation">Technical-Article-Translation</a>。</p><p></p></div></div><div class="card"><div class="card-content"><h3 class="title is-5">评论</h3><div class="content" id="valine-thread"></div><script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script><script src="https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js"></script><script>new Valine({
+            el: '#valine-thread' ,
+            notify: false,
+            verify: undefined,
+            appId: 'zfvr24HFhzQ5vtHkr4NQ1fmW-gzGzoHsz',
+            appKey: 'RChgr9mR005hgu4yiQ4WQU3O',
+            placeholder: '说点什么',
+            avatar: 'mm',
+            avatarForce: false,
+            meta: ["nick","mail","link"],
+            pageSize: 10,
+            visitor: false,
+            highlight: true,
+            recordIP: false
+        });</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1 is-sticky"><div class="card widget" id="toc" style="max-height: 500px;overflow: auto;"><div class="card-content"><div class="menu"><h3 class="menu-label">目录</h3><ul class="menu-list"><li><a class="is-flex" href="#前言"><span>前言</span></a></li><li><a class="is-flex" href="#为何要有-Proto-DataStore"><span>为何要有 Proto DataStore</span></a></li><li><a class="is-flex" href="#序列化"><span>序列化</span></a><ul class="menu-list"><li><a class="is-flex" href="#对象的序列化"><span>对象的序列化</span></a></li><li><a class="is-flex" href="#数据序列化"><span>数据序列化</span></a></li><li><a class="is-flex" href="#Protocol-Buffer"><span>Protocol Buffer</span></a></li></ul></li><li><a class="is-flex" href="#如何在项目中使用-Proto-DataStore"><span>如何在项目中使用 Proto DataStore</span></a></li><li><a class="is-flex" href="#迁移-SharedPreferences-到-Proto-DataStore"><span>迁移 SharedPreferences 到 Proto DataStore</span></a></li><li><a class="is-flex" href="#常用的-proto3-语法"><span>常用的 proto3 语法</span></a><ul class="menu-list"><li><a class="is-flex" href="#一个基本的消息类型"><span>一个基本的消息类型</span></a><ul class="menu-list"><li><a class="is-flex" href="#消息嵌套"><span>消息嵌套</span></a></li><li><a class="is-flex" href="#枚举类型"><span>枚举类型</span></a></li><li><a class="is-flex" href="#oneof"><span>oneof</span></a></li></ul></li></ul></li><li><a class="is-flex" href="#MAD-Skills-是什么"><span>MAD Skills 是什么</span></a></li><li><a class="is-flex" href="#总结"><span>总结</span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content size-small"><p><time dateTime="2020-11-08T08:19:47.188Z">2020-11-08</time></p><p class="title is-6"><a class="link-muted" href="/2020/11/08/jetpack/12-porot-datastore/">Google | 再见 SharedPreferences 拥抱 Jetpack DataStore(二)</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-11-08T08:16:13.718Z">2020-11-08</time></p><p class="title is-6"><a class="link-muted" href="/2020/11/08/translate/08-java-or-kotlin/">「译」Google 官方正解是否应该学习 Kotlin</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-10-28T14:25:50.792Z">2020-10-28</time></p><p class="title is-6"><a class="link-muted" href="/2020/10/28/jetpack/05-probuff-AndroidStudio/">Protobuf | 安装 Gradle 插件编译 proto 文件</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-10-28T14:21:39.485Z">2020-10-28</time></p><p class="title is-6"><a class="link-muted" href="/2020/10/28/android/05-probuff-mac/">Protobuf | 如何在 MAC 上安装 Protobuf 编译 proto 文件</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-10-28T14:03:07.989Z">2020-10-28</time></p><p class="title is-6"><a class="link-muted" href="/2020/10/28/android/04-probuff-ubuntu/">Protobuf | 如何在 ubuntu 上安装 Protobuf 编译 proto 文件</a></p><p class="is-uppercase"></p></div></article></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile is-marginless" href="/categories/Android/"><span class="level-start"><span class="level-item">Android</span></span><span class="level-end"><span class="level-item tag">6</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Android10/"><span class="level-start"><span class="level-item">Android10</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/AndroidStudio/"><span class="level-start"><span class="level-item">AndroidStudio</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Jetpack/"><span class="level-start"><span class="level-item">Jetpack</span></span><span class="level-end"><span class="level-item tag">12</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Kotlin/"><span class="level-start"><span class="level-item">Kotlin</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Linux/"><span class="level-start"><span class="level-item">Linux</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/translated/"><span class="level-start"><span class="level-item">精选译文</span></span><span class="level-end"><span class="level-item tag">8</span></span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/Android/"><span class="tag">Android</span><span class="tag is-grey-lightest">6</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E5%8C%85%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-包管理系统</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-窗口管理系统</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-资源管理系统</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/AndroidStudio/"><span class="tag">AndroidStudio</span><span class="tag is-grey-lightest">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android%E6%BA%90%E7%A0%81/"><span class="tag">Android源码</span><span class="tag is-grey-lightest">7</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Fragment/"><span class="tag">Fragment</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Jetpack/"><span class="tag">Jetpack</span><span class="tag is-grey-lightest">14</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Koin/"><span class="tag">Koin</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Kotlin/"><span class="tag">Kotlin</span><span class="tag is-grey-lightest">6</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Linux/"><span class="tag">Linux</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Protobuf/"><span class="tag">Protobuf</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/RxJava/"><span class="tag">RxJava</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Shell/"><span class="tag">Shell</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/kotlin/"><span class="tag">kotlin</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%AF%91%E6%96%87/"><span class="tag">译文</span><span class="tag is-grey-lightest">8</span></a></div></div></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level-item"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img class="logo-img" src="/img/logo.png" alt="dhl" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="dhl" height="28"></a><p class="size-small"><span>&copy; 2020 dhl</span>  <a href="http://www.beian.miit.gov.cn/" target="_blank">京ICP备18050211号-2</a>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            site: {
+                url: 'https://hi-dhl.com',
+                external_link: {"enable":true,"exclude":[]}
+            },
+            article: {
+                highlight: {
+                    clipboard: false,
+                    fold: ''
+                }
+            }
+        };</script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><script src="https://s9.cnzz.com/z_stat.php?id=1278919895&amp;web_id=1278919895" async></script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><script src="/js/imaegoo/universe.js"></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>
