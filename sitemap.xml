@@ -2,6 +2,62 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://hi-dhl.com/2020/11/11/kotlin/05-kotlin-databinding/</loc>
+    
+    <lastmod>2020-11-11T02:55:54.931Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://hi-dhl.com/2020/06/07/android10/window-manager/07-WindowManagerService/</loc>
+    
+    <lastmod>2020-11-11T02:48:17.460Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://hi-dhl.com/2020/06/07/android10/window-manager/06-Window-WindowManager/</loc>
+    
+    <lastmod>2020-11-11T02:48:09.789Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://hi-dhl.com/2020/06/07/android10/window-manager/05-Dialog/</loc>
+    
+    <lastmod>2020-11-11T02:48:05.068Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://hi-dhl.com/2020/06/07/android10/resource-manager/04-APK-resource2/</loc>
+    
+    <lastmod>2020-11-11T02:47:57.876Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://hi-dhl.com/2020/06/07/android10/resource-manager/03-APK-resource/</loc>
+    
+    <lastmod>2020-11-11T02:47:53.008Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://hi-dhl.com/2020/06/07/android10/package-manager/02-APK-install/</loc>
+    
+    <lastmod>2020-11-11T02:47:42.346Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://hi-dhl.com/2020/06/07/android10/package-manager/01-APK-generate/</loc>
+    
+    <lastmod>2020-11-11T02:47:35.359Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://hi-dhl.com/2020/11/08/translate/08-java-or-kotlin/</loc>
     
     <lastmod>2020-11-08T08:48:06.419Z</lastmod>
@@ -201,27 +257,6 @@
     <loc>https://hi-dhl.com/2020/08/22/android/01-screenVideo/</loc>
     
     <lastmod>2020-09-06T04:29:02.724Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://hi-dhl.com/2020/06/07/android10/window-manager/07-WindowManagerService/</loc>
-    
-    <lastmod>2020-09-05T16:28:11.265Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://hi-dhl.com/2020/06/07/android10/window-manager/06-Window-WindowManager/</loc>
-    
-    <lastmod>2020-09-05T16:12:57.258Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://hi-dhl.com/2020/06/07/android10/resource-manager/03-APK-resource/</loc>
-    
-    <lastmod>2020-09-05T12:43:48.447Z</lastmod>
     
   </url>
   
@@ -509,34 +544,6 @@
     <loc>https://hi-dhl.com/backup/LeetCode/search/02-perfect-squares.html</loc>
     
     <lastmod>2020-08-01T04:44:05.388Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://hi-dhl.com/2020/06/07/android10/window-manager/05-Dialog/</loc>
-    
-    <lastmod>2020-08-01T04:42:01.125Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://hi-dhl.com/2020/06/07/android10/resource-manager/04-APK-resource2/</loc>
-    
-    <lastmod>2020-08-01T04:41:49.161Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://hi-dhl.com/2020/06/07/android10/package-manager/02-APK-install/</loc>
-    
-    <lastmod>2020-08-01T04:41:33.065Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://hi-dhl.com/2020/06/07/android10/package-manager/01-APK-generate/</loc>
-    
-    <lastmod>2020-08-01T04:41:24.823Z</lastmod>
     
   </url>
   

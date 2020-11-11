@@ -1,6 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://hi-dhl.com/2020/11/11/kotlin/05-kotlin-databinding/</loc>
+    <lastmod>2020-11-11</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/06/07/android10/window-manager/07-WindowManagerService/</loc>
+    <lastmod>2020-11-11</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/06/07/android10/window-manager/06-Window-WindowManager/</loc>
+    <lastmod>2020-11-11</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/06/07/android10/window-manager/05-Dialog/</loc>
+    <lastmod>2020-11-11</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/06/07/android10/resource-manager/04-APK-resource2/</loc>
+    <lastmod>2020-11-11</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/06/07/android10/resource-manager/03-APK-resource/</loc>
+    <lastmod>2020-11-11</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/06/07/android10/package-manager/02-APK-install/</loc>
+    <lastmod>2020-11-11</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/06/07/android10/package-manager/01-APK-generate/</loc>
+    <lastmod>2020-11-11</lastmod>
+  </url>  <url>
     <loc>https://hi-dhl.com/2020/11/08/translate/08-java-or-kotlin/</loc>
     <lastmod>2020-11-08</lastmod>
   </url>  <url>
@@ -87,15 +111,6 @@
   </url>  <url>
     <loc>https://hi-dhl.com/2020/08/22/android/01-screenVideo/</loc>
     <lastmod>2020-09-06</lastmod>
-  </url>  <url>
-    <loc>https://hi-dhl.com/2020/06/07/android10/window-manager/07-WindowManagerService/</loc>
-    <lastmod>2020-09-05</lastmod>
-  </url>  <url>
-    <loc>https://hi-dhl.com/2020/06/07/android10/window-manager/06-Window-WindowManager/</loc>
-    <lastmod>2020-09-05</lastmod>
-  </url>  <url>
-    <loc>https://hi-dhl.com/2020/06/07/android10/resource-manager/03-APK-resource/</loc>
-    <lastmod>2020-09-05</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/backup/LeetCode/offer/28-dui-cheng-de-er-cha-shu.html</loc>
     <lastmod>2020-09-01</lastmod>
@@ -218,18 +233,6 @@
     <lastmod>2020-08-05</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/backup/LeetCode/search/02-perfect-squares.html</loc>
-    <lastmod>2020-08-01</lastmod>
-  </url>  <url>
-    <loc>https://hi-dhl.com/2020/06/07/android10/window-manager/05-Dialog/</loc>
-    <lastmod>2020-08-01</lastmod>
-  </url>  <url>
-    <loc>https://hi-dhl.com/2020/06/07/android10/resource-manager/04-APK-resource2/</loc>
-    <lastmod>2020-08-01</lastmod>
-  </url>  <url>
-    <loc>https://hi-dhl.com/2020/06/07/android10/package-manager/02-APK-install/</loc>
-    <lastmod>2020-08-01</lastmod>
-  </url>  <url>
-    <loc>https://hi-dhl.com/2020/06/07/android10/package-manager/01-APK-generate/</loc>
     <lastmod>2020-08-01</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/backup/LeetCode/offer/16-shu-zhi-de-zheng-shu-ci-fang.html</loc>
