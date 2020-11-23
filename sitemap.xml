@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://hi-dhl.com/2020/08/22/jetpack/09-kotlin-flow/</loc>
+    
+    <lastmod>2020-11-23T03:23:50.969Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://hi-dhl.com/2020/11/08/translate/08-java-or-kotlin/</loc>
     
     <lastmod>2020-11-12T02:24:01.969Z</lastmod>
@@ -236,13 +243,6 @@
     <loc>https://hi-dhl.com/backup/LeetCode/binary-tree/04-binary-tree-level-order.html</loc>
     
     <lastmod>2020-09-24T08:52:13.697Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://hi-dhl.com/2020/08/22/jetpack/09-kotlin-flow/</loc>
-    
-    <lastmod>2020-09-06T10:39:43.694Z</lastmod>
     
   </url>
   
