@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://hi-dhl.com/2020/08/04/translate/03-dagger-koin/</loc>
+    <lastmod>2020-11-26</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/08/22/AndroidStudio/03-androidstudio-2/</loc>
+    <lastmod>2020-11-26</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/08/22/AndroidStudio/03-androidstudio-1/</loc>
+    <lastmod>2020-11-26</lastmod>
+  </url>  <url>
     <loc>https://hi-dhl.com/2020/08/22/jetpack/09-kotlin-flow/</loc>
     <lastmod>2020-11-23</lastmod>
   </url>  <url>
@@ -14,9 +23,6 @@
     <lastmod>2020-11-11</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/2020/08/05/translate/04-kotlin-performance/</loc>
-    <lastmod>2020-11-11</lastmod>
-  </url>  <url>
-    <loc>https://hi-dhl.com/2020/08/04/translate/03-dagger-koin/</loc>
     <lastmod>2020-11-11</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/2020/07/31/translate/02-fragment-data/</loc>
@@ -191,12 +197,6 @@
     <lastmod>2020-08-22</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/2020/08/22/jetpack/08-PokemonGo/</loc>
-    <lastmod>2020-08-22</lastmod>
-  </url>  <url>
-    <loc>https://hi-dhl.com/2020/08/22/AndroidStudio/03-androidstudio-2/</loc>
-    <lastmod>2020-08-22</lastmod>
-  </url>  <url>
-    <loc>https://hi-dhl.com/2020/08/22/AndroidStudio/03-androidstudio-1/</loc>
     <lastmod>2020-08-22</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/backup/LeetCode/linked-list/02-linked-list-cycle.html</loc>
