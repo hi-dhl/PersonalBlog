@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://hi-dhl.com/2020/06/07/android10/package-manager/01-APK-generate/</loc>
+    <lastmod>2020-12-27</lastmod>
+  </url>  <url>
     <loc>https://hi-dhl.com/2020/12/07/translate/09-android-studio-version/</loc>
     <lastmod>2020-12-07</lastmod>
   </url>  <url>
@@ -56,9 +59,6 @@
     <lastmod>2020-11-11</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/2020/06/07/android10/package-manager/02-APK-install/</loc>
-    <lastmod>2020-11-11</lastmod>
-  </url>  <url>
-    <loc>https://hi-dhl.com/2020/06/07/android10/package-manager/01-APK-generate/</loc>
     <lastmod>2020-11-11</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/2020/11/08/jetpack/12-porot-datastore/</loc>
