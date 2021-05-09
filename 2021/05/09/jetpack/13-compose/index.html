@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="generator" content="Hexo 4.2.1"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>开篇，初识 Compose，永久激活 IntelliJ IDEA - dhl</title><meta description="Jetpack DataStore 另外一种实现方式 Proto DataStore"><meta property="og:type" content="blog"><meta property="og:title" content="开篇，初识 Compose，永久激活 IntelliJ IDEA"><meta property="og:url" content="https://hi-dhl.com/2021/05/09/jetpack/13-compose/"><meta property="og:site_name" content="dhl"><meta property="og:description" content="Jetpack DataStore 另外一种实现方式 Proto DataStore"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="http://img.hi-dhl.com/compose.001.png"><meta property="article:published_time" content="2021-05-09T07:41:11.309Z"><meta property="article:modified_time" content="2021-05-09T07:43:52.700Z"><meta property="article:author" content="dhl"><meta property="article:tag" content="Android10"><meta property="article:tag" content="AndroidStudio"><meta property="article:tag" content="buildSrc"><meta property="article:tag" content="kotlin"><meta property="article:tag" content="run"><meta property="article:tag" content="with"><meta property="article:tag" content="let"><meta property="article:tag" content="also"><meta property="article:tag" content="apply"><meta property="article:tag" content="Jetpack"><meta property="article:tag" content="App Startup"><meta property="article:tag" content="Paging3"><meta property="article:tag" content="Hilt"><meta property="article:tag" content="Dagger"><meta property="article:tag" content="Koin"><meta property="article:tag" content="Jetpack"><meta property="article:tag" content="MVVM"><meta property="article:tag" content="Repository"><meta property="article:tag" content="Kotlin Flow"><meta property="article:tag" content="sealed"><meta property="article:tag" content="RemoteMediator"><meta property="article:tag" content="SharedPreferences"><meta property="article:tag" content="Jetpack DataStore"><meta property="article:tag" content="Proto DataStore"><meta property="article:tag" content="Protobuf"><meta property="article:tag" content="Compose"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="http://img.hi-dhl.com/compose.001.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://hi-dhl.com/2021/05/09/jetpack/13-compose/"},"headline":"dhl","image":["http://img.hi-dhl.com/compose.001.png"],"datePublished":"2021-05-09T07:41:11.309Z","dateModified":"2021-05-09T07:43:52.700Z","author":{"@type":"Person","name":"dhl"},"description":"Jetpack DataStore 另外一种实现方式 Proto DataStore"}</script><link rel="canonical" href="https://hi-dhl.com/2021/05/09/jetpack/13-compose/"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" defer></script><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script></head><body class="is-2-column"><script type="text/javascript" src="/js/imaegoo/night.js"></script><canvas id="universe"></canvas><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img class="logo-img" src="/img/logo.png" alt="dhl" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="dhl" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">首页</a><a class="navbar-item" href="/categories">分类</a><a class="navbar-item" href="/categories/Jetpack">Jetpack</a><a class="navbar-item" href="/categories/Kotlin/">Kotlin</a><a class="navbar-item" href="/categories/Android10/">系统源码</a><a class="navbar-item" href="/categories/translated/">译文</a><a class="navbar-item" href="https://offer.hi-dhl.com">算法</a><a class="navbar-item" href="https://site.51git.cn/">国内外书签</a></div><div class="navbar-end"><a class="navbar-item night" id="night-nav" title="Night Mode" href="javascript:;"><i class="fas fa-moon" id="night-icon"></i></a><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/hi-dhl"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><div class="card-image"><span class="image is-7by3"><img class="thumbnail" src="http://img.hi-dhl.com/compose.001.png" alt="开篇，初识 Compose，永久激活 IntelliJ IDEA"></span></div><article class="card-content article" role="article"><h1 class="title is-3 is-size-4-mobile"></h1><h1 class="title is-3 is-size-4-mobile">开篇，初识 Compose，永久激活 IntelliJ IDEA</h1><div class="article-meta size-small level is-mobile"><div class="level-left"><span class="mr-2"><i class="fa fa-calendar"></i></span><time class="level-item" dateTime="2021-05-09T07:41:11.309Z" title="2021-05-09T07:41:11.309Z">2021-05-09</time><span class="mr-2"> <i class="fa fa-folder"></i></span><span class="level-item"><a class="link-muted" href="/categories/Jetpack/">Jetpack</a></span><span class="mr-2"> <i class="fa fa-tag"></i></span><span class="level-item"><a class="link-muted" href="/tags/Jetpack/">Jetpack</a><span> , </span><a class="link-muted" href="/tags/Compose/">Compose</a></span></div></div><div class="level-left article-meta size-small is-mobile"></div><div><p style="height:15px"></p><ul class="page-blockquote"><li>如果评论区没有及时回复，欢迎来公众号：ByteCode 咨询</li><li>公众号：ByteCode。致力于分享最新技术原创文章，涉及 Kotlin、Jetpack、算法、译文、系统源码相关的文章</li><li></li></ul><p style="height:15px"></p></div><div class="content"><p>Jetpack Compose 是 Android UI 的现代工具包，简化了 Android 上 UI 的开发。你无需编辑任何 XML 布局，使用声明性函数即可构建一个简单的 UI 组件，UI 构建工作将由 Compose 编译器完成。通过更少的代码、强大的工具和直观的 Kotlin api，加速 Android 上 UI 的开发——来自官网。</p>
+<p>Compose 是用 Kotlin 编写的 UI 工具包，JetBrains 基于 Google 提供的 Compose 开发了 Compose for Desktop 简化了桌面应用程序 UI 的开发，因此 Android 和 桌面应用程序之间大部分 UI 代码是共享的。也就是说在 Android 上使用的部分 UI 组件，同样也适用于桌面应用程序 UI 开发，降低了学习成本，在后文中会有详细的演示案例。</p>
+<p>在 Compose for Desktop 之前也提供了 JavaFX 、Java Swing 等等，都是为 Java 设计的 UI 工具包。</p>
+<p>之前我用 JavaFX 开发过 Win 和  Mac 桌面应用程序，最近我也打算用 Compose for Desktop 重写之前开发的桌面应用程序，后面会出一系列文章。</p>
+<p>如何将程序打包成可安装的桌面应用程序，提供给使用者在 Win、Mac 上进行安装，因为篇幅限制，会在后续的文章中介绍。</p>
+<p><strong>通过这篇文章你将学习到以下内容：</strong></p>
+<ul>
+<li>使用破解补丁无限制的使用 IntelliJ IDEA</li>
+<li>破解补丁源码分析</li>
+<li>Compose for Desktop or Android 应用程序所需的环境配置</li>
+<li>如何配置多个不同版本的 JDK</li>
+<li>Compose for Desktop or Android 示例</li>
+</ul>
+<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p>使用 Compose for Desktop 开发桌面应用程序，需要如下工具：</p>
+<ul>
+<li>IntelliJ.IDEA-2020.3 以上</li>
+<li>JDK 11 以上</li>
+<li>Kotlin 1.4.2 以上</li>
+</ul>
+<p>如果你的电脑上安装的是低版本的 JDK，我不建议你贸然升级到最新版本，因为你之前很多项目都是基于当前 JDK 版本进行开发的，而且有一些软件只在低版本的 JDK 上才能运行，例如  JD-GUI，所以可以在电脑上安装多个 JDK，例如开发 Compose for Desktop 使用 JDK 11，开发 Android 项目使用 JDK 8。</p>
+<p>IntelliJ IDEA 开发工具是收费的，而且价格相对而言挺贵的，如果资金允许的前提下，可以前去购买，在本文中也会提供破解补丁，永久激活 IntelliJ IDEA。</p>
+<p>我已经将 JDK 11 、IntelliJ.IDEA-(2020.3 ~ 2021.1) 以及 IntelliJ.IDEA 破解补丁已经上传到网盘上，可以 「关注下方公众号」或者「搜索关注公众号：ByteCode」，回复关键词：compose，即可获取所有软件。</p>
+<h3 id="如何配置多个-JDK"><a href="#如何配置多个-JDK" class="headerlink" title="如何配置多个 JDK"></a>如何配置多个 JDK</h3><p>这一小节中将会介绍如何在 MAC 上安装多个 JDK（PS: win 配置方式网上有很多教程，可自行搜索）：</p>
+<ul>
+<li>首先从 Oracle 官网下载并安装 JDK 11 也可以在公众号内，回复关键词：compose，即可获取</li>
+</ul>
+<p>我们自己安装的 JDK 默认存放在 <code>/Library/Java/JavaVirtualMachines/</code> 目录下。</p>
+<p><img src="http://img.hi-dhl.com/16192607903829.jpg" alt=""></p>
+<ul>
+<li>在命令行中输入 <code>vi ~/.bash_profile</code> 打开 <code>bash_profile</code> 文件</li>
+<li>在 <code>bash_profile</code> 文件中配置不同版本 JDK 的路径</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">export JAVA_8_HOME&#x3D;&#x2F;Library&#x2F;Java&#x2F;JavaVirtualMachines&#x2F;jdk1.8.0_51.jdk&#x2F;Contents&#x2F;Home</span><br><span class="line">export JAVA_11_HOME&#x3D;&#x2F;Library&#x2F;Java&#x2F;JavaVirtualMachines&#x2F;jdk-11.0.11.jdk&#x2F;Contents&#x2F;Home</span><br><span class="line">export JAVA_16_HOME&#x3D;&#x2F;Library&#x2F;Java&#x2F;JavaVirtualMachines&#x2F;jdk-16.0.1.jdk&#x2F;Contents&#x2F;Home</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在 <code>bash_profile</code> 文件中添加下面命令，用于切换不同 JDK 版本</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">alias jdk8&#x3D;&#39;export JAVA_HOME&#x3D;$JAVA_8_HOME&#39;</span><br><span class="line">alias jdk11&#x3D;&#39;export JAVA_HOME&#x3D;$JAVA_11_HOME&#39;</span><br><span class="line">alias jdk16&#x3D;&#39;export JAVA_HOME&#x3D;$JAVA_16_HOME&#39;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>验证是否配置成功</li>
+</ul>
+<p>使用别名 alias <code>jdk8</code> 切换到 JDK 8 ，然后输入 <code>java -version</code> 获取当前 JDK 的版本。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">localhost:~ $ jdk8</span><br><span class="line">localhost:~ $</span><br><span class="line">localhost:~ $ java -version</span><br><span class="line">java version &quot;1.8.0_51&quot;</span><br><span class="line">Java(TM) SE Runtime Environment (build 1.8.0_51-b16)</span><br><span class="line">Java HotSpot(TM) 64-Bit Server VM (build 25.51-b03, mixed mode)</span><br></pre></td></tr></table></figure>
+
+<p>切换到其他 JDK 版本同样如此。</p>
+<p><strong>高版本的 JDK 造成很多软件无法正常运行</strong></p>
+<p>如果我们安装了高版本的 JDK ，即使电脑上有低版本的 JDK，还是会造成很多软件无法正常运行，例如 JD-GUI，所以我们需要修改一下系统默认的 JDK，查看 JD-GUI 执行脚本可知，在 Mac OS 上都是通过下面的命令来获取系统默认的版本。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;usr&#x2F;libexec&#x2F;java_home</span><br></pre></td></tr></table></figure>
+
+<p>系统默认的排序是根据 JDK 的版本从高到低进行排序的，所以通过上面的命令获取到的是最高版本的 JDK，可以通过下面的命令查看 JDK 的排序。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;usr&#x2F;libexec&#x2F;java_home -V</span><br></pre></td></tr></table></figure>
+
+<p>执行结果如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Matching Java Virtual Machines (2):</span><br><span class="line">    16.0.1, x86_64:	&quot;Java SE 16.0.1&quot; &#x2F;Library&#x2F;Java&#x2F;JavaVirtualMachines&#x2F;jdk-16.0.1.jdk&#x2F;Contents&#x2F;Home</span><br><span class="line">    11.0.11, x86_64:	&quot;Java SE 11.0.11&quot;	&#x2F;Library&#x2F;Java&#x2F;JavaVirtualMachines&#x2F;jdk-11.0.11.jdk&#x2F;Contents&#x2F;Home</span><br><span class="line">    1.8.0_51, x86_64:	&quot;Java SE 8&quot;	&#x2F;Library&#x2F;Java&#x2F;JavaVirtualMachines&#x2F;jdk1.8.0_51.jdk&#x2F;Contents&#x2F;Home</span><br></pre></td></tr></table></figure>
+
+
+<p>默认的话使用第一条作为系统默认的 JDK，如果我们想设置 JDK 8 作为默认系统的 JDK，可以修改 Info.plist 文件 <code>JVMVersion</code> 的版本号来调整它的顺序，将 JDK 8 放在第一条，将 JDK 11 和 JDK 16 放在最底下，达到修改默认 JDK 的目的，JDK 11 和 JDK 16 的 Info.plist 文件路径如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;Library&#x2F;Java&#x2F;JavaVirtualMachines&#x2F;jdk-16.0.1.jdk&#x2F;Contents&#x2F;Home&#x2F;Info.plist</span><br><span class="line"></span><br><span class="line">&#x2F;Library&#x2F;Java&#x2F;JavaVirtualMachines&#x2F;jdk-11.0.11.jdk&#x2F;Contents&#x2F;Home&#x2F;Info.plist</span><br></pre></td></tr></table></figure>
+
+<p>只需要将 JDK 11 的 Info.plist 文件 <code>JVMVersion</code> 从 <code>11.0.11</code> 修改至 <code>!11.0.11</code>，JDK 16 的 Info.plist 文件 <code>JVMVersion</code> 从 <code>16.0.1</code> 修改至 <code>!16.0.1</code>，通过这种方式即可将高版本的 JDK 放在最底下，修改完成之后，执行上述命令 <code>/usr/libexec/java_home -V</code> 查看 JDK 的排序，结果如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Matching Java Virtual Machines (2):</span><br><span class="line">    1.8.0_51, x86_64:	&quot;Java SE 8&quot;	&#x2F;Library&#x2F;Java&#x2F;JavaVirtualMachines&#x2F;jdk1.8.0_51.jdk&#x2F;Contents&#x2F;Home</span><br><span class="line">    !16.0.1, x86_64:	&quot;Java SE 16.0.1&quot; &#x2F;Library&#x2F;Java&#x2F;JavaVirtualMachines&#x2F;jdk-16.0.1.jdk&#x2F;Contents&#x2F;Home</span><br><span class="line">    !11.0.11, x86_64:	&quot;Java SE 11.0.11&quot;	&#x2F;Library&#x2F;Java&#x2F;JavaVirtualMachines&#x2F;jdk-11.0.11.jdk&#x2F;Contents&#x2F;Home</span><br></pre></td></tr></table></figure>
+
+<p>最后执行 <code>/usr/libexec/java_home</code> 命令，返回的就是你设置的低版本的 JDK，这样就可以解决高版本的 JDK 造成很多软件无法正常运行的问题。</p>
+<h3 id="IntelliJ-IDEA-破解补丁的使用"><a href="#IntelliJ-IDEA-破解补丁的使用" class="headerlink" title="IntelliJ.IDEA 破解补丁的使用"></a>IntelliJ.IDEA 破解补丁的使用</h3><p>在这一小节中将会介绍如何使用破解补丁永久激活 IntelliJ IDEA。感谢作者 <a href="https://gitee.com/pengzhile/ide-eval-resetter">pengzhile/ide-eval-resetter</a> 提供的插件</p>
+<blockquote>
+<ul>
+<li>IntelliJ IDEA 破解补丁，仅供个人学习使用, 请勿商用，建议购买正版</li>
+<li>破解补丁适用于 IntelliJ IDEA 2020 ~ 2021.1 所有的版本，其他版本尚未尝试</li>
+<li>破解教程适用于 Windows/Mac/Linux 系统</li>
+</ul>
+</blockquote>
+<p><strong>只需要五步即可永久使用 IntelliJ IDEA：</strong></p>
+<ul>
+<li>首先从 IDEA 官网下载 2021.1 版本并安装，也可以在公众号内，回复关键词：compose，即可获取</li>
+<li>安装成功之后运行 IDEA 会弹出一个注册框，勾选 <code>Evaluate for free</code> , 点击 <code>Evaluate</code>, 之后随便创建一个新的项目即可</li>
+<li>将破解补丁 <code>ide-eval-resetter-2.1.6.zip</code> 拖入 IDEA 界面中, 会弹出如下界面，点击 <code>Restart</code> 重启 IDEA 即可（PS：破解补丁放在固定位置，不要移动）</li>
+</ul>
+<p><img src="http://img.hi-dhl.com/16192626130749.jpg" alt=""></p>
+<ul>
+<li>重启 IDEA，点击顶部菜单栏 <code>Help</code>，若列表中出现 <code>Eval Reset</code> 选项，则代表安装成功</li>
+<li>点击顶部菜单栏 <code>Help</code> -&gt; <code>Eval Reset</code>，弹出如下界面，勾选 <code>Auto reset before per restart</code>，每次重启 IDE 会自动重置所有信息，你无需做额外的事情</li>
+</ul>
+<p><img src="http://img.hi-dhl.com/16192628096592.jpg" alt=""></p>
+<p><strong>验证是否永久激活 IntelliJ IDEA：</strong></p>
+<ul>
+<li>运行 IDEA，将系统时间修改到 30 天之后</li>
+<li>点击顶部菜单栏 <code>Help</code> -&gt; <code>Register</code> 查看剩余时间</li>
+<li>重启 IDEA，再次查看剩余时间，破解补丁会重置试用时间为 30 天</li>
+</ul>
+<p>执行完以上步骤就，恭喜你现在可以开始使用 IDEA 开发桌面应用程序了。</p>
+<p>破解补丁不仅适用于 IntelliJ IDEA，还适用于 Jetbrains 其他系列产品：AppCode 、 CLion 、 DataGrip 、GoLand  、PhpStorm 、PyCharm 、Rider 、RubyMine 、WebStorm。</p>
+<p>以上是关于 Compose for Desktop 所需要的工具配置，Compose for Android 的环境配置非常的简单，从官网下载并安装 <a href="https://developer.android.google.cn/studio/preview">Android Studio 2020.3.1 Canary 14</a> 然后在模板列表中选择 Empty Compose Activity ，等待 AS 构建完就可以开始使用了。</p>
+<p><strong>破解补丁分析</strong></p>
+<p>IntelliJ IDEA 是 Jetbrains 旗下的产品，Jetbrains 的产品会允许你试用 30 天，所以作者 pengzhile 写了一个插件，无限重置 30 天试用期，从而达到永久激活 IDEA  的目的。（PS: 如果 IntelliJ IDEA 版本有更新，千万不要升级）。</p>
+<p>首次运行 IntelliJ IDEA 会弹出一个注册框，勾选 <code>Evaluate for free</code> , 点击 <code>Evaluate</code> 会在 <code>/Users/用户名/Library/Application\ Support/JetBrains/IntelliJIdea2021.1/eval/</code> 目录下生成 <code>idea211.evaluation.key</code> 文件，这个文件记录当前的时间戳，作者会读取当前文件内容，重新写入新的时间戳，重置 30 天试用期，核心源码如下：<br/><br><strong>src/main/java/io/zhile/research/intellij/ier/ui/form/MainForm.java</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Resetter.reset(Resetter.getEvalRecords());</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>调用 <code>Resetter.getEvalRecords()</code> 会遍历 <code>/Users/用户名/Library/Application\ Support/JetBrains/IntelliJIdea2021.1/</code> 文件夹下面的内容</li>
+<li>调用 <code>Resetter.reset()</code> 方法，重新写入新的时间戳</li>
+</ul>
+<p>接下里我们一起来看一下 <code>Resetter.getEvalRecords()</code> 方法的实现。 <br/><br><strong>src/main/java/io/zhile/research/intellij/ier/common/Resetter.java</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">protected static File getEvalDir() &#123;</span><br><span class="line">    String configPath &#x3D; PathManager.getConfigPath();</span><br><span class="line"></span><br><span class="line">    return new File(configPath, &quot;eval&quot;);</span><br><span class="line">&#125;</span><br><span class="line">    </span><br><span class="line">public static List&lt;EvalRecord&gt; getEvalRecords() &#123;</span><br><span class="line">    List&lt;EvalRecord&gt; list &#x3D; new ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    File evalDir &#x3D; getEvalDir();</span><br><span class="line">    if (evalDir.exists()) &#123;</span><br><span class="line">        File[] files &#x3D; evalDir.listFiles();</span><br><span class="line">        if (files &#x3D;&#x3D; null) &#123;</span><br><span class="line">            NotificationHelper.showError(null, &quot;List eval license file failed!&quot;);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            for (File file : files) &#123;</span><br><span class="line">                if (!file.getName().endsWith(&quot;.key&quot;)) &#123;</span><br><span class="line">                    continue;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                list.add(new LicenseFileRecord(file));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    .......</span><br></pre></td></tr></table></figure>
+
+<p>调用 <code>getEvalRecords()</code> 方法获取 <code>/Users/用户名/Library/Application\ Support/JetBrains/IntelliJIdea2021.1/eval/</code> 文件夹下以 <code>.key</code> 结尾的文件，然后重写里面的时间戳。<br/><br><strong>src/main/java/io/zhile/research/intellij/ier/common/LicenseFileRecord.java</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public void reset() throws Exception &#123;</span><br><span class="line">    if (!FileUtil.delete(file)) &#123;</span><br><span class="line">        throw new Exception(&quot;Remove &quot; + type + &quot; failed: &quot; + file.getAbsolutePath());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    try (DataOutputStream dos &#x3D; new DataOutputStream(new FileOutputStream(file))) &#123;</span><br><span class="line">        dos.writeLong(~System.currentTimeMillis());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="Compose-for-Android-or-Desktop-示例"><a href="#Compose-for-Android-or-Desktop-示例" class="headerlink" title="Compose for Android or Desktop 示例"></a>Compose for Android or Desktop 示例</h2><p>在文章开头讲述了，Compose 是由 Kotlin 开发的 UI 工具包，Android 和 桌面应用程序之间大部分 UI 代码是共享的，也就是说在 Android 上使用的部分 UI 组件，同样也适用于桌面应用程序开发。如下图所示。</p>
+<p><img src="http://img.hi-dhl.com/compose.001.png" alt=""></p>
+<p>如上图所示 「创建 Button」核心的代码都是一样的， 如果你之前没有了解过 Compose， 上面的代码可能觉得很陌生，可以先忽略，只需要知道 Android 和 桌面应用程序之间大部分 UI 代码是共享的即可。</p>
+<p><strong>参考文章</strong></p>
+<ul>
+<li><a href="https://developer.android.google.cn/jetpack/compose/setup">https://developer.android.google.cn/jetpack/compose/setup</a></li>
+<li><a href="https://gitee.com/pengzhile/ide-eval-resetter">https://gitee.com/pengzhile/ide-eval-resetter</a></li>
+</ul>
+<p align="center">
+<br/>
+<p align="center"><b>全文到这里就结束了，如果有帮助 点个赞 就是对我最大的鼓励</b></p>
+<p align="center"><b>代码不止，文章不停</b></p>
+<p align="center"><b>欢迎关注公众号：ByteCode，持续分享最新的技术</b></p>
+<br/>
+</p>
+
+<hr>
+<p><strong>推荐文章：</strong></p>
+<ul>
+<li><a href="https://juejin.im/post/5edfd7c9e51d45789a7f206d">为数不多的人知道的 Kotlin 技巧以及 原理解析（一）</a></li>
+<li><a href="https://juejin.im/post/6847902224467623950">为数不多的人知道的 Kotlin 技巧以及 原理解析（二）</a></li>
+<li><a href="https://juejin.im/post/5ee4bbe4f265da76b559bdfe">Jetpack 最新成员 AndroidX App Startup 实践以及原理分析</a></li>
+<li><a href="https://juejin.im/post/5ee998e8e51d4573d65df02b">Jetpack 成员 Paging3 实践以及源码分析（一）</a></li>
+<li><a href="https://juejin.im/post/5eeefbf4e51d45742c53ddce">Jetpack 成员 Paging3 网络实践及原理分析（二）</a></li>
+<li><a href="https://mp.weixin.qq.com/s/ABtWRiiIKlQe32Z6sFPbng">Jetpack成员Paging3获取网络分页数据并更新到数据库中（三）</a></li>
+<li><a href="https://mp.weixin.qq.com/s/6yqsc6P4aUn5alvzf9PPVg">Jetpack 成员 Hilt 实践（一）启程过坑记</a> </li>
+<li><a href="https://mp.weixin.qq.com/s/-B7pCNFncGaBW3AJEy8zWA">Jetpack 成员 Hilt 结合 App Startup（二）进阶篇）进阶篇</a></li>
+<li><a href="https://juejin.im/post/5efca0c1e51d4534a40d972f">Jetpack 新成员 Hilt 与 Dagger 大不同（三）落地篇</a></li>
+<li><a href="https://juejin.im/post/5f02114d5188252e8a081afb">全方面分析 Hilt 和 Koin 性能</a></li>
+<li><a href="https://juejin.im/post/5f0d303e6fb9a07e76550d4c?utm_source=gold_browser_extension">神奇宝贝(PokemonGo)  眼前一亮的 Jetpack + MVVM 极简实战</a> </li>
+<li><a href="https://juejin.im/post/6859980718588575757">Kotlin Sealed 是什么？为什么 Google 都用</a></li>
+<li><a href="https://juejin.im/post/6876990111113248775">Kotlin StateFlow 搜索功能的实践 DB + NetWork</a></li>
+<li><a href="https://juejin.im/post/5ed3ef906fb9a047bf7070b6">再见吧 buildSrc, 拥抱 Composing builds 提升 Android 编译速度</a></li>
+<li><a href="https://mp.weixin.qq.com/s/gp3xAafc7hP2f3NHrfAFPg">[Google] 再见 SharedPreferences 拥抱 Jetpack DataStore</a></li>
+<li><a href="https://juejin.cn/post/6905942568467759111">Kotlin 插件的落幕，ViewBinding 的崛起</a> </li>
+<li><a href="https://mp.weixin.qq.com/s/omn7AhHzihhtr0vtq6csNg">竟然如此简单，DataBinding 和 ViewBinding</a></li>
+<li><a href="https://mp.weixin.qq.com/s/QjU5cBEkQMc3Pxf-Zsdobg">图解多平台 AndroidStudio 技巧(三)</a></li>
+<li><a href="https://mp.weixin.qq.com/s/BPuUy85MsREmWSQ3a6WVvQ">Android 12 行为变更，对应用产生的影响</a></li>
+</ul>
+</div><div><p style="height:15px"></p><ul class="page-copyright"><li><strong>本文作者：</strong>hi-dhl</li><li><strong>本文标题：</strong>开篇，初识 Compose，永久激活 IntelliJ IDEA</li><li><strong>本文链接：</strong><a href="" title="{page.title}">https://hi-dhl.com/2021/05/09/jetpack/13-compose/</a></li><li><strong>版权声明：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://hi-dhl.com" title="{page.title}">hi-dhl</a></li></ul><p style="height:15px"></p></div><!--!--><h1 class="title is-4 is-size-4-mobile"></h1></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2021/04/17/android/06-andrid12-change/"><span class="level-item">Android 12 行为变更，对应用产生的影响</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content template"><p align="center"><img src="http://cdn.51git.cn/2020-10-07-bytecode.png"></p><p>致力于分享一系列 Android 系统源码、逆向分析、算法、翻译、Jetpack 源码相关的文章，在技术的道路上一起前进</p><h3 class="title is-4">Android10 源码分析</h3><p>正在写一系列的 Android 10 源码分析的文章，了解系统源码，不仅有助于分析问题，在面试过程中，对我们也是非常有帮助的，如果你同我一样喜欢研究 Android 源码，可以关注我 GitHub 上的 <a href="https://github.com/hi-dhl/Android10-Source-Analysis">Android10-Source-Analysis</a>。</p><h3 class="title is-4">算法题库的归纳和总结</h3><p>由于 LeetCode 的题库庞大，每个分类都能筛选出数百道题，由于每个人的精力有限，不可能刷完所有题目，因此我按照经典类型题目去分类、和题目的难易程度去排序。</p><ul><li>数据结构： 数组、栈、队列、字符串、链表、树……</li><li>算法： 查找算法、搜索算法、位运算、排序、数学、……</li></ul><p>每道题目都会用 Java 和 kotlin 去实现，并且每道题目都有解题思路，如果你同我一样喜欢算法、LeetCode，可以关注我 GitHub 上的 LeetCode 题解：<a href="https://github.com/hi-dhl/Leetcode-Solutions-with-Java-And-Kotlin">Leetcode-Solutions-with-Java-And-Kotlin</a>。</p><h3 class="title is-4">精选国外的技术文章</h3><p>目前正在整理和翻译一系列精选国外的技术文章，不仅仅是翻译，很多优秀的英文技术文章提供了很好思路和方法，每篇文章都会有<strong>译者思考</strong>部分，对原文的更加深入的解读，可以关注我 GitHub 上的 <a href="https://github.com/hi-dhl/Technical-Article-Translation">Technical-Article-Translation</a>。</p><p></p></div></div><div class="card"><div class="card-content"><h3 class="title is-5">评论</h3><div class="content" id="valine-thread"></div><script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script><script src="https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js"></script><script>new Valine({
+            el: '#valine-thread' ,
+            notify: false,
+            verify: undefined,
+            appId: 'zfvr24HFhzQ5vtHkr4NQ1fmW-gzGzoHsz',
+            appKey: 'RChgr9mR005hgu4yiQ4WQU3O',
+            placeholder: '说点什么',
+            avatar: 'mm',
+            avatarForce: false,
+            meta: ["nick","mail","link"],
+            pageSize: 10,
+            visitor: false,
+            highlight: true,
+            recordIP: false
+        });</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1 is-sticky"><div class="card widget" id="toc" style="max-height: 500px;overflow: auto;"><div class="card-content"><div class="menu"><h3 class="menu-label">目录</h3><ul class="menu-list"><li><a class="is-flex" href="#环境"><span>环境</span></a><ul class="menu-list"><li><a class="is-flex" href="#如何配置多个-JDK"><span>如何配置多个 JDK</span></a></li><li><a class="is-flex" href="#IntelliJ-IDEA-破解补丁的使用"><span>IntelliJ.IDEA 破解补丁的使用</span></a></li></ul></li><li><a class="is-flex" href="#Compose-for-Android-or-Desktop-示例"><span>Compose for Android or Desktop 示例</span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content size-small"><p><time dateTime="2021-05-09T07:41:11.309Z">2021-05-09</time></p><p class="title is-6"><a class="link-muted" href="/2021/05/09/jetpack/13-compose/">开篇，初识 Compose，永久激活 IntelliJ IDEA</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2021-04-17T10:46:33.038Z">2021-04-17</time></p><p class="title is-6"><a class="link-muted" href="/2021/04/17/android/06-andrid12-change/">Android 12 行为变更，对应用产生的影响</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2021-01-26T02:56:06.126Z">2021-01-26</time></p><p class="title is-6"><a class="link-muted" href="/2021/01/26/AndroidStudio/04-androidstuido-3/">图解多平台 AndroidStudio 技巧(三)</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2021-01-26T02:51:26.317Z">2021-01-26</time></p><p class="title is-6"><a class="link-muted" href="/2021/01/26/kotlin/07-use-viewbinding/">竟然如此简单，DataBinding 和 ViewBinding</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-12-30T08:10:34.203Z">2020-12-30</time></p><p class="title is-6"><a class="link-muted" href="/2020/12/30/kotlin/06-viewbinding/">Kotlin 插件的落幕，ViewBinding 的崛起</a></p><p class="is-uppercase"></p></div></article></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile is-marginless" href="/categories/Android/"><span class="level-start"><span class="level-item">Android</span></span><span class="level-end"><span class="level-item tag">6</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Android-12/"><span class="level-start"><span class="level-item">Android 12</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Android10/"><span class="level-start"><span class="level-item">Android10</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/AndroidStudio/"><span class="level-start"><span class="level-item">AndroidStudio</span></span><span class="level-end"><span class="level-item tag">5</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Jetpack/"><span class="level-start"><span class="level-item">Jetpack</span></span><span class="level-end"><span class="level-item tag">14</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Kotlin/"><span class="level-start"><span class="level-item">Kotlin</span></span><span class="level-end"><span class="level-item tag">6</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Linux/"><span class="level-start"><span class="level-item">Linux</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/translated/"><span class="level-start"><span class="level-item">译文</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E8%AF%91%E6%96%87-AndroidStudio/"><span class="level-start"><span class="level-item">译文,AndroidStudio</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E8%AF%91%E6%96%87-Kotlin/"><span class="level-start"><span class="level-item">译文,Kotlin</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/Android/"><span class="tag">Android</span><span class="tag is-grey-lightest">7</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android-12/"><span class="tag">Android 12</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E5%8C%85%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-包管理系统</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-窗口管理系统</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-资源管理系统</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/AndroidStudio/"><span class="tag">AndroidStudio</span><span class="tag is-grey-lightest">6</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android%E6%BA%90%E7%A0%81/"><span class="tag">Android源码</span><span class="tag is-grey-lightest">7</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Compose/"><span class="tag">Compose</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Fragment/"><span class="tag">Fragment</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Jetpack/"><span class="tag">Jetpack</span><span class="tag is-grey-lightest">18</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Koin/"><span class="tag">Koin</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Kotlin/"><span class="tag">Kotlin</span><span class="tag is-grey-lightest">11</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Linux/"><span class="tag">Linux</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Protobuf/"><span class="tag">Protobuf</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/RxJava/"><span class="tag">RxJava</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Shell/"><span class="tag">Shell</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/kotlin/"><span class="tag">kotlin</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%AF%91%E6%96%87/"><span class="tag">译文</span><span class="tag is-grey-lightest">9</span></a></div></div></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level-item"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img class="logo-img" src="/img/logo.png" alt="dhl" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="dhl" height="28"></a><p class="size-small"><span>&copy; 2021 dhl</span>  <a href="http://www.beian.miit.gov.cn/" target="_blank">京ICP备18050211号-2</a>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            site: {
+                url: 'https://hi-dhl.com',
+                external_link: {"enable":true,"exclude":[]}
+            },
+            article: {
+                highlight: {
+                    clipboard: false,
+                    fold: ''
+                }
+            }
+        };</script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><script src="https://s9.cnzz.com/z_stat.php?id=1278919895&amp;web_id=1278919895" async></script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><script src="/js/imaegoo/universe.js"></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>
