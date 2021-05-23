@@ -1,0 +1,776 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="generator" content="Hexo 4.2.1"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Android 常用资源汇总 - dhl</title><meta description="常用颜色透明度汇总、常用系统 API、插件版本、 Gradle 版本、系统版本之间的对应关系，快来收藏吧"><meta property="og:type" content="blog"><meta property="og:title" content="Android 常用资源汇总"><meta property="og:url" content="https://hi-dhl.com/2021/05/23/android/07-Android-resource/"><meta property="og:site_name" content="dhl"><meta property="og:description" content="常用颜色透明度汇总、常用系统 API、插件版本、 Gradle 版本、系统版本之间的对应关系，快来收藏吧"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://hi-dhl.com/img/og_image.png"><meta property="article:published_time" content="2021-05-23T11:38:11.187Z"><meta property="article:modified_time" content="2021-05-23T11:41:41.761Z"><meta property="article:author" content="dhl"><meta property="article:tag" content="Java"><meta property="article:tag" content="Kotlin"><meta property="article:tag" content="Fragment"><meta property="article:tag" content="Dagger"><meta property="article:tag" content="Koin"><meta property="article:tag" content="FragmentContainerView"><meta property="article:tag" content="Kotlin"><meta property="article:tag" content="Coil"><meta property="article:tag" content="Glide"><meta property="article:tag" content="Picasso"><meta property="article:tag" content="AndroidStudio"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://hi-dhl.com/2021/05/23/android/07-Android-resource/"},"headline":"dhl","image":["https://hi-dhl.com/img/og_image.png"],"datePublished":"2021-05-23T11:38:11.187Z","dateModified":"2021-05-23T11:41:41.761Z","author":{"@type":"Person","name":"dhl"},"description":"常用颜色透明度汇总、常用系统 API、插件版本、 Gradle 版本、系统版本之间的对应关系，快来收藏吧"}</script><link rel="canonical" href="https://hi-dhl.com/2021/05/23/android/07-Android-resource/"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" defer></script><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script></head><body class="is-2-column"><script type="text/javascript" src="/js/imaegoo/night.js"></script><canvas id="universe"></canvas><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img class="logo-img" src="/img/logo.png" alt="dhl" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="dhl" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">首页</a><a class="navbar-item" href="/categories">分类</a><a class="navbar-item" href="/categories/Jetpack">Jetpack</a><a class="navbar-item" href="/categories/Kotlin/">Kotlin</a><a class="navbar-item" href="/categories/Android10/">系统源码</a><a class="navbar-item" href="/categories/translated/">译文</a><a class="navbar-item" href="https://offer.hi-dhl.com">算法</a><a class="navbar-item" href="https://site.51git.cn/">国内外书签</a></div><div class="navbar-end"><a class="navbar-item night" id="night-nav" title="Night Mode" href="javascript:;"><i class="fas fa-moon" id="night-icon"></i></a><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/hi-dhl"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><h1 class="title is-3 is-size-4-mobile"></h1><h1 class="title is-3 is-size-4-mobile">Android 常用资源汇总</h1><div class="article-meta size-small level is-mobile"><div class="level-left"><span class="mr-2"><i class="fa fa-calendar"></i></span><time class="level-item" dateTime="2021-05-23T11:38:11.187Z" title="2021-05-23T11:38:11.187Z">2021-05-23</time><span class="mr-2"> <i class="fa fa-folder"></i></span><span class="level-item"><a class="link-muted" href="/categories/Android-AndroidStudio/">Android,AndroidStudio</a></span><span class="mr-2"> <i class="fa fa-tag"></i></span><span class="level-item"><a class="link-muted" href="/tags/AndroidStudio/">AndroidStudio</a><span> , </span><a class="link-muted" href="/tags/Android/">Android</a></span></div></div><div class="level-left article-meta size-small is-mobile"></div><div><p style="height:15px"></p><ul class="page-blockquote"><li>如果评论区没有及时回复，欢迎来公众号：ByteCode 咨询</li><li>公众号：ByteCode。致力于分享最新技术原创文章，涉及 Kotlin、Jetpack、算法、译文、系统源码相关的文章</li><li></li></ul><p style="height:15px"></p></div><div class="content"><h3 id="颜色透明度汇总"><a href="#颜色透明度汇总" class="headerlink" title="颜色透明度汇总"></a>颜色透明度汇总</h3><p>半透明颜色值不同于平时使用的颜色，半透明颜色值共 8 位，例如：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">android:background&#x3D;&quot;#AAxxxxxx&quot;</span><br></pre></td></tr></table></figure>
+
+<p>前 2 位(AA)是透明度，后 6 位(xxxxxx) 是颜色，透明度和颜色结合在一起就可以写出各种颜色的透明度。下面是透明度说明表。</p>
+<table>
+<thead>
+<tr>
+<th>透明度百分比</th>
+<th>对应的值</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>100%</td>
+<td>FF</td>
+<td>完全不透明</td>
+</tr>
+<tr>
+<td>95%</td>
+<td>F2</td>
+<td></td>
+</tr>
+<tr>
+<td>90%</td>
+<td>E6</td>
+<td></td>
+</tr>
+<tr>
+<td>85%</td>
+<td>D9</td>
+<td></td>
+</tr>
+<tr>
+<td>80%</td>
+<td>CC</td>
+<td></td>
+</tr>
+<tr>
+<td>75%</td>
+<td>BF</td>
+<td></td>
+</tr>
+<tr>
+<td>70%</td>
+<td>B3</td>
+<td></td>
+</tr>
+<tr>
+<td>65%</td>
+<td>A6</td>
+<td></td>
+</tr>
+<tr>
+<td>60%</td>
+<td>99</td>
+<td></td>
+</tr>
+<tr>
+<td>55%</td>
+<td>8C</td>
+<td></td>
+</tr>
+<tr>
+<td>50%</td>
+<td>80</td>
+<td>半透明    50%</td>
+</tr>
+<tr>
+<td>45%</td>
+<td>73</td>
+<td></td>
+</tr>
+<tr>
+<td>40%</td>
+<td>40</td>
+<td></td>
+</tr>
+<tr>
+<td>35%</td>
+<td>59</td>
+<td></td>
+</tr>
+<tr>
+<td>30%</td>
+<td>4D</td>
+<td></td>
+</tr>
+<tr>
+<td>25%</td>
+<td>40</td>
+<td></td>
+</tr>
+<tr>
+<td>20%</td>
+<td>33</td>
+<td></td>
+</tr>
+<tr>
+<td>15%</td>
+<td>26</td>
+<td></td>
+</tr>
+<tr>
+<td>10%</td>
+<td>1A</td>
+<td></td>
+</tr>
+<tr>
+<td>5%</td>
+<td>0D</td>
+<td></td>
+</tr>
+<tr>
+<td>0%</td>
+<td>00</td>
+<td>全透明</td>
+</tr>
+</tbody></table>
+<p><strong>使用举例：</strong></p>
+<ul>
+<li>全透明：#00000000</li>
+<li>半透明：#80000000</li>
+<li>不透明：#FF000000</li>
+<li>白色半透明：#80FFFFFF</li>
+</ul>
+<h3 id="不同像素密度的配置限定符"><a href="#不同像素密度的配置限定符" class="headerlink" title="不同像素密度的配置限定符"></a>不同像素密度的配置限定符</h3><p><a href="https://developer.android.com/training/multiscreen/screendensities?hl=zh-cn">官方链接：https://developer.android.com/training/multiscreen/screendensities?hl=zh-cn</a></p>
+<table>
+<thead>
+<tr>
+<th>密度限定符<span class="Apple-tab-span" style="white-space:pre"></span></th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ldpi</td>
+<td>适用于低密度 (ldpi) 屏幕 (~ 120dpi) 的资源</td>
+</tr>
+<tr>
+<td>mdpi</td>
+<td>适用于中密度 (mdpi) 屏幕 (~ 160dpi) 的资源（这是基准密度）</td>
+</tr>
+<tr>
+<td>hdpi</td>
+<td>适用于高密度 (hdpi) 屏幕 (~ 240dpi) 的资源</td>
+</tr>
+<tr>
+<td>xhdpi</td>
+<td>适用于加高 (xhdpi) 密度屏幕 (~ 320dpi) 的资源</td>
+</tr>
+<tr>
+<td>xxhdpi</td>
+<td>适用于超超高密度 (xxhdpi) 屏幕 (~ 480dpi) 的资源</td>
+</tr>
+<tr>
+<td>xxxhdpi</td>
+<td>适用于超超超高密度 (xxxhdpi) 屏幕 (~ 640dpi) 的资源</td>
+</tr>
+<tr>
+<td>nodpi</td>
+<td>适用于所有密度的资源。这些是与密度无关的资源。无论当前屏幕的密度是多少，系统都不会缩放以此限定符标记的资源</td>
+</tr>
+<tr>
+<td>tvdpi</td>
+<td>适用于密度介于 mdpi 和 hdpi 之间的屏幕（约 213dpi）的资源。这不属于“主要”密度组。它主要用于电视，而大多数应用都不需要它。对于大多数应用而言，提供 mdpi 和 hdpi 资源便已足够，系统将视情况对其进行缩放。如果您发现有必要提供 tvdpi 资源，应按一个系数来确定其大小，即 1.33*mdpi。例如，如果某张图片在 mdpi 屏幕上的大小为 100px x 100px，那么它在 tvdpi 屏幕上的大小应该为 133px x 133px</td>
+</tr>
+</tbody></table>
+<p>要针对不同的密度创建备用可绘制位图资源，您应遵循六种主要密度之间的 3:4:6:8:12:16 缩放比。例如，如果您有一个可绘制位图资源，它在中密度屏幕上的大小为 48x48 像素，那么它在其他各种密度的屏幕上的大小应该为：</p>
+<ul>
+<li>36x36 (0.75x) - 低密度 (ldpi)</li>
+<li>48x48（1.0x 基准）- 中密度 (mdpi)</li>
+<li>72x72 (1.5x) - 高密度 (hdpi)</li>
+<li>96x96 (2.0x) - 超高密度 (xhdpi)</li>
+<li>144x144 (3.0x) - 超超高密度 (xxhdpi)</li>
+<li>192x192 (4.0x) - 超超超高密度 (xxxhdpi)</li>
+</ul>
+<h3 id="Android-studio-插件版本与-gradle-版本对应关系"><a href="#Android-studio-插件版本与-gradle-版本对应关系" class="headerlink" title="Android studio 插件版本与 gradle 版本对应关系"></a>Android studio 插件版本与 gradle 版本对应关系</h3><p><strong>Android studio 插件版本与 gradle 版本对应关系如下所示：</strong></p>
+<table>
+<thead>
+<tr>
+<th>AS 插件版本</th>
+<th>Gradle 版本</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1.0.0 - 1.1.3</td>
+<td>2.2.1 - 2.3</td>
+</tr>
+<tr>
+<td>1.2.0 - 1.3.1</td>
+<td>2.2.1 - 2.9</td>
+</tr>
+<tr>
+<td>1.5.0</td>
+<td>2.2.1 - 2.13</td>
+</tr>
+<tr>
+<td>2.0.0 - 2.1.2</td>
+<td>2.10 - 2.13</td>
+</tr>
+<tr>
+<td>2.1.3 - 2.2.3</td>
+<td>2.14.1+</td>
+</tr>
+<tr>
+<td>2.3.0+</td>
+<td>3.3+</td>
+</tr>
+<tr>
+<td>3.0.0+</td>
+<td>4.1+</td>
+</tr>
+<tr>
+<td>3.1.0+</td>
+<td>4.4+</td>
+</tr>
+<tr>
+<td>3.2.0 - 3.2.1</td>
+<td>4.6+</td>
+</tr>
+<tr>
+<td>3.3.0 - 3.3.3</td>
+<td>4.10.1+</td>
+</tr>
+<tr>
+<td>3.4.0 - 3.4.3</td>
+<td>5.1.1+</td>
+</tr>
+<tr>
+<td>3.5.0 - 3.5.4</td>
+<td>5.4.1+</td>
+</tr>
+<tr>
+<td>3.6.0 - 3.6.4</td>
+<td>5.6.4+</td>
+</tr>
+<tr>
+<td>4.0.0+</td>
+<td>6.1.1+</td>
+</tr>
+<tr>
+<td>4.1.0+</td>
+<td>6.5+</td>
+</tr>
+</tbody></table>
+<p>以上信息参考 <a href="https://developer.android.google.cn/studio/releases/gradle-plugin#updating-plugin">Android Gradle 插件版本说明</a></p>
+<p>Android Studio 根据动物名称来命名，而 Android 系统 10.0 之前都是以甜点的方式来命名，我们在来会汇总一下 Android 系统的命名方案。</p>
+<p>2007 年 11 月 5 日发布最初的版本（Android 0.5），至今 Android 发行了多个版本，Android 操作系统有预发行的内部版本，分别为铁臂阿童木（Astro）与机器人班亭（Bender），从 2009 年 5 月开始， Android 的版本代号以甜点来命名，且每个代号间的前缀以英文本母序接续排列。</p>
+<h3 id="Android-系统名字、版本、API-level-的对应关系"><a href="#Android-系统名字、版本、API-level-的对应关系" class="headerlink" title="Android 系统名字、版本、API level 的对应关系"></a>Android 系统名字、版本、API level 的对应关系</h3><p><strong>Android 系统名字、版本、API level 的对应关系如下所示：</strong></p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>版本号</th>
+<th>发版日期</th>
+<th>API</th>
+<th>API</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Android 1.0</td>
+<td>1.0</td>
+<td>2008年9月23日</td>
+<td>1</td>
+<td>BASE</td>
+</tr>
+<tr>
+<td>Android 1.1</td>
+<td>1.1</td>
+<td>2009年2月9日</td>
+<td>2</td>
+<td>BASE_1_1</td>
+</tr>
+<tr>
+<td>Android Cupcake（纸杯蛋糕）</td>
+<td>1.5</td>
+<td>2009年4月27日</td>
+<td>3</td>
+<td>CUPCAKE</td>
+</tr>
+<tr>
+<td>Android Donut（甜甜圈）</td>
+<td>1.6</td>
+<td>2009年9月15日</td>
+<td>4</td>
+<td>DONUT</td>
+</tr>
+<tr>
+<td>Android Eclair（闪电泡芙）</td>
+<td>2.0 – 2.1</td>
+<td>2009年10月26日</td>
+<td>5 – 7</td>
+<td>ECLAIR_MR1（2.1.x）<br/> ECLAIR_0_1（2.0.1）<br/> ECLAIR（2.0）</td>
+</tr>
+<tr>
+<td>Android Froyo（优格冰淇淋）</td>
+<td>2.2 – 2.2.3</td>
+<td>2010年5月20日</td>
+<td>8</td>
+<td>FROYO</td>
+</tr>
+<tr>
+<td>Android Gingerbread（姜饼）</td>
+<td>2.3 – 2.3.7</td>
+<td>2010年12月6日</td>
+<td>9 - 10</td>
+<td>GINGERBREAD_MR1（ 2.3.3 -  2.3.4）<br/> GINGERBREAD（2.3、2.3.1、2.3.2）</td>
+</tr>
+<tr>
+<td>Android Honeycomb（蜂巢）</td>
+<td>3.0 – 3.2.6</td>
+<td>2011年2月22日</td>
+<td>11 - 13</td>
+<td>HONEYCOMB_MR2（3.2）<br/> HONEYCOMB_MR1（3.1x） <br/> HONEYCOMB（3.0.x）</td>
+</tr>
+<tr>
+<td>Android Ice Cream Sandwich（冰淇淋三明治）</td>
+<td>4.0 – 4.0.4</td>
+<td>2011年10月18日</td>
+<td>14 - 15</td>
+<td>ICE_CREAM_SANDWICH_MR1（4.0.3、4.0.4）<br/>  ICE_CREAM_SANDWICH （4.0、4.0.1、4.0.2）</td>
+</tr>
+<tr>
+<td>Android Jelly Bean（果冻豆）</td>
+<td>4.1 – 4.3.1</td>
+<td>2012年7月9日</td>
+<td>16 – 18</td>
+<td>JELLY_BEAN_MR2（4.3） <br/> JELLY_BEAN_MR1（4.2 - 4.2.2）<br/> JELLY_BEAN（4.1 - 4.1.1）</td>
+</tr>
+<tr>
+<td>Android KitKat（奇巧巧克力）</td>
+<td>4.4 – 4.4.4</td>
+<td>2013年10月31日</td>
+<td>19 - 20</td>
+<td>KITKAT</td>
+</tr>
+<tr>
+<td>Android Lollipop（棒棒糖）</td>
+<td>5.0 – 5.1.1</td>
+<td>2014年11月12日</td>
+<td>21 - 22</td>
+<td>LOLLIPOP_MR1（5.1） <br/> LOLLIPOP（5.0）</td>
+</tr>
+<tr>
+<td>Android Marshmallow（棉花糖）</td>
+<td>6.0 – 6.0.1</td>
+<td>2015年10月5日</td>
+<td>23</td>
+<td>M</td>
+</tr>
+<tr>
+<td>Android Nougat（牛轧糖）</td>
+<td>7.0 – 7.1.2</td>
+<td>2016年8月22日</td>
+<td>24 - 25</td>
+<td>N_MR1（7.1 - 7.11） N（7.0）</td>
+</tr>
+<tr>
+<td>Android Oreo（奥利奥）</td>
+<td>8.0 – 8.1</td>
+<td>2017年8月21日</td>
+<td>26 – 27</td>
+<td>O_MR1（8.1）  O （8.0）</td>
+</tr>
+<tr>
+<td>Android Pie（派）</td>
+<td>9</td>
+<td>2018年8月6日</td>
+<td>28</td>
+<td>P</td>
+</tr>
+<tr>
+<td>Android 10</td>
+<td>10</td>
+<td>2019年9月3日</td>
+<td>29</td>
+<td>Q</td>
+</tr>
+<tr>
+<td>Android 11</td>
+<td>11</td>
+<td>2020年2月19日</td>
+<td>30</td>
+<td>R</td>
+</tr>
+</tbody></table>
+<p>从 Android Q 开始不再以甜品命名，且直接称 Android Q 为 Android 10。以上信息参考 <a href="https://developer.android.com/guide/topics/manifest/uses-sdk-element.html">uses-sdk</a></p>
+<h3 id="跳转到系统各个设置界面"><a href="#跳转到系统各个设置界面" class="headerlink" title="跳转到系统各个设置界面"></a>跳转到系统各个设置界面</h3><p><strong>跳转常用方法如下：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; 第一个参：包名</span><br><span class="line">&#x2F;&#x2F; 第二个参数：各个设置的类名(可以参考下面)</span><br><span class="line">ComponentName cm &#x3D; new ComponentName(&quot;com.android.settings&quot;,</span><br><span class="line">            &quot;com.android.settings.RadioInfo&quot;);</span><br><span class="line">    intent.setComponent(cm);</span><br><span class="line">    intent.setAction(&quot;android.intent.action.VIEW&quot;);</span><br><span class="line">    startActivity(intent);</span><br></pre></td></tr></table></figure>
+
+<p><strong>各个设置的类名汇总</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">com.android.settings.AccessibilitySettings 辅助功能设置</span><br><span class="line">com.android.settings.ActivityPicker 选择活动</span><br><span class="line">com.android.settings.ApnSettings APN设置</span><br><span class="line">com.android.settings.ApplicationSettings 应用程序设置</span><br><span class="line">com.android.settings.BandMode 设置GSM&#x2F;UMTS波段</span><br><span class="line">com.android.settings.BatteryInfo 电池信息</span><br><span class="line">com.android.settings.DateTimeSettings 日期和坝上旅游网时间设置</span><br><span class="line">com.android.settings.DateTimeSettingsSetupWizard 日期和时间设置</span><br><span class="line">com.android.settings.DevelopmentSettings 应用程序设置&#x3D;》开发设置</span><br><span class="line">com.android.settings.DeviceAdminSettings 设备管理器</span><br><span class="line">com.android.settings.DeviceInfoSettings 关于手机</span><br><span class="line">com.android.settings.Display 显示——设置显示字体大小及预览</span><br><span class="line">com.android.settings.DisplaySettings 显示设置</span><br><span class="line">com.android.settings.DockSettings 底座设置</span><br><span class="line">com.android.settings.IccLockSettings SIM卡锁定设置</span><br><span class="line">com.android.settings.InstalledAppDetails 语言和键盘设置</span><br><span class="line">com.android.settings.LanguageSettings 语言和键盘设置</span><br><span class="line">com.android.settings.LocalePicker 选择手机语言</span><br><span class="line">com.android.settings.LocalePickerInSetupWizard 选择手机语言</span><br><span class="line">com.android.settings.ManageApplications 已下载（安装）软件列表</span><br><span class="line">com.android.settings.MasterClear 恢复出厂设置</span><br><span class="line">com.android.settings.MediaFormat 格式化手机闪存</span><br><span class="line">com.android.settings.PhysicalKeyboardSettings 设置键盘</span><br><span class="line">com.android.settings.PrivacySettings 隐私设置</span><br><span class="line">com.android.settings.ProxySelector 代理设置</span><br><span class="line">com.android.settings.RadioInfo 手机信息</span><br><span class="line">com.android.settings.RunningServices 正在运行的程序（服务）</span><br><span class="line">com.android.settings.SecuritySettings 位置和安全设置</span><br><span class="line">com.android.settings.Settings 系统设置</span><br><span class="line">com.android.settings.SettingsSafetyLegalActivity 安全信息</span><br><span class="line">com.android.settings.SoundSettings 声音设置</span><br><span class="line">com.android.settings.TestingSettings 测试——显示手机信息、电池信息、使用情况统计、Wifi information、服务信息</span><br><span class="line">com.android.settings.TetherSettings 绑定与便携式热点</span><br><span class="line">com.android.settings.TextToSpeechSettings 文字转语音设置</span><br><span class="line">com.android.settings.UsageStats 使用情况统计</span><br><span class="line">com.android.settings.UserDictionarySettings 用户词典</span><br><span class="line">com.android.settings.VoiceInputOutputSettings 语音输入与输出设置</span><br><span class="line">com.android.settings.WirelessSettings 无线和网络设置</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="Android-设备信息以及系统-API"><a href="#Android-设备信息以及系统-API" class="headerlink" title="Android 设备信息以及系统 API"></a>Android 设备信息以及系统 API</h3><p><strong>Build 系列</strong></p>
+<table>
+<thead>
+<tr>
+<th>Build 系列</th>
+<th>android.os.Build</th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>系统版本</td>
+<td>RELEASE</td>
+<td>获取系统版本字符串。如4.1.2 或2.2 或2.3等</td>
+<td>4.4.4</td>
+</tr>
+<tr>
+<td>系统版本值</td>
+<td>SDK_INT</td>
+<td></td>
+<td>19</td>
+</tr>
+<tr>
+<td>品牌</td>
+<td>BRAND</td>
+<td>获取设备品牌</td>
+<td>Huawei</td>
+</tr>
+<tr>
+<td>型号</td>
+<td>MODEL</td>
+<td>获取手机的型号</td>
+<td>HUAWEI G750-T01</td>
+</tr>
+<tr>
+<td>ID</td>
+<td>ID</td>
+<td>设备版本号</td>
+<td>HUAWEITAG-TLOO</td>
+</tr>
+<tr>
+<td>DISPLAY</td>
+<td>DISPLAY</td>
+<td>获取设备显示的版本包（在系统设置中显示为版本号）和ID一样</td>
+<td>TAG-TLOOCO1B166-TLOO</td>
+</tr>
+<tr>
+<td>产品名</td>
+<td>PRODUCT</td>
+<td>整个产品的名称</td>
+<td>G750-T01</td>
+</tr>
+<tr>
+<td>制造商</td>
+<td>MANUFACTURER</td>
+<td>获取设备制造商</td>
+<td>HUAWEI</td>
+</tr>
+<tr>
+<td>设备名</td>
+<td>DEVICE</td>
+<td>获取设备驱动名称</td>
+<td>hwG750-T01</td>
+</tr>
+<tr>
+<td>硬件</td>
+<td>HARDWARE</td>
+<td>设备硬件名称,一般和基板名称一样（BOARD）</td>
+<td>mt6592</td>
+</tr>
+<tr>
+<td>指纹</td>
+<td>FINGERPRINT</td>
+<td>设备的唯一标识。由设备的多个信息拼接合成</td>
+<td>Huawei/G750-T01/hwG750-T01:4.2.2/HuaweiG750-T01/C00B152:user/ota-rel-keys,release-keys</td>
+</tr>
+<tr>
+<td>串口序列号</td>
+<td>SERIAL</td>
+<td>返回串口序列号</td>
+<td>YGKBBBB5C1711949</td>
+</tr>
+<tr>
+<td>设备版本类型</td>
+<td>TYPE</td>
+<td>主要为user 或eng.</td>
+<td>user</td>
+</tr>
+<tr>
+<td>描述build的标签</td>
+<td>TAGS</td>
+<td>设备标签。如release-keys 或测试的 test-keys</td>
+<td>release-keys</td>
+</tr>
+<tr>
+<td>设备主机地址</td>
+<td>HOST</td>
+<td>设备主机地址</td>
+<td>scmbuild</td>
+</tr>
+<tr>
+<td>设备用户名</td>
+<td>USER</td>
+<td>基本上都为android-build</td>
+<td>queen</td>
+</tr>
+<tr>
+<td>固件开发版本代号</td>
+<td>codename</td>
+<td>设备当前的系统开发代号，一般使用REL代替</td>
+<td>REL</td>
+</tr>
+<tr>
+<td>源码控制版本号</td>
+<td>build_incremental</td>
+<td>系统源代码控制值，一个数字或者git hash值</td>
+<td>C01B166</td>
+</tr>
+<tr>
+<td>主板</td>
+<td>board</td>
+<td>获取设备基板名称</td>
+<td>TAG-TL00</td>
+</tr>
+<tr>
+<td>主板引导程序</td>
+<td>bootloader</td>
+<td>获取设备引导程序版本号</td>
+<td>unkonwn</td>
+</tr>
+<tr>
+<td>Build时间</td>
+<td>time</td>
+<td>Build时间</td>
+<td>1476084456000</td>
+</tr>
+<tr>
+<td>系统的API级别</td>
+<td>SDK_INT</td>
+<td>数字表示</td>
+<td>19</td>
+</tr>
+<tr>
+<td>cpu指令集1</td>
+<td>CPU_ABI</td>
+<td>获取设备指令集名称（CPU的类型）</td>
+<td>arm64-v8a</td>
+</tr>
+<tr>
+<td>cpu指令集1</td>
+<td>CPU_ABI2</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p><strong>Android 硬件设备信息：</strong></p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>接口参数名称</th>
+<th>备注</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>序列号</td>
+<td>getDeviceId</td>
+<td>序列号IMEI</td>
+<td>865872025238821</td>
+</tr>
+<tr>
+<td>andrlid_id</td>
+<td>getString</td>
+<td>android_id</td>
+<td>bcbc00f09479aa5b</td>
+</tr>
+<tr>
+<td>手机号码</td>
+<td>getLine1Number</td>
+<td>手机号码</td>
+<td>13117511178</td>
+</tr>
+<tr>
+<td>手机卡序列号</td>
+<td>getSimSerialNumber</td>
+<td>手机卡序列号</td>
+<td>89860179328595969501</td>
+</tr>
+<tr>
+<td>手机卡IMSI号</td>
+<td>getSubscriberId</td>
+<td>IMSI</td>
+<td>460017932859596</td>
+</tr>
+<tr>
+<td>手机卡国家</td>
+<td>getSimCountryIso</td>
+<td>手机卡国家</td>
+<td>cn</td>
+</tr>
+<tr>
+<td>运营商</td>
+<td>getSimOperator</td>
+<td>运营商</td>
+<td>46001</td>
+</tr>
+<tr>
+<td>运营商名字</td>
+<td>getSimOperatorName</td>
+<td>运营商名字</td>
+<td>中国联通</td>
+</tr>
+<tr>
+<td>国家iso代码</td>
+<td>getNetworkCountryIso</td>
+<td>国家iso代码字</td>
+<td>cn</td>
+</tr>
+<tr>
+<td>网络运营商类型</td>
+<td>getNetworkOperator</td>
+<td>返回MCC+MNC代码</td>
+<td>(SIM卡运营商国家代码和运营商网络代码)(IMSI) 46001</td>
+</tr>
+<tr>
+<td>网络类型名</td>
+<td>getNetworkOperatorName</td>
+<td>返回移动网络运营商的名字(SPN)</td>
+<td>中国联通</td>
+</tr>
+<tr>
+<td>网络</td>
+<td>getNetworkType</td>
+<td>网络</td>
+<td>3</td>
+</tr>
+<tr>
+<td>手机类型</td>
+<td>getPhoneType</td>
+<td>机类型</td>
+<td>1</td>
+</tr>
+<tr>
+<td>手机卡状态</td>
+<td>getSimState</td>
+<td></td>
+<td>1</td>
+</tr>
+<tr>
+<td>mac地址</td>
+<td>getMacAddress</td>
+<td>mac地址</td>
+<td>a8:a6:68:a3:d9:ef</td>
+</tr>
+<tr>
+<td>蓝牙名称</td>
+<td>getName</td>
+<td></td>
+<td>HUAWEI TAG-TL00</td>
+</tr>
+<tr>
+<td>固件版本</td>
+<td>固件版本</td>
+<td>无线电固件版本号，通常是不可用的</td>
+<td>MOLY.WR8.W1328.MD.TG.MP.V1.P22, 2014/07/15 19:57</td>
+</tr>
+</tbody></table>
+<p><strong>WifiManager</strong></p>
+<table>
+<thead>
+<tr>
+<th>WifiManager</th>
+<th>WIFI相关</th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>蓝牙地址</td>
+<td>getAddress</td>
+<td>蓝牙地址MAC地址</td>
+<td>6a: cd:57:f2:3b:59</td>
+</tr>
+<tr>
+<td>无线路由器名</td>
+<td>getSSID</td>
+<td>WIFI名字</td>
+<td>210e03fcf0</td>
+</tr>
+<tr>
+<td>无线路由器地址</td>
+<td>getBSSID</td>
+<td></td>
+<td>ce:ea:8c:1a:5c:b2</td>
+</tr>
+<tr>
+<td>内网ip(wifl可用)</td>
+<td>getIpAddress</td>
+<td>可以用代码转成192.168形式</td>
+<td>-2023511872</td>
+</tr>
+</tbody></table>
+<p><strong>Display 屏幕相关</strong></p>
+<table>
+<thead>
+<tr>
+<th>Display</th>
+<th>屏幕相关</th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>屏幕密度</td>
+<td>density</td>
+<td>屏幕密度（像素比例：0.75/1.0/1.5/2.0）</td>
+<td>2.0</td>
+</tr>
+<tr>
+<td>屏幕密度</td>
+<td>densityDpi</td>
+<td>屏幕密度（每寸像素：120/160/240/320）</td>
+<td>480</td>
+</tr>
+<tr>
+<td>手机内置分辨率</td>
+<td>getWidth</td>
+<td>内置好的不准确已废弃API</td>
+<td>720</td>
+</tr>
+<tr>
+<td>手机内置分辨率</td>
+<td>getHeight</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>字体缩放比例</td>
+<td>scaledDensity</td>
+<td></td>
+<td>2.0</td>
+</tr>
+</tbody></table>
+</div><div><p style="height:15px"></p><ul class="page-copyright"><li><strong>本文作者：</strong>hi-dhl</li><li><strong>本文标题：</strong>Android 常用资源汇总</li><li><strong>本文链接：</strong><a href="" title="{page.title}">https://hi-dhl.com/2021/05/23/android/07-Android-resource/</a></li><li><strong>版权声明：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://hi-dhl.com" title="{page.title}">hi-dhl</a></li></ul><p style="height:15px"></p></div><!--!--><h1 class="title is-4 is-size-4-mobile"></h1></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2021/05/09/jetpack/13-compose/"><span class="level-item">开篇，初识 Compose，永久激活 IntelliJ IDEA</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content template"><p align="center"><img src="http://cdn.51git.cn/2020-10-07-bytecode.png"></p><p>致力于分享一系列 Android 系统源码、逆向分析、算法、翻译、Jetpack 源码相关的文章，在技术的道路上一起前进</p><h3 class="title is-4">Android10 源码分析</h3><p>正在写一系列的 Android 10 源码分析的文章，了解系统源码，不仅有助于分析问题，在面试过程中，对我们也是非常有帮助的，如果你同我一样喜欢研究 Android 源码，可以关注我 GitHub 上的 <a href="https://github.com/hi-dhl/Android10-Source-Analysis">Android10-Source-Analysis</a>。</p><h3 class="title is-4">算法题库的归纳和总结</h3><p>由于 LeetCode 的题库庞大，每个分类都能筛选出数百道题，由于每个人的精力有限，不可能刷完所有题目，因此我按照经典类型题目去分类、和题目的难易程度去排序。</p><ul><li>数据结构： 数组、栈、队列、字符串、链表、树……</li><li>算法： 查找算法、搜索算法、位运算、排序、数学、……</li></ul><p>每道题目都会用 Java 和 kotlin 去实现，并且每道题目都有解题思路，如果你同我一样喜欢算法、LeetCode，可以关注我 GitHub 上的 LeetCode 题解：<a href="https://github.com/hi-dhl/Leetcode-Solutions-with-Java-And-Kotlin">Leetcode-Solutions-with-Java-And-Kotlin</a>。</p><h3 class="title is-4">精选国外的技术文章</h3><p>目前正在整理和翻译一系列精选国外的技术文章，不仅仅是翻译，很多优秀的英文技术文章提供了很好思路和方法，每篇文章都会有<strong>译者思考</strong>部分，对原文的更加深入的解读，可以关注我 GitHub 上的 <a href="https://github.com/hi-dhl/Technical-Article-Translation">Technical-Article-Translation</a>。</p><p></p></div></div><div class="card"><div class="card-content"><h3 class="title is-5">评论</h3><div class="content" id="valine-thread"></div><script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script><script src="https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js"></script><script>new Valine({
+            el: '#valine-thread' ,
+            notify: false,
+            verify: undefined,
+            appId: 'zfvr24HFhzQ5vtHkr4NQ1fmW-gzGzoHsz',
+            appKey: 'RChgr9mR005hgu4yiQ4WQU3O',
+            placeholder: '说点什么',
+            avatar: 'mm',
+            avatarForce: false,
+            meta: ["nick","mail","link"],
+            pageSize: 10,
+            visitor: false,
+            highlight: true,
+            recordIP: false
+        });</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1 is-sticky"><div class="card widget" id="toc" style="max-height: 500px;overflow: auto;"><div class="card-content"><div class="menu"><h3 class="menu-label">目录</h3><ul class="menu-list"><li><a class="is-flex" href="#颜色透明度汇总"><span>颜色透明度汇总</span></a></li><li><a class="is-flex" href="#不同像素密度的配置限定符"><span>不同像素密度的配置限定符</span></a></li><li><a class="is-flex" href="#Android-studio-插件版本与-gradle-版本对应关系"><span>Android studio 插件版本与 gradle 版本对应关系</span></a></li><li><a class="is-flex" href="#Android-系统名字、版本、API-level-的对应关系"><span>Android 系统名字、版本、API level 的对应关系</span></a></li><li><a class="is-flex" href="#跳转到系统各个设置界面"><span>跳转到系统各个设置界面</span></a></li><li><a class="is-flex" href="#Android-设备信息以及系统-API"><span>Android 设备信息以及系统 API</span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content size-small"><p><time dateTime="2021-05-23T11:38:11.187Z">2021-05-23</time></p><p class="title is-6"><a class="link-muted" href="/2021/05/23/android/07-Android-resource/">Android 常用资源汇总</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2021-05-09T07:41:11.309Z">2021-05-09</time></p><p class="title is-6"><a class="link-muted" href="/2021/05/09/jetpack/13-compose/">开篇，初识 Compose，永久激活 IntelliJ IDEA</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2021-04-17T10:46:33.038Z">2021-04-17</time></p><p class="title is-6"><a class="link-muted" href="/2021/04/17/android/06-andrid12-change/">Android 12 行为变更，对应用产生的影响</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2021-01-26T02:56:06.126Z">2021-01-26</time></p><p class="title is-6"><a class="link-muted" href="/2021/01/26/AndroidStudio/04-androidstuido-3/">图解多平台 AndroidStudio 技巧(三)</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2021-01-26T02:51:26.317Z">2021-01-26</time></p><p class="title is-6"><a class="link-muted" href="/2021/01/26/kotlin/07-use-viewbinding/">竟然如此简单，DataBinding 和 ViewBinding</a></p><p class="is-uppercase"></p></div></article></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile is-marginless" href="/categories/Android/"><span class="level-start"><span class="level-item">Android</span></span><span class="level-end"><span class="level-item tag">6</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Android-12/"><span class="level-start"><span class="level-item">Android 12</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Android-AndroidStudio/"><span class="level-start"><span class="level-item">Android,AndroidStudio</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Android10/"><span class="level-start"><span class="level-item">Android10</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/AndroidStudio/"><span class="level-start"><span class="level-item">AndroidStudio</span></span><span class="level-end"><span class="level-item tag">5</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Jetpack/"><span class="level-start"><span class="level-item">Jetpack</span></span><span class="level-end"><span class="level-item tag">14</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Kotlin/"><span class="level-start"><span class="level-item">Kotlin</span></span><span class="level-end"><span class="level-item tag">6</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Linux/"><span class="level-start"><span class="level-item">Linux</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/translated/"><span class="level-start"><span class="level-item">译文</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E8%AF%91%E6%96%87-AndroidStudio/"><span class="level-start"><span class="level-item">译文,AndroidStudio</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E8%AF%91%E6%96%87-Kotlin/"><span class="level-start"><span class="level-item">译文,Kotlin</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/Android/"><span class="tag">Android</span><span class="tag is-grey-lightest">8</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android-12/"><span class="tag">Android 12</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E5%8C%85%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-包管理系统</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-窗口管理系统</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-资源管理系统</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/AndroidStudio/"><span class="tag">AndroidStudio</span><span class="tag is-grey-lightest">7</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android%E6%BA%90%E7%A0%81/"><span class="tag">Android源码</span><span class="tag is-grey-lightest">7</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Compose/"><span class="tag">Compose</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Fragment/"><span class="tag">Fragment</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Jetpack/"><span class="tag">Jetpack</span><span class="tag is-grey-lightest">18</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Koin/"><span class="tag">Koin</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Kotlin/"><span class="tag">Kotlin</span><span class="tag is-grey-lightest">11</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Linux/"><span class="tag">Linux</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Protobuf/"><span class="tag">Protobuf</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/RxJava/"><span class="tag">RxJava</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Shell/"><span class="tag">Shell</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/kotlin/"><span class="tag">kotlin</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%AF%91%E6%96%87/"><span class="tag">译文</span><span class="tag is-grey-lightest">9</span></a></div></div></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level-item"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img class="logo-img" src="/img/logo.png" alt="dhl" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="dhl" height="28"></a><p class="size-small"><span>&copy; 2021 dhl</span>  <a href="http://www.beian.miit.gov.cn/" target="_blank">京ICP备18050211号-2</a>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            site: {
+                url: 'https://hi-dhl.com',
+                external_link: {"enable":true,"exclude":[]}
+            },
+            article: {
+                highlight: {
+                    clipboard: false,
+                    fold: ''
+                }
+            }
+        };</script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><script src="https://s9.cnzz.com/z_stat.php?id=1278919895&amp;web_id=1278919895" async></script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><script src="/js/imaegoo/universe.js"></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>
