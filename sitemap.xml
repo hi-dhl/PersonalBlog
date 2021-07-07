@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://hi-dhl.com/2020/08/22/android/03-adb/</loc>
+    
+    <lastmod>2021-07-06T02:57:45.135Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://hi-dhl.com/2021/06/29/kotlin/09-kotlin-interface/</loc>
     
     <lastmod>2021-06-29T12:40:16.486Z</lastmod>
@@ -516,13 +523,6 @@
     <loc>https://hi-dhl.com/2020/05/30/AndroidStudio/01-monitor/</loc>
     
     <lastmod>2020-08-22T15:24:10.019Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://hi-dhl.com/2020/08/22/android/03-adb/</loc>
-    
-    <lastmod>2020-08-22T12:26:34.306Z</lastmod>
     
   </url>
   
