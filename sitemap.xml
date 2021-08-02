@@ -2,16 +2,30 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://hi-dhl.com/2021/07/14/kotlin/10-kotlin-equality/</loc>
+    <loc>https://hi-dhl.com/2021/08/02/kotlin/11-kotlin-tip3/</loc>
     
-    <lastmod>2021-07-14T02:51:55.364Z</lastmod>
+    <lastmod>2021-08-02T15:33:41.895Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://hi-dhl.com/2020/06/07/android10/resource-manager/03-APK-resource/</loc>
+    
+    <lastmod>2021-07-18T11:23:18.517Z</lastmod>
     
   </url>
   
   <url>
     <loc>https://hi-dhl.com/2020/08/22/android/03-adb/</loc>
     
-    <lastmod>2021-07-06T02:57:45.135Z</lastmod>
+    <lastmod>2021-07-15T05:12:20.286Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://hi-dhl.com/2021/07/14/kotlin/10-kotlin-equality/</loc>
+    
+    <lastmod>2021-07-14T02:51:55.364Z</lastmod>
     
   </url>
   
@@ -215,13 +229,6 @@
     <loc>https://hi-dhl.com/2020/06/07/android10/resource-manager/04-APK-resource2/</loc>
     
     <lastmod>2020-11-11T02:47:57.876Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://hi-dhl.com/2020/06/07/android10/resource-manager/03-APK-resource/</loc>
-    
-    <lastmod>2020-11-11T02:47:53.008Z</lastmod>
     
   </url>
   

@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://hi-dhl.com/2021/07/14/kotlin/10-kotlin-equality/</loc>
-    <lastmod>2021-07-14</lastmod>
+    <loc>https://hi-dhl.com/2021/08/02/kotlin/11-kotlin-tip3/</loc>
+    <lastmod>2021-08-02</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2020/06/07/android10/resource-manager/03-APK-resource/</loc>
+    <lastmod>2021-07-18</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/2020/08/22/android/03-adb/</loc>
-    <lastmod>2021-07-06</lastmod>
+    <lastmod>2021-07-15</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2021/07/14/kotlin/10-kotlin-equality/</loc>
+    <lastmod>2021-07-14</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/2021/06/29/kotlin/09-kotlin-interface/</loc>
     <lastmod>2021-06-29</lastmod>
@@ -92,9 +98,6 @@
     <lastmod>2020-11-11</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/2020/06/07/android10/resource-manager/04-APK-resource2/</loc>
-    <lastmod>2020-11-11</lastmod>
-  </url>  <url>
-    <loc>https://hi-dhl.com/2020/06/07/android10/resource-manager/03-APK-resource/</loc>
     <lastmod>2020-11-11</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/2020/06/07/android10/package-manager/02-APK-install/</loc>
