@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://hi-dhl.com/2021/09/05/kotlin/2021-09-05/</loc>
+    <loc>https://hi-dhl.com/2021/09/14/algorithm/01-stack/</loc>
+    <lastmod>2021-09-14</lastmod>
+  </url>  <url>
+    <loc>https://hi-dhl.com/2021/09/05/kotlin/12-kotlin-optimize/</loc>
     <lastmod>2021-09-05</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/2021/08/18/jetpack/14-Splashscreen/</loc>
