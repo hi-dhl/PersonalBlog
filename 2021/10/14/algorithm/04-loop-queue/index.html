@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="generator" content="Hexo 4.2.1"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>独家 | 跟源码学数据结构 | 循环队列 - dhl</title><meta description="循环队列是一种线性数据结构，将队尾连接在队首，形成一个环，这篇主要分析源码是如何实现队列，以及我们自己如何设计循环队列"><meta property="og:type" content="blog"><meta property="og:title" content="独家 | 跟源码学数据结构 | 循环队列"><meta property="og:url" content="https://hi-dhl.com/2021/10/14/algorithm/04-loop-queue/"><meta property="og:site_name" content="dhl"><meta property="og:description" content="循环队列是一种线性数据结构，将队尾连接在队首，形成一个环，这篇主要分析源码是如何实现队列，以及我们自己如何设计循环队列"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="http://img.hi-dhl.com/loop_queue4.png"><meta property="article:published_time" content="2021-10-14T01:02:29.585Z"><meta property="article:modified_time" content="2021-10-14T01:04:24.520Z"><meta property="article:author" content="dhl"><meta property="article:tag" content="Android10"><meta property="article:tag" content="AndroidStudio"><meta property="article:tag" content="buildSrc"><meta property="article:tag" content="kotlin"><meta property="article:tag" content="run"><meta property="article:tag" content="with"><meta property="article:tag" content="let"><meta property="article:tag" content="also"><meta property="article:tag" content="apply"><meta property="article:tag" content="Jetpack"><meta property="article:tag" content="算法动画"><meta property="article:tag" content="LeetCode"><meta property="article:tag" content="Stack"><meta property="article:tag" content="ArrayDeque"><meta property="article:tag" content="LinkedList"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="http://img.hi-dhl.com/loop_queue4.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://hi-dhl.com/2021/10/14/algorithm/04-loop-queue/"},"headline":"dhl","image":["http://img.hi-dhl.com/loop_queue4.png"],"datePublished":"2021-10-14T01:02:29.585Z","dateModified":"2021-10-14T01:04:24.520Z","author":{"@type":"Person","name":"dhl"},"description":"循环队列是一种线性数据结构，将队尾连接在队首，形成一个环，这篇主要分析源码是如何实现队列，以及我们自己如何设计循环队列"}</script><link rel="canonical" href="https://hi-dhl.com/2021/10/14/algorithm/04-loop-queue/"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" defer></script><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script></head><body class="is-2-column"><script type="text/javascript" src="/js/imaegoo/night.js"></script><canvas id="universe"></canvas><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img class="logo-img" src="/img/logo.png" alt="dhl" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="dhl" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">首页</a><a class="navbar-item" href="/categories">分类</a><a class="navbar-item" href="/categories/Jetpack">Jetpack</a><a class="navbar-item" href="/categories/Kotlin/">Kotlin</a><a class="navbar-item" href="/categories/Android10/">系统源码</a><a class="navbar-item" href="/categories/translated/">译文</a><a class="navbar-item" href="https://offer.hi-dhl.com">算法</a><a class="navbar-item" href="https://site.51git.cn/">国内外书签</a></div><div class="navbar-end"><a class="navbar-item night" id="night-nav" title="Night Mode" href="javascript:;"><i class="fas fa-moon" id="night-icon"></i></a><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/hi-dhl"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><div class="card-image"><span class="image is-7by3"><img class="thumbnail" src="http://img.hi-dhl.com/loop_queue4.png" alt="独家 | 跟源码学数据结构 | 循环队列"></span></div><article class="card-content article" role="article"><h1 class="title is-3 is-size-4-mobile"></h1><h1 class="title is-3 is-size-4-mobile">独家 | 跟源码学数据结构 | 循环队列</h1><div class="article-meta size-small level is-mobile"><div class="level-left"><span class="mr-2"><i class="fa fa-calendar"></i></span><time class="level-item" dateTime="2021-10-14T01:02:29.585Z" title="2021-10-14T01:02:29.585Z">2021-10-14</time><span class="mr-2"> <i class="fa fa-folder"></i></span><span class="level-item"><a class="link-muted" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a></span><span class="mr-2"> <i class="fa fa-tag"></i></span><span class="level-item"><a class="link-muted" href="/tags/%E7%AE%97%E6%B3%95/">算法</a><span> , </span><a class="link-muted" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a></span></div></div><div class="level-left article-meta size-small is-mobile"></div><div><p style="height:15px"></p><ul class="page-blockquote"><li>如果评论区没有及时回复，欢迎来公众号：ByteCode 咨询</li><li>公众号：ByteCode。致力于分享最新技术原创文章，涉及 Kotlin、Jetpack、算法、译文、系统源码相关的文章</li><li></li></ul><p style="height:15px"></p></div><div class="content"><hr>
+<p>阅读完本文，可以前往 LeetCode 刷 </p>
+<ul>
+<li><a href="https://leetcode-cn.com/problems/design-circular-queue">第 622 号问题：设计循环队列</a> </li>
+</ul>
+<hr>
+<p>到目前为止不知不觉已经写了三篇关于栈和队列的文章，点击下方链接前去查看。</p>
+<ul>
+<li><a href="https://mp.weixin.qq.com/s/TSpWaYSUpjeR_wzSclCTQA">算法动画图解 | 被 “废弃” 的 Java 栈，为什么还在用</a><ul>
+<li>为什么不推荐使用 Java 栈？为什么现在还有很多人在用？</li>
+<li>为什么推荐使用 <code>Deque</code> 接口替换 Java 栈？</li>
+<li>Stack 和 ArrayDeque 区别？</li>
+<li>栈的时间复杂度？</li>
+</ul>
+</li>
+<li><a href="https://mp.weixin.qq.com/s/o6gnTbbKUODHBgRD7AYqUQ">为什么不推荐 ArrayDeque 代替 Stack</a><ul>
+<li>JDK 推荐使用 <code>ArrayDeque</code> 代替 <code>Stack</code> 真的合理吗？</li>
+<li>如何实现一个真正意义上的栈？</li>
+</ul>
+</li>
+<li><a href="https://mp.weixin.qq.com/s/rg4vZOVrHm5Pg82GFt7sTw">图解 ArrayDeque 比 LinkedList 快</a><ul>
+<li><code>ArrayDeque</code> 和 <code>LinkedList</code> 数据结构的特点？</li>
+<li>为什么 <code>ArrayDeque</code> 比 <code>LinkedList</code> 快？</li>
+</ul>
+</li>
+</ul>
+<p>而今天这篇文章是第 4 篇，主要来学习如何设计循环队列。学习如何设计循环队列之前，我们先来看看 JDK 源码是如何设计的。</p>
+<p><strong>通过这篇文章你将学习到以下内容：</strong></p>
+<ul>
+<li>队列的定义？</li>
+<li>JDK 源码是如何设计队列？</li>
+<li>队列的大小为什么要设置成 2 的整数次幂？</li>
+<li><strong>位运算</strong> 效率比 <strong>非位运算</strong> 快多少？</li>
+<li>ArrayDeque 的 2 的整数次幂计算逻辑和 HashMap 有什么区别？</li>
+<li>自己如何设计一个循环队列？</li>
+</ul>
+<h2 id="队列的定义"><a href="#队列的定义" class="headerlink" title="队列的定义"></a>队列的定义</h2><p>在开始分析 JDK 源码是如何设计循环队列之前，我们需要先了解队列的基础知识点。</p>
+<p>队列是一种 <strong>先进先出</strong> 的特殊线性表，简称 FIFO，在 Java 中队列有两种形式，单向队列（ <code>AbstractQueue</code> ） 和 双端队列（ <code>Deque</code> ），单向队列效果如下所示，只能从一端进入，另外一端出去。</p>
+<p><img src="http://img.hi-dhl.com/16325655296706.gif" alt=""></p>
+<p>双端队列（ <code>Deque</code> ）, <code>Deque</code> 是双端队列的线性数据结构, 可以在两端进行插入和删除操作，效果如下所示。</p>
+<p><img src="http://img.hi-dhl.com/16325656386832.gif" alt=""></p>
+<p>双端队列（ <code>Deque</code> ）的子类分别是  <code>ArrayDeque</code> 和 <code>LinkedList</code>，<code>ArrayDeque</code> 基于数组实现的双端队列，而 <code>LinkedList</code> 基于双向链表实现的双端队列，它们的继承关系如下图所示。</p>
+<p><img src="http://img.hi-dhl.com/deque4.png" alt=""></p>
+<h2 id="循环队列"><a href="#循环队列" class="headerlink" title="循环队列"></a>循环队列</h2><p>循环队列是一种线性数据结构，将队尾连接在队首，形成一个环，而 Java 中 <code>ArrayDeque</code> 是基于数组实现的循环队列，而 <code>LinkedList</code> 属于链式队列。</p>
+<blockquote>
+<p>更多关于 <code>ArrayDeque</code> 和 <code>LinkedList</code> 的优缺点，在什么情况下使用，以及它们谁更快，请前往查看 <a href="https://mp.weixin.qq.com/s/rg4vZOVrHm5Pg82GFt7sTw">图解 ArrayDeque 比 LinkedList 快</a></p>
+</blockquote>
+<p><code>ArrayDeque</code> 和 <code>LinkedList</code> 数据结构的特点如下所示：</p>
+<table>
+<thead>
+<tr>
+<th>集合类型</th>
+<th>数据结构</th>
+<th>初始化及扩容</th>
+<th>插入/删除时间复杂度</th>
+<th>查询时间复杂度</th>
+<th>是否是线程安全</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ArrqyDeque</td>
+<td>循环数组</td>
+<td>初始化：16 <br/> 扩容：2 倍</td>
+<td>0(n)</td>
+<td>0(1)</td>
+<td>否</td>
+</tr>
+<tr>
+<td>LinkedList</td>
+<td>双向链表</td>
+<td>无</td>
+<td>0(1)</td>
+<td>0(n)</td>
+<td>否</td>
+</tr>
+</tbody></table>
+<p>在上一篇文章 <a href="https://mp.weixin.qq.com/s/rg4vZOVrHm5Pg82GFt7sTw">图解 ArrayDeque 比 LinkedList 快</a> 从速度和内存两个方面分析了  <code>ArrayDeque</code> 的性能都比 <code>LinkedList</code> 要好，并结合实际的案例来验证，结果如下图所示。</p>
+<p><img src="http://img.hi-dhl.com/16321351422740.jpg" alt=""></p>
+<h3 id="ArrayDeque-源码分析"><a href="#ArrayDeque-源码分析" class="headerlink" title="ArrayDeque 源码分析"></a>ArrayDeque 源码分析</h3><p>本文的目的主要来分析循环队列，我们先来看一下 JDK 源码是如何基于数组的形式实现的双端队列，<code>ArrayDeque</code> 继承关系如下图所示。</p>
+<p><img src="http://img.hi-dhl.com/deque4.png" alt=""></p>
+<p>接口 <code>Deque</code> 和 <code>Queue</code> 提供了两套 API ，存在两种形式，分别为抛出异常，和不抛出异常，返回一个特殊值 null 或者布尔值 ( true | false )。</p>
+<table>
+<thead>
+<tr>
+<th align="center">操作类型</th>
+<th align="center">抛出异常</th>
+<th align="center">返回特殊值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">插入</td>
+<td align="center">addXXX(e)</td>
+<td align="center">offerXXX(e)</td>
+</tr>
+<tr>
+<td align="center">移除</td>
+<td align="center">removeXXX()</td>
+<td align="center">pollXXX()</td>
+</tr>
+<tr>
+<td align="center">查找</td>
+<td align="center">element()</td>
+<td align="center">peekXXX()</td>
+</tr>
+</tbody></table>
+<h4 id="成员变量分析"><a href="#成员变量分析" class="headerlink" title="成员变量分析"></a>成员变量分析</h4><p><code>ArrayDeque</code> 内部有四个变量： 数组 <code>elements</code> 、 头指针 <code>head</code> 、 尾指针 <code>tail</code> 、 最小初始化容量 <code>MIN_INITIAL_CAPACITY</code></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; 数组的长度，总是 2 的整数次幂</span><br><span class="line">transient Object[] elements; </span><br><span class="line">&#x2F;&#x2F; 头指针，表示队首元素所在位置</span><br><span class="line">transient int head; </span><br><span class="line">&#x2F;&#x2F; 尾指针，表示队尾元素所在位置</span><br><span class="line">transient int tail; </span><br><span class="line">&#x2F;&#x2F; 最小初始化容量是 8（JDK 8）， 这是为了保证初始容量都是 2 的整数次幂, 减少计算步骤</span><br><span class="line">private static final int MIN_INITIAL_CAPACITY &#x3D; 8;</span><br></pre></td></tr></table></figure>
+
+<h4 id="构造方法分析"><a href="#构造方法分析" class="headerlink" title="构造方法分析"></a>构造方法分析</h4><p>构造方法分别有 <strong>有参构造方法</strong> 和 <strong>无参构造方法</strong>，这里我们主要关注点在 2 的整数次幂计算逻辑。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; 无参构造方法，直接初始化容量为 16 的数组</span><br><span class="line">public ArrayDeque() &#123; elements &#x3D; new Object[16]; &#125;</span><br><span class="line"></span><br><span class="line">public ArrayDeque(int numElements) &#123; allocateElements(numElements); &#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 计算数组的大小，返回值是最接近 2 的整数次幂</span><br><span class="line">private void allocateElements(int numElements) &#123;</span><br><span class="line">    &#x2F;&#x2F; 最小初始化容量是 8（JDK 8）</span><br><span class="line">    int initialCapacity &#x3D; MIN_INITIAL_CAPACITY; </span><br><span class="line">    if (numElements &gt;&#x3D; initialCapacity) &#123;</span><br><span class="line">        &#x2F;&#x2F; 大于或者等于初始化容量时</span><br><span class="line">        &#x2F;&#x2F; 会调整为最接近 2 的整数次幂，例如 9 -&gt; 16</span><br><span class="line">        initialCapacity &#x3D; numElements;</span><br><span class="line">        initialCapacity |&#x3D; (initialCapacity &gt;&gt;&gt;  1);</span><br><span class="line">        initialCapacity |&#x3D; (initialCapacity &gt;&gt;&gt;  2);</span><br><span class="line">        initialCapacity |&#x3D; (initialCapacity &gt;&gt;&gt;  4);</span><br><span class="line">        initialCapacity |&#x3D; (initialCapacity &gt;&gt;&gt;  8);</span><br><span class="line">        initialCapacity |&#x3D; (initialCapacity &gt;&gt;&gt; 16);</span><br><span class="line">        initialCapacity++;</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F; 当传人值非常大，经过计算变成负数，会重新初始化为 2 ^ 30</span><br><span class="line">        if (initialCapacity &lt; 0)</span><br><span class="line">            initialCapacity &gt;&gt;&gt;&#x3D; 1;</span><br><span class="line">    &#125;</span><br><span class="line">    elements &#x3D; new Object[initialCapacity];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>无参构造方法（默认），直接初始化容量为 16 的数组</li>
+<li>有参构造方法，会初始化最接近 2 的整数次幂的大小的数组。而 <code>allocateElements(numElements)</code> 方法的返回值是最接近 2 的整数次幂</li>
+</ul>
+<p><strong>为什么要设置成 2 的整数次幂</strong></p>
+<p>任何一个数 和 <code>2^n-1</code> 做与运算，保证指针 <code>head</code>  的索引和尾指针 <code>tail</code> 的索引，落在队列范围内。一个正数 x 和 <code>2^n-1</code> 做与运算，结果如下所示。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">例如 2^n-1 &#x3D; 16</span><br><span class="line"></span><br><span class="line">int len &#x3D; 16;</span><br><span class="line">int x1 &#x3D; 6 &amp; (len -1);</span><br><span class="line">System.out.println(&quot;x1 &#x3D; &quot; + x1); &#x2F;&#x2F; x1 &#x3D; 6</span><br><span class="line"></span><br><span class="line">x1 &#x3D; 20 &amp; (len -1);</span><br><span class="line">System.out.println(&quot;x1 &#x3D; &quot; + x1); &#x2F;&#x2F; x1 &#x3D; 4</span><br></pre></td></tr></table></figure>
+
+<p>而一个负数 x 和 <code>2^n-1</code> 做与运算，结果如下所示。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">例如 2^n-1 &#x3D; 16</span><br><span class="line"></span><br><span class="line">int len &#x3D; 16;</span><br><span class="line">int x1 &#x3D; -10 &amp; (len - 1);</span><br><span class="line">System.out.println(&quot;x1 &#x3D; &quot; + x1); &#x2F;&#x2F; x1 &#x3D; 6</span><br><span class="line"></span><br><span class="line">x1 &#x3D; 0 &amp; (len - 1);</span><br><span class="line">System.out.println(&quot;x1 &#x3D; &quot; + x1); &#x2F;&#x2F; x1 &#x3D; 0</span><br><span class="line"></span><br><span class="line">x1 &#x3D; -20 &amp; (len - 1);</span><br><span class="line">System.out.println(&quot;x1 &#x3D; &quot; + x1); &#x2F;&#x2F; x1 &#x3D; 12</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong></p>
+<p><code>ArrayDeque</code> 的 2 的整数次幂计算逻辑，相比于 <code>HashMap</code> 的计算逻辑是有一点区别的，如下图所示。</p>
+<p><img src="http://img.hi-dhl.com/16338533249508.jpg" alt=""></p>
+<p><code>HashMap</code> 的 2 的整数次幂计算逻辑，在进行位运算之前先执行了 <code>cap - 1</code> 的操作，而 <code>ArrayDeque</code> 没有，这么做的区别在于，假设传进去来的是 8 正好是 2 的整数次幂， <code>ArrayDeque</code> 计算出来的结果是 16，而 <code>HashMap</code> 的计算结果是其本身 8 ，这么做的目的，是为了省内存。</p>
+<h4 id="元素入队分析"><a href="#元素入队分析" class="headerlink" title="元素入队分析"></a>元素入队分析</h4><p>无论是通过 <code>add(e)</code> 或者 <code>offer(e)</code> 方法将元素插入到队列中。最终都是调用 <code>addLast(E e)</code> 方法。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">......</span><br><span class="line">public void addLast(E e) &#123;</span><br><span class="line">    if (e &#x3D;&#x3D; null)</span><br><span class="line">        throw new NullPointerException();</span><br><span class="line">    elements[tail] &#x3D; e;</span><br><span class="line">    if ( (tail &#x3D; (tail + 1) &amp; (elements.length - 1)) &#x3D;&#x3D; head)</span><br><span class="line">        doubleCapacity(); &#x2F;&#x2F; 扩容为两倍，通过数组拷贝的方式进行扩容</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述代码中，实现循环队列，最核心的就是下面这句。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">(tail &#x3D; (tail + 1) &amp; (elements.length - 1)) &#x3D;&#x3D; head</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>重新计算 tail 的索引指向的下一个位置</li>
+<li>判断队列是否已满，如果已满执行 <code>doubleCapacity()</code> 方法进行扩容</li>
+</ul>
+<p>通过以下方法判断队列是否为空。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public boolean isEmpty() &#123;</span><br><span class="line">    return head &#x3D;&#x3D; tail;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果头指针 <code>head</code> 的索引和尾指针 <code>tail</code> 索引相同，即当前队列为空。</p>
+<h4 id="元素出队分析"><a href="#元素出队分析" class="headerlink" title="元素出队分析"></a>元素出队分析</h4><p>无论是通过 <code>add(e)</code> 或者 <code>offer(e)</code> 方法将元素从队列中删除。最终都是调用 <code>pollFirst()</code> 方法。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public E pollFirst() &#123;</span><br><span class="line">    int h &#x3D; head;</span><br><span class="line">    @SuppressWarnings(&quot;unchecked&quot;)</span><br><span class="line">    E result &#x3D; (E) elements[h]; &#x2F;&#x2F; 获取队头元素</span><br><span class="line">    &#x2F;&#x2F; 返回值为 null，表示队列为空，直接返回</span><br><span class="line">    if (result &#x3D;&#x3D; null)</span><br><span class="line">        return null;</span><br><span class="line">    elements[h] &#x3D; null;     &#x2F;&#x2F; 重置当前 head 的位置为空</span><br><span class="line">    head &#x3D; (h + 1) &amp; (elements.length - 1); &#x2F;&#x2F; 重新计算 head 指向的下一个位置</span><br><span class="line">    return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>到这里关于 <code>ArrayDeque</code> 源码最核心的部分分析完了，其中最重要的核心算法，是通过任何一个数 x 和 <code>2^n-1</code> 做与运算，来保证头指针 <code>head</code> 的索引和尾指针 <code>tail</code> 的索引，落在队列范围内。</p>
+<p>JDK 之所以这么做是为了<strong>提高程序的执行效率</strong>，接下来我们通过一个案例来验证 <strong>位运算</strong> 和 <strong>非位运算</strong> 它们的执行效率。</p>
+<h2 id="设计循环队列"><a href="#设计循环队列" class="headerlink" title="设计循环队列"></a>设计循环队列</h2><blockquote>
+<p>因为篇幅原因，本文只演示一种语言，更多语言的实现，前往查看 <a href="https://leetcode.hi-dhl.com/#/queue/01-design-circular-queue">设计循环队列</a></p>
+</blockquote>
+<p>题目来源于 LeetCode 上第 622 号问题：设计循环队列。题目难度为 Medium。</p>
+<ul>
+<li><a href="https://leetcode.com/problems/design-circular-queue">英文地址：https://leetcode.com/problems/design-circular-queue</a></li>
+<li><a href="https://leetcode-cn.com/problems/design-circular-queue">中文地址：https://leetcode-cn.com/problems/design-circular-queue</a></li>
+</ul>
+<p><strong>题目描述</strong></p>
+<p>设计你的循环队列实现。 循环队列是一种线性数据结构，其操作表现基于 FIFO（先进先出）原则并且队尾被连接在队首之后以形成一个循环。它也被称为“环形缓冲器”。</p>
+<p>循环队列的一个好处是我们可以利用这个队列之前用过的空间。在一个普通队列里，一旦一个队列满了，我们就不能插入下一个元素，即使在队列前面仍有空间。但是使用循环队列，我们能使用这些空间去存储新的值。</p>
+<p>你的实现应该支持如下操作：</p>
+<ul>
+<li>MyCircularQueue(k): 构造器，设置队列长度为 k 。</li>
+<li>Front: 从队首获取元素。如果队列为空，返回 -1 。</li>
+<li>Rear: 获取队尾元素。如果队列为空，返回 -1 。</li>
+<li>enQueue(value): 向循环队列插入一个元素。如果成功插入则返回真。</li>
+<li>deQueue(): 从循环队列中删除一个元素。如果成功删除则返回真。</li>
+<li>isEmpty(): 检查循环队列是否为空。</li>
+<li>isFull(): 检查循环队列是否已满。</li>
+</ul>
+<p><strong>示例：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">MyCircularQueue circularQueue &#x3D; new MyCircularQueue(3); &#x2F;&#x2F; 设置长度为 3</span><br><span class="line">circularQueue.enQueue(1);  &#x2F;&#x2F; 返回 true</span><br><span class="line">circularQueue.enQueue(2);  &#x2F;&#x2F; 返回 true</span><br><span class="line">circularQueue.enQueue(3);  &#x2F;&#x2F; 返回 true</span><br><span class="line">circularQueue.enQueue(4);  &#x2F;&#x2F; 返回 false，队列已满</span><br><span class="line">circularQueue.Rear();  &#x2F;&#x2F; 返回 3</span><br><span class="line">circularQueue.isFull();  &#x2F;&#x2F; 返回 true</span><br><span class="line">circularQueue.deQueue();  &#x2F;&#x2F; 返回 true</span><br><span class="line">circularQueue.enQueue(4);  &#x2F;&#x2F; 返回 true</span><br><span class="line">circularQueue.Rear();  &#x2F;&#x2F; 返回 4</span><br></pre></td></tr></table></figure>
+
+<p><strong>提示：</strong></p>
+<ul>
+<li>所有的值都在 0 至 1000 的范围内</li>
+<li>操作数将在 1 至 1000 的范围内</li>
+<li>请不要使用内置的队列库</li>
+</ul>
+<h3 id="方法一：位运算"><a href="#方法一：位运算" class="headerlink" title="方法一：位运算"></a>方法一：位运算</h3><p><strong>参数的含义：</strong></p>
+<ul>
+<li><code>data</code> ：表示固定的数组，用作循环队列，而队列的长度是最接近于 2 的整数次幂</li>
+<li><code>allocateElements()</code> ：用于计算队列的大小，返回值是最接近 2 的整数次幂</li>
+<li><code>head</code> ：表示的队列的头指针索引</li>
+<li><code>tail</code> ：表示队列的尾指针索引</li>
+<li><code>count</code>：表示队列中的元素数量</li>
+<li><code>size</code> ：表示队列中最多可以容纳的元素数量</li>
+</ul>
+<p><strong>判断队列是否已满</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">((tail + 1) &amp; (data.length - 1)) &#x3D;&#x3D; head || (count &gt;&#x3D; size)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>任何一个数 和 <code>2^n-1</code> 做与运算，保证头指针 <code>head</code> 和尾指针 <code>tail</code> 的索引，都落在队列范围内</li>
+<li>队列的长度是最接近于 2 的整数次幂，会大于实际的队列大小，所以需要变量 <code>count</code> 统计当前队列中的元素数量，如果 <code>count &gt;= size</code> 表示队列已满 </li>
+</ul>
+<p><strong>判断队列是否为空</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">head &#x3D;&#x3D; tail</span><br></pre></td></tr></table></figure>
+
+<p><strong>复杂度分析：</strong></p>
+<ul>
+<li>时间复杂度：O(1) ，数组存储都是按顺序存放的，具有随机访问的特点 </li>
+<li>空间复杂度：O(N) ，N 为数组的长度</li>
+</ul>
+<p><strong>代码实现：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class MyCircularQueue &#123;</span><br><span class="line">    private int size;</span><br><span class="line">    private int head;</span><br><span class="line">    private int tail;</span><br><span class="line">    private int[] data;</span><br><span class="line">    private int count;</span><br><span class="line"></span><br><span class="line">    public MyCircularQueue(int k) &#123;</span><br><span class="line">        size &#x3D; k;</span><br><span class="line">        data &#x3D; new int[allocateElements(k)];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; 计算队列的大小，返回值是最接近 2 的整数次幂</span><br><span class="line">    int allocateElements(int numElements) &#123;</span><br><span class="line">        int initialCapacity &#x3D; numElements; </span><br><span class="line">        &#x2F;&#x2F; 调整为最接近 2 的整数次幂，例如 9 -&gt; 16</span><br><span class="line">        initialCapacity |&#x3D; (initialCapacity &gt;&gt;&gt; 1);</span><br><span class="line">        initialCapacity |&#x3D; (initialCapacity &gt;&gt;&gt; 2);</span><br><span class="line">        initialCapacity |&#x3D; (initialCapacity &gt;&gt;&gt; 4);</span><br><span class="line">        initialCapacity |&#x3D; (initialCapacity &gt;&gt;&gt; 8);</span><br><span class="line">        initialCapacity |&#x3D; (initialCapacity &gt;&gt;&gt; 16);</span><br><span class="line">        initialCapacity++;</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F; 当传人值非常大，经过计算变成负数，会重新初始化为 2 ^ 30</span><br><span class="line">        if (initialCapacity &lt; 0)</span><br><span class="line">            initialCapacity &gt;&gt;&gt;&#x3D; 1;</span><br><span class="line">        return initialCapacity;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public boolean enQueue(int value) &#123;</span><br><span class="line">        if (isFull()) &#123;</span><br><span class="line">            return false;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        data[tail] &#x3D; value;</span><br><span class="line">        tail &#x3D; (tail + 1) &amp; (data.length - 1);</span><br><span class="line">        count++;</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public boolean deQueue() &#123;</span><br><span class="line">        if (isEmpty()) &#123;</span><br><span class="line">            return false;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        head &#x3D; (head + 1) &amp; (data.length - 1);</span><br><span class="line">        count--;</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int Front() &#123;</span><br><span class="line">        if (isEmpty()) &#123;</span><br><span class="line">            return -1;</span><br><span class="line">        &#125;</span><br><span class="line">        return data[head];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int Rear() &#123;</span><br><span class="line">        if (isEmpty()) &#123;</span><br><span class="line">            return -1;</span><br><span class="line">        &#125;</span><br><span class="line">        &#x2F;&#x2F; tail - 1 取最近存放的元素</span><br><span class="line">        return data[(tail - 1) &amp; (data.length - 1)];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public boolean isEmpty() &#123;</span><br><span class="line">        return head &#x3D;&#x3D; tail;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public boolean isFull() &#123;</span><br><span class="line">        return ((tail + 1) &amp; (data.length - 1)) &#x3D;&#x3D; head || (count &gt;&#x3D; size);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="方法二：-非位运算"><a href="#方法二：-非位运算" class="headerlink" title="方法二： 非位运算"></a>方法二： 非位运算</h3><p><strong>参数的含义：</strong></p>
+<ul>
+<li><code>data</code> ：表示固定的数组，用作循环队列</li>
+<li><code>head</code> ：表示的队列的头指针</li>
+<li><code>tail</code> ：表示队列的尾指针</li>
+</ul>
+<p><strong>判断队列是否已满</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">(tail + 1) % size &#x3D;&#x3D; head</span><br></pre></td></tr></table></figure>
+
+<p><strong>判断队列是否为空</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">head &#x3D;&#x3D; tail</span><br></pre></td></tr></table></figure>
+
+<p><strong>复杂度分析：</strong></p>
+<ul>
+<li>时间复杂度：O(1) ，数组存储都是按顺序存放的，具有随机访问的特点 </li>
+<li>空间复杂度：O(N)，N 为数组的长度</li>
+</ul>
+<p><strong>代码实现</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class MyCircularQueue &#123;</span><br><span class="line">    int[] data;</span><br><span class="line">    int head;</span><br><span class="line">    int tail;</span><br><span class="line">    int size;</span><br><span class="line"></span><br><span class="line">    public MyCircularQueue(int k) &#123;</span><br><span class="line">        &#x2F;&#x2F; k + 1 有两个原因</span><br><span class="line">        &#x2F;&#x2F; 1. 为了避免冲突循环数组中任何时刻一定至少有一个位置不存放有效元素</span><br><span class="line">        &#x2F;&#x2F; 2. 当  k &#x3D; 4 ，下标从 0 开始的，假设不移动 head， k 也不 +1 ，第四个元素始终放不进去</span><br><span class="line">        size &#x3D; k + 1;</span><br><span class="line">        data &#x3D; new int[size];</span><br><span class="line">        head &#x3D; 0;</span><br><span class="line">        tail &#x3D; 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public boolean enQueue(int value) &#123;</span><br><span class="line">        if (isFull()) return false;</span><br><span class="line">        data[tail] &#x3D; value;</span><br><span class="line">        tail &#x3D; (tail + 1) % size;</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public boolean deQueue() &#123;</span><br><span class="line">        if (isEmpty()) return false;</span><br><span class="line">        head &#x3D; (head + 1) % size;</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int Front() &#123;</span><br><span class="line">        if (isEmpty()) return -1;</span><br><span class="line">        return data[head];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int Rear() &#123;</span><br><span class="line">        if (isEmpty()) return -1;</span><br><span class="line">        &#x2F;&#x2F; 因为数组中任何时刻一定至少有一个位置不存放有效元素，所以 tail - 1 取最近存放的元素</span><br><span class="line">        &#x2F;&#x2F; 假设 tail &#x3D; 0 时，tail - 1 就会变成负数，下标会越界，所以 tail - 1 + size) % size</span><br><span class="line">        return data[(tail - 1 + size) % size];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public boolean isEmpty() &#123;</span><br><span class="line">        return head &#x3D;&#x3D; tail;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public boolean isFull() &#123;</span><br><span class="line">        return (tail + 1) % size &#x3D;&#x3D; head;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>位运算</strong> 和 <strong>非位运算</strong> 执行效率对比。</p>
+<p><img src="http://img.hi-dhl.com/16338680853055.jpg" alt=""></p>
+<p>很明显 <strong>位运算</strong> 效率远远高于 <strong>非位运算</strong>，数据量越大，差距会越来越大，并且我在测试过程中，通过 <strong>位运算</strong> 的方式提交， 在 Java 提交中打败了 <strong>100%</strong> 的用户。</p>
+<p align="center">
+<br/>
+<p align="center"><b>如果有帮助 点个赞 就是对我最大的鼓励</b></p>
+<p align="center"><b>代码不止，文章不停</b></p>
+<p align="center"><b>欢迎关注公众号：ByteCode，持续分享最新的技术</b></p>
+<br/>
+</p>
+
+<hr>
+<p>最后推荐长期更新和维护的项目：</p>
+<ul>
+<li><p>个人博客，将所有文章进行分类，欢迎前去查看 <a href="https://hi-dhl.com">https://hi-dhl.com</a></p>
+</li>
+<li><p>KtKit 小巧而实用，用 Kotlin 语言编写的工具库，欢迎前去查看 <a href="https://github.com/hi-dhl/KtKit">KtKit</a></p>
+</li>
+<li><p>计划建立一个最全、最新的 AndroidX Jetpack 相关组件的实战项目 以及 相关组件原理分析文章，正在逐渐增加 Jetpack 新成员，仓库持续更新，欢迎前去查看 <a href="https://github.com/hi-dhl/AndroidX-Jetpack-Practice">AndroidX-Jetpack-Practice</a></p>
+</li>
+<li><p>LeetCode / 剑指 offer / 国内外大厂面试题 / 多线程 题解，语言 Java 和 kotlin，包含多种解法、解题思路、时间复杂度、空间复杂度分析<br/></p>
+  <image src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cde6d3ba158742d1a821390fad86d50c~tplv-k3u1fbpfcp-zoom-1.image" width = "500px"/>
+
+<ul>
+<li>剑指 offer 及国内外大厂面试题解：<a href="https://offer.hi-dhl.com">在线阅读</a></li>
+<li>LeetCode 系列题解：<a href="https://leetcode.hi-dhl.com">在线阅读</a></li>
+</ul>
+</li>
+</ul>
+<p><strong>近期必读热门文章</strong></p>
+<ul>
+<li><a href="https://mp.weixin.qq.com/s/rg4vZOVrHm5Pg82GFt7sTw">图解 ArrayDeque 比 LinkedList 快</a></li>
+<li><a href="https://mp.weixin.qq.com/s/o6gnTbbKUODHBgRD7AYqUQ">为什么不推荐 ArrayDeque 代替 Stack</a></li>
+<li><a href="https://mp.weixin.qq.com/s/TSpWaYSUpjeR_wzSclCTQA">算法动画图解 | 被 “废弃” 的 Java 栈，为什么还在用</a></li>
+<li><a href="https://mp.weixin.qq.com/s/8dAbt1-mcCVLWLXKC-1_xw">影响性能的 Kotlin 代码（一）</a></li>
+<li><a href="https://mp.weixin.qq.com/s/1jTdPgXbNl38smOnN2k1MA">Jetpack Splashscreen 解析 | 助力新生代 IT 农民工 事半功倍</a></li>
+<li><a href="https://mp.weixin.qq.com/s/lcLJB0MFaYX1lQXtJ3M88g">为数不多的人知道的 Kotlin 技巧及解析(三)</a></li>
+<li><a href="https://juejin.im/post/6847902224467623950">为数不多的人知道的 Kotlin 技巧以及 原理解析（二）</a></li>
+<li><a href="https://juejin.im/post/5edfd7c9e51d45789a7f206d">为数不多的人知道的 Kotlin 技巧以及 原理解析（一）</a></li>
+<li><a href="https://mp.weixin.qq.com/s/sYj_-wqENr9Jaw1p8iP4Jg">揭秘 Kotlin 中的 == 和 ===</a></li>
+<li><a href="https://mp.weixin.qq.com/s/0O-ZnbVnHUnh3jCnthKgHA">Kotlin 密封类进化了</a></li>
+<li><a href="https://mp.weixin.qq.com/s/VNxFVGvDU-X3lfenehkGtw">Kotlin 中的密封类 优于 带标签的类</a></li>
+<li><a href="https://mp.weixin.qq.com/s/X1jEUFS8vmRF9ybkmVy5zQ">Kotlin Sealed 是什么？为什么 Google 都在用</a></li>
+<li><a href="https://mp.weixin.qq.com/s/BPuUy85MsREmWSQ3a6WVvQ">Android 12 行为变更，对应用产生的影响</a></li>
+<li><a href="https://mp.weixin.qq.com/s/QjU5cBEkQMc3Pxf-Zsdobg">图解多平台 AndroidStudio 技巧(三)</a></li>
+<li><a href="https://juejin.im/post/6876990111113248775">Kotlin StateFlow 搜索功能的实践 DB + NetWork</a></li>
+<li><a href="https://juejin.cn/post/6905942568467759111">Kotlin 插件的落幕，ViewBinding 的崛起</a> </li>
+</ul>
+</div><div><p style="height:15px"></p><ul class="page-copyright"><li><strong>本文作者：</strong>hi-dhl</li><li><strong>本文标题：</strong>独家 | 跟源码学数据结构 | 循环队列</li><li><strong>本文链接：</strong><a href="" title="{page.title}">https://hi-dhl.com/2021/10/14/algorithm/04-loop-queue/</a></li><li><strong>版权声明：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://hi-dhl.com" title="{page.title}">hi-dhl</a></li></ul><p style="height:15px"></p></div><!--!--><h1 class="title is-4 is-size-4-mobile"></h1></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2021/09/27/algorithm/03-arraydeque2/"><span class="level-item">图解 ArrayDeque 比 LinkedList 快</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content template"><p align="center"><img src="http://cdn.51git.cn/2020-10-07-bytecode.png"></p><p>致力于分享一系列 Android 系统源码、逆向分析、算法、翻译、Jetpack 源码相关的文章，在技术的道路上一起前进</p><h3 class="title is-4">Android10 源码分析</h3><p>正在写一系列的 Android 10 源码分析的文章，了解系统源码，不仅有助于分析问题，在面试过程中，对我们也是非常有帮助的，如果你同我一样喜欢研究 Android 源码，可以关注我 GitHub 上的 <a href="https://github.com/hi-dhl/Android10-Source-Analysis">Android10-Source-Analysis</a>。</p><h3 class="title is-4">算法题库的归纳和总结</h3><p>由于 LeetCode 的题库庞大，每个分类都能筛选出数百道题，由于每个人的精力有限，不可能刷完所有题目，因此我按照经典类型题目去分类、和题目的难易程度去排序。</p><ul><li>数据结构： 数组、栈、队列、字符串、链表、树……</li><li>算法： 查找算法、搜索算法、位运算、排序、数学、……</li></ul><p>每道题目都会用 Java 和 kotlin 去实现，并且每道题目都有解题思路，如果你同我一样喜欢算法、LeetCode，可以关注我 GitHub 上的 LeetCode 题解：<a href="https://github.com/hi-dhl/Leetcode-Solutions-with-Java-And-Kotlin">Leetcode-Solutions-with-Java-And-Kotlin</a>。</p><h3 class="title is-4">精选国外的技术文章</h3><p>目前正在整理和翻译一系列精选国外的技术文章，不仅仅是翻译，很多优秀的英文技术文章提供了很好思路和方法，每篇文章都会有<strong>译者思考</strong>部分，对原文的更加深入的解读，可以关注我 GitHub 上的 <a href="https://github.com/hi-dhl/Technical-Article-Translation">Technical-Article-Translation</a>。</p><p></p></div></div><div class="card"><div class="card-content"><h3 class="title is-5">评论</h3><div class="content" id="valine-thread"></div><script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script><script src="https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js"></script><script>new Valine({
+            el: '#valine-thread' ,
+            notify: false,
+            verify: undefined,
+            appId: 'zfvr24HFhzQ5vtHkr4NQ1fmW-gzGzoHsz',
+            appKey: 'RChgr9mR005hgu4yiQ4WQU3O',
+            placeholder: '说点什么',
+            avatar: 'mm',
+            avatarForce: false,
+            meta: ["nick","mail","link"],
+            pageSize: 10,
+            visitor: false,
+            highlight: true,
+            recordIP: false
+        });</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1 is-sticky"><div class="card widget" id="toc" style="max-height: 500px;overflow: auto;"><div class="card-content"><div class="menu"><h3 class="menu-label">目录</h3><ul class="menu-list"><li><a class="is-flex" href="#队列的定义"><span>队列的定义</span></a></li><li><a class="is-flex" href="#循环队列"><span>循环队列</span></a><ul class="menu-list"><li><a class="is-flex" href="#ArrayDeque-源码分析"><span>ArrayDeque 源码分析</span></a><ul class="menu-list"><li><a class="is-flex" href="#成员变量分析"><span>成员变量分析</span></a></li><li><a class="is-flex" href="#构造方法分析"><span>构造方法分析</span></a></li><li><a class="is-flex" href="#元素入队分析"><span>元素入队分析</span></a></li><li><a class="is-flex" href="#元素出队分析"><span>元素出队分析</span></a></li></ul></li></ul></li><li><a class="is-flex" href="#设计循环队列"><span>设计循环队列</span></a><ul class="menu-list"><li><a class="is-flex" href="#方法一：位运算"><span>方法一：位运算</span></a></li><li><a class="is-flex" href="#方法二：-非位运算"><span>方法二： 非位运算</span></a></li></ul></li></ul></div></div></div><div class="card widget"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content size-small"><p><time dateTime="2021-10-14T01:02:29.585Z">2021-10-14</time></p><p class="title is-6"><a class="link-muted" href="/2021/10/14/algorithm/04-loop-queue/">独家 | 跟源码学数据结构 | 循环队列</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2021-09-27T00:48:32.866Z">2021-09-27</time></p><p class="title is-6"><a class="link-muted" href="/2021/09/27/algorithm/03-arraydeque2/">图解 ArrayDeque 比 LinkedList 快</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2021-09-24T01:14:31.412Z">2021-09-24</time></p><p class="title is-6"><a class="link-muted" href="/2021/09/24/algorithm/02-arraydeque/">为什么不推荐 ArrayDeque 代替 Stack</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2021-09-14T15:25:21.231Z">2021-09-14</time></p><p class="title is-6"><a class="link-muted" href="/2021/09/14/algorithm/01-stack/">算法动画图解 | 被 &quot;废弃&quot; 的 Java 栈，为什么还在用</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2021-09-05T08:00:50.111Z">2021-09-05</time></p><p class="title is-6"><a class="link-muted" href="/2021/09/05/kotlin/12-kotlin-optimize/">影响性能的 Kotlin 代码（一）</a></p><p class="is-uppercase"></p></div></article></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile is-marginless" href="/categories/Android/"><span class="level-start"><span class="level-item">Android</span></span><span class="level-end"><span class="level-item tag">6</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Android-12/"><span class="level-start"><span class="level-item">Android 12</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Android-AndroidStudio/"><span class="level-start"><span class="level-item">Android,AndroidStudio</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Android10/"><span class="level-start"><span class="level-item">Android10</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/AndroidStudio/"><span class="level-start"><span class="level-item">AndroidStudio</span></span><span class="level-end"><span class="level-item tag">5</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Jetpack/"><span class="level-start"><span class="level-item">Jetpack</span></span><span class="level-end"><span class="level-item tag">15</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Kotlin/"><span class="level-start"><span class="level-item">Kotlin</span></span><span class="level-end"><span class="level-item tag">11</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Linux/"><span class="level-start"><span class="level-item">Linux</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><span class="level-start"><span class="level-item">数据结构</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E6%9D%82%E8%B0%88/"><span class="level-start"><span class="level-item">杂谈</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E7%AE%97%E6%B3%95%E5%8A%A8%E7%94%BB/"><span class="level-start"><span class="level-item">算法动画</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/translated/"><span class="level-start"><span class="level-item">译文</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E8%AF%91%E6%96%87-AndroidStudio/"><span class="level-start"><span class="level-item">译文,AndroidStudio</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E8%AF%91%E6%96%87-Kotlin/"><span class="level-start"><span class="level-item">译文,Kotlin</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/Android/"><span class="tag">Android</span><span class="tag is-grey-lightest">8</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android-12/"><span class="tag">Android 12</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E5%8C%85%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-包管理系统</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-窗口管理系统</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-资源管理系统</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/AndroidStudio/"><span class="tag">AndroidStudio</span><span class="tag is-grey-lightest">7</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android%E6%BA%90%E7%A0%81/"><span class="tag">Android源码</span><span class="tag is-grey-lightest">7</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Compose/"><span class="tag">Compose</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Fragment/"><span class="tag">Fragment</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Jetpack/"><span class="tag">Jetpack</span><span class="tag is-grey-lightest">19</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Koin/"><span class="tag">Koin</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Kotlin/"><span class="tag">Kotlin</span><span class="tag is-grey-lightest">16</span></a></div><div class="control"><a class="tags has-addons" href="/tags/LeetCode/"><span class="tag">LeetCode</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Linux/"><span class="tag">Linux</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Protobuf/"><span class="tag">Protobuf</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/RxJava/"><span class="tag">RxJava</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Shell/"><span class="tag">Shell</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/kotlin/"><span class="tag">kotlin</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%8A%A8%E7%94%BB/"><span class="tag">动画</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><span class="tag">数据结构</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%9D%82%E8%B0%88/"><span class="tag">杂谈</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%AE%97%E6%B3%95/"><span class="tag">算法</span><span class="tag is-grey-lightest">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%AF%91%E6%96%87/"><span class="tag">译文</span><span class="tag is-grey-lightest">9</span></a></div></div></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level-item"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img class="logo-img" src="/img/logo.png" alt="dhl" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="dhl" height="28"></a><p class="size-small"><span>&copy; 2021 dhl</span>  <a href="http://www.beian.miit.gov.cn/" target="_blank">京ICP备18050211号-2</a>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p><p></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            site: {
+                url: 'https://hi-dhl.com',
+                external_link: {"enable":true,"exclude":[]}
+            },
+            article: {
+                highlight: {
+                    clipboard: false,
+                    fold: ''
+                }
+            }
+        };</script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><script src="https://s9.cnzz.com/z_stat.php?id=1278919895&amp;web_id=1278919895" async></script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><script src="/js/imaegoo/universe.js"></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>
