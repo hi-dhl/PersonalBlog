@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://hi-dhl.com/2020/08/17/translate/07-kotlin-let-run/</loc>
+    <lastmod>2021-10-23</lastmod>
+  </url>  <url>
     <loc>https://hi-dhl.com/2021/10/14/algorithm/04-loop-queue/</loc>
     <lastmod>2021-10-14</lastmod>
   </url>  <url>
@@ -87,9 +90,6 @@
   </url>  <url>
     <loc>https://hi-dhl.com/2020/11/08/translate/08-java-or-kotlin/</loc>
     <lastmod>2020-11-12</lastmod>
-  </url>  <url>
-    <loc>https://hi-dhl.com/2020/08/17/translate/07-kotlin-let-run/</loc>
-    <lastmod>2020-11-11</lastmod>
   </url>  <url>
     <loc>https://hi-dhl.com/2020/08/17/translate/05-rxJava-error/</loc>
     <lastmod>2020-11-11</lastmod>
