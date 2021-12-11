@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="generator" content="Hexo 4.2.1"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>LinkedList 落幕了吗？作者自己都不用 - dhl</title><meta description="LinkedList 性能这么差吗？作者自己都不想用"><meta property="og:type" content="blog"><meta property="og:title" content="LinkedList 落幕了吗？作者自己都不用"><meta property="og:url" content="https://www.hi-dhl.com/2021/12/11/algorithm/05-linkedlist/"><meta property="og:site_name" content="dhl"><meta property="og:description" content="LinkedList 性能这么差吗？作者自己都不想用"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="http://img.hi-dhl.com/LinkedList_3.png"><meta property="article:published_time" content="2021-12-11T08:48:00.168Z"><meta property="article:modified_time" content="2021-12-11T08:49:52.919Z"><meta property="article:author" content="dhl"><meta property="article:tag" content="Android10"><meta property="article:tag" content="AndroidStudio"><meta property="article:tag" content="buildSrc"><meta property="article:tag" content="kotlin"><meta property="article:tag" content="run"><meta property="article:tag" content="with"><meta property="article:tag" content="let"><meta property="article:tag" content="also"><meta property="article:tag" content="apply"><meta property="article:tag" content="Jetpack"><meta property="article:tag" content="算法动画"><meta property="article:tag" content="LeetCode"><meta property="article:tag" content="Stack"><meta property="article:tag" content="ArrayDeque"><meta property="article:tag" content="LinkedList"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="http://img.hi-dhl.com/LinkedList_3.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.hi-dhl.com/2021/12/11/algorithm/05-linkedlist/"},"headline":"dhl","image":["http://img.hi-dhl.com/LinkedList_3.png"],"datePublished":"2021-12-11T08:48:00.168Z","dateModified":"2021-12-11T08:49:52.919Z","author":{"@type":"Person","name":"dhl"},"description":"LinkedList 性能这么差吗？作者自己都不想用"}</script><link rel="canonical" href="https://www.hi-dhl.com/2021/12/11/algorithm/05-linkedlist/"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" defer></script><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script></head><body class="is-2-column"><script type="text/javascript" src="/js/imaegoo/night.js"></script><canvas id="universe"></canvas><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img class="logo-img" src="/img/logo.png" alt="dhl" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="dhl" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">首页</a><a class="navbar-item" href="/categories">分类</a><a class="navbar-item" href="/categories/Jetpack">Jetpack</a><a class="navbar-item" href="/categories/Kotlin/">Kotlin</a><a class="navbar-item" href="/categories/Android10/">系统源码</a><a class="navbar-item" href="/categories/translated/">译文</a><a class="navbar-item" href="https://offer.hi-dhl.com">算法</a></div><div class="navbar-end"><a class="navbar-item night" id="night-nav" title="Night Mode" href="javascript:;"><i class="fas fa-moon" id="night-icon"></i></a><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/hi-dhl"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><div class="card-image"><span class="image is-7by3"><img class="thumbnail" src="http://img.hi-dhl.com/LinkedList_3.png" alt="LinkedList 落幕了吗？作者自己都不用"></span></div><article class="card-content article" role="article"><h1 class="title is-3 is-size-4-mobile"></h1><h1 class="title is-3 is-size-4-mobile">LinkedList 落幕了吗？作者自己都不用</h1><div class="article-meta size-small level is-mobile"><div class="level-left"><span class="mr-2"><i class="fa fa-calendar"></i></span><time class="level-item" dateTime="2021-12-11T08:48:00.168Z" title="2021-12-11T08:48:00.168Z">2021-12-11</time><span class="mr-2"> <i class="fa fa-folder"></i></span><span class="level-item"><a class="link-muted" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a></span><span class="mr-2"> <i class="fa fa-tag"></i></span><span class="level-item"><a class="link-muted" href="/tags/%E7%AE%97%E6%B3%95/">算法</a><span> , </span><a class="link-muted" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a></span></div></div><div class="level-left article-meta size-small is-mobile"></div><div><p style="height:15px"></p><ul class="page-blockquote"><li>如果评论区没有及时回复，欢迎来公众号：ByteCode 咨询</li><li>公众号：ByteCode。致力于分享最新技术原创文章，涉及 Kotlin、Jetpack、算法、译文、系统源码相关的文章</li><li></li></ul><p style="height:15px"></p></div><div class="content"><p>近期，看到网上有小伙伴们在讨论 <code>LinkedList</code> 作者自己都不用 <code>LinkedList</code>，我特意从网上搜索了一下，结果真让我找到了。</p>
+<p><a href="https://twitter.com/joshbloch/status/583813919019573248">https://twitter.com/joshbloch/status/583813919019573248</a></p>
+<p><img src="http://img.hi-dhl.com/163889028007101.jpg" alt=""></p>
+<p>大神真的不用 <code>LinkedList</code> 了吗？ 我仔细扒了一下，如下图所示，大神的回复。</p>
+<p><img src="http://img.hi-dhl.com/1638889501419015.jpg" alt=""></p>
+<p>其实大神非常喜欢链表的数据结构，在 C 语言中是非常有用的。并且也非常认可 <code>ArrayDeque</code> 的实现，因为 <code>ArrayDeque</code> 作为栈使用时可能比 <code>Stack</code> 快，作为队列使用时可能比 <code>LinkedList</code> 快。</p>
+<p>但是为什么不用 <code>LinkedList</code> 呢？<code>LinkedList</code> 基于双向链表实现的双端队列，链表 和 队列都是非常好的数据结构，但是 Java 中 <code>LinkedList</code> 存在性能问题，所以在实际项目中，很少会用到，先来一起了解一下 <code>LinkedList</code> 的特点。</p>
+<h3 id="LinkedList-特点"><a href="#LinkedList-特点" class="headerlink" title="LinkedList 特点"></a>LinkedList 特点</h3><ul>
+<li><code>LinkedList</code> 是基于双向链表的结构来存储元素，所以长度没有限制，因此不存在扩容机制</li>
+<li>由于链表的内存地址是非连续的，所以只能从头部或者尾部查找元素，查询的时间复杂为 <code>O(n)</code>，但是 JDK 对 <code>LinkedList</code> 做了查找优化，当我们查找某个元素时，若 <code>index &lt; (size / 2)</code>，则从 <code>head</code> 往后查找，否则从 <code>tail</code> 开始往前查找 , 但是我们在计算时间复杂度的时候，常数项可以省略，故时间复杂度 <code>O(n)</code></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Node&lt;E&gt; node(int index) &#123;</span><br><span class="line">    &#x2F;&#x2F; size &gt;&gt; 1 等价于 size &#x2F; 2</span><br><span class="line">    if (index &lt; (size &gt;&gt; 1)) &#123;</span><br><span class="line">        &#x2F;&#x2F; form head to tail</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        &#x2F;&#x2F; form tail to head</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>链表通过指针去访问各个元素，所以插入、删除元素只需要更改指针指向即可，因此插入、删除的时间复杂度 <code>O(1)</code></li>
+<li>它是非线程安全的集合</li>
+</ul>
+<p><code>LinkedList</code> 属于链式队列，与之相对应的 <code>ArrayDeque</code> 是基于数组实现的双端队列，<code>ArrayDeque</code> 和 <code>LinkedList</code> 数据结构的特点如下所示。</p>
+<table>
+<thead>
+<tr>
+<th>集合类型</th>
+<th>数据结构</th>
+<th>初始化及扩容</th>
+<th>插入/删除时间复杂度</th>
+<th>查询时间复杂度</th>
+<th>是否是线程安全</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ArrayDeque</td>
+<td>循环数组</td>
+<td>初始化：16 <br/> 扩容：2 倍</td>
+<td>0(n)</td>
+<td>0(1)</td>
+<td>否</td>
+</tr>
+<tr>
+<td>LinkedList</td>
+<td>双向链表</td>
+<td>无</td>
+<td>0(1)</td>
+<td>0(n)</td>
+<td>否</td>
+</tr>
+</tbody></table>
+<p>更多关于 <code>ArrayDeque</code> 和 <code>LinkedList</code> 的优缺点，在什么情况下使用，以及它们谁更快，请前往查看 <a href="https://mp.weixin.qq.com/s/rg4vZOVrHm5Pg82GFt7sTw">图解 ArrayDeque 比 LinkedList 快</a>。</p>
+<p>了解完数据结构特点之后，接下来我们从两个方面分析为什么 <code>LinkedList</code> 存在性能问题。</p>
+<h3 id="LinkedList-存在的性能问题"><a href="#LinkedList-存在的性能问题" class="headerlink" title="LinkedList 存在的性能问题"></a>LinkedList 存在的性能问题</h3><ul>
+<li><p>从速度的角度：<code>ArrayDeque</code> 基于数组实现双端队列，而 <code>LinkedList</code> 基于双向链表实现双端队列，数组采用连续的内存地址空间，通过下标索引访问，链表是非连续的内存地址空间，通过指针访问，所以在寻址方面数组的效率高于链表。</p>
+</li>
+<li><p>从内存的角度：虽然 <code>LinkedList</code> 没有扩容的问题，但是插入元素的时候，需要创建一个 <code>Node</code> 对象, 换句话说每次都要执行 <code>new</code> 操作，当执行 <code>new</code> 操作的时候，其过程是非常慢的，会经历两个过程：类加载过程 、对象创建过程。</p>
+<ul>
+<li><p>类加载过程</p>
+<ul>
+<li>会先判断这个类是否已经初始化，如果没有初始化，会执行类的加载过程</li>
+<li>类的加载过程：加载、验证、准备、解析、初始化等等阶段，之后会执行 <code>&lt;clinit&gt;()</code> 方法，初始化静态变量，执行静态代码块等等</li>
+</ul>
+</li>
+<li><p>对象创建过程</p>
+<ul>
+<li>如果类已经初始化了，直接执行对象的创建过程</li>
+<li>对象的创建过程：在堆内存中开辟一块空间，给开辟空间分配一个地址，之后执行初始化，会执行 <code>&lt;init&gt;()</code> 方法，初始化普通变量，调用普通代码块</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>在上一篇文章 <a href="https://mp.weixin.qq.com/s/rg4vZOVrHm5Pg82GFt7sTw">图解 ArrayDeque 比 LinkedList 快</a> 从 <strong>速度</strong> 和 <strong>内存</strong> 两个方面分析了  <code>ArrayDeque</code> 的性能都比 <code>LinkedList</code> 要好，并结合实际的案例来验证，结果如下图所示。</p>
+<p><img src="http://img.hi-dhl.com/16321351422740.jpg" alt=""></p>
+<p>在之前的文章中，我围绕着 <code>LinkedList</code> （栈、队列 等等）写了四篇文章，从不同的角度进行了分析。</p>
+<ul>
+<li><p><a href="https://mp.weixin.qq.com/s/TSpWaYSUpjeR_wzSclCTQA">算法动画图解 | 被 “废弃” 的 Java 栈，为什么还在用</a></p>
+<ul>
+<li>栈的定义</li>
+<li>栈的实现<ul>
+<li>为什么不推荐使用 Java 栈<ul>
+<li>性能低</li>
+<li>破坏了原有的数据结构</li>
+</ul>
+</li>
+<li>不推荐使用了，为什么现在还在用</li>
+<li>为什么推荐使用 <code>Deque</code> 接口替换栈<ul>
+<li>效率比 Java 栈快</li>
+<li>屏蔽掉无关的方法</li>
+</ul>
+</li>
+<li>Stack 和 ArrayDeque 区别</li>
+<li>栈的时间复杂度</li>
+</ul>
+</li>
+<li>栈的实战</li>
+</ul>
+</li>
+<li><p><a href="https://mp.weixin.qq.com/s/o6gnTbbKUODHBgRD7AYqUQ">为什么不推荐 ArrayDeque 代替 Stack</a></p>
+<ul>
+<li>为什么不推荐使用 Java 栈</li>
+<li>JDK 推荐使用 <code>ArrayDeque</code> 代替 <code>Stack</code> 真的合理吗</li>
+<li>大神不推荐使用 <code>ArrayDeque</code> 代替 <code>Stack</code></li>
+<li>如何实现一个真正意义上的栈</li>
+</ul>
+</li>
+<li><p><a href="https://mp.weixin.qq.com/s/rg4vZOVrHm5Pg82GFt7sTw">图解 ArrayDeque 比 LinkedList 快</a></p>
+<ul>
+<li><code>ArrayDeque</code> 和 <code>LinkedList</code> 数据结构的特点？</li>
+<li>为什么 <code>ArrayDeque</code> 比 <code>LinkedList</code> 快？</li>
+</ul>
+</li>
+<li><p><a href="https://mp.weixin.qq.com/s/xWp4U6MOGxLC5hKaDZyJPQ">跟源码学数据结构 | 循环队列</a></p>
+<ul>
+<li>主要来学习如何设计循环队列</li>
+<li>JDK 源码是如何设计队列？</li>
+<li>队列的大小为什么要设置成 2 的整数次幂？</li>
+<li><strong>位运算</strong> 效率比 <strong>非位运算</strong> 快多少？</li>
+<li>ArrayDeque 的 2 的整数次幂计算逻辑和 HashMap 有什么区别？</li>
+<li>自己如何设计一个循环队列？</li>
+</ul>
+</li>
+</ul>
+<p align="center">
+<br/>
+<p align="center"><b>如果有帮助 点个赞 就是对我最大的鼓励</b></p>
+<p align="center"><b>代码不止，文章不停</b></p>
+<p align="center"><b>欢迎关注公众号：ByteCode，持续分享最新的技术</b></p>
+<br/>
+</p>
+
+<hr>
+<p>最后推荐长期更新和维护的项目：</p>
+<ul>
+<li><p>个人博客，将所有文章进行分类，欢迎前去查看 <a href="https://hi-dhl.com">https://hi-dhl.com</a></p>
+</li>
+<li><p>KtKit 小巧而实用，用 Kotlin 语言编写的工具库，欢迎前去查看 <a href="https://github.com/hi-dhl/KtKit">KtKit</a></p>
+</li>
+<li><p>计划建立一个最全、最新的 AndroidX Jetpack 相关组件的实战项目 以及 相关组件原理分析文章，正在逐渐增加 Jetpack 新成员，仓库持续更新，欢迎前去查看 <a href="https://github.com/hi-dhl/AndroidX-Jetpack-Practice">AndroidX-Jetpack-Practice</a></p>
+</li>
+<li><p>LeetCode / 剑指 offer / 国内外大厂面试题 / 多线程 题解，语言 Java 和 kotlin，包含多种解法、解题思路、时间复杂度、空间复杂度分析<br/></p>
+  <image src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cde6d3ba158742d1a821390fad86d50c~tplv-k3u1fbpfcp-zoom-1.image" width = "500px"/>
+
+<ul>
+<li>剑指 offer 及国内外大厂面试题解：<a href="https://offer.hi-dhl.com">在线阅读</a></li>
+<li>LeetCode 系列题解：<a href="https://leetcode.hi-dhl.com">在线阅读</a></li>
+</ul>
+</li>
+</ul>
+<p><strong>近期必读热门文章</strong></p>
+<ul>
+<li><a href="https://mp.weixin.qq.com/s/9NMpEP-7mABh44Wc3-E8DA">Oracle 官方推荐，使用 ReentrantLock 需要注意的细节</a></li>
+<li><a href="https://mp.weixin.qq.com/s/oS8r2DieTYBhFuyWF6jx9w">Kotlin 宣布一个重磅特性</a></li>
+<li><a href="https://mp.weixin.qq.com/s/fp1ZOmqAcEBv2f7ec1r-zw">Google 宣布废弃 LiveData.observe 方法</a></li>
+<li><a href="https://mp.weixin.qq.com/s/7ZoBeSK97j4YWXTGX9vEYA">使用 kotlin 需要注意的一个细节</a></li>
+<li><a href="https://mp.weixin.qq.com/s/xWp4U6MOGxLC5hKaDZyJPQ">跟源码学数据结构 | 循环队列</a></li>
+<li><a href="https://mp.weixin.qq.com/s/rg4vZOVrHm5Pg82GFt7sTw">图解 ArrayDeque 比 LinkedList 快</a></li>
+<li><a href="https://mp.weixin.qq.com/s/o6gnTbbKUODHBgRD7AYqUQ">为什么不推荐 ArrayDeque 代替 Stack</a></li>
+<li><a href="https://mp.weixin.qq.com/s/TSpWaYSUpjeR_wzSclCTQA">算法动画图解 | 被 “废弃” 的 Java 栈，为什么还在用</a></li>
+<li><a href="https://mp.weixin.qq.com/s/8dAbt1-mcCVLWLXKC-1_xw">影响性能的 Kotlin 代码（一）</a></li>
+<li><a href="https://mp.weixin.qq.com/s/1jTdPgXbNl38smOnN2k1MA">Jetpack Splashscreen 解析 | 助力新生代 IT 农民工 事半功倍</a></li>
+<li><a href="https://mp.weixin.qq.com/s/lcLJB0MFaYX1lQXtJ3M88g">为数不多的人知道的 Kotlin 技巧及解析(三)</a></li>
+<li><a href="https://juejin.im/post/6847902224467623950">为数不多的人知道的 Kotlin 技巧以及 原理解析（二）</a></li>
+<li><a href="https://juejin.im/post/5edfd7c9e51d45789a7f206d">为数不多的人知道的 Kotlin 技巧以及 原理解析（一）</a></li>
+<li><a href="https://mp.weixin.qq.com/s/sYj_-wqENr9Jaw1p8iP4Jg">揭秘 Kotlin 中的 == 和 ===</a></li>
+<li><a href="https://mp.weixin.qq.com/s/0O-ZnbVnHUnh3jCnthKgHA">Kotlin 密封类进化了</a></li>
+<li><a href="https://mp.weixin.qq.com/s/VNxFVGvDU-X3lfenehkGtw">Kotlin 中的密封类 优于 带标签的类</a></li>
+<li><a href="https://mp.weixin.qq.com/s/X1jEUFS8vmRF9ybkmVy5zQ">Kotlin Sealed 是什么？为什么 Google 都在用</a></li>
+<li><a href="https://mp.weixin.qq.com/s/BPuUy85MsREmWSQ3a6WVvQ">Android 12 行为变更，对应用产生的影响</a></li>
+<li><a href="https://mp.weixin.qq.com/s/QjU5cBEkQMc3Pxf-Zsdobg">图解多平台 AndroidStudio 技巧(三)</a></li>
+</ul>
+</div><div><p style="height:15px"></p><ul class="page-copyright"><li><strong>本文作者：</strong>hi-dhl</li><li><strong>本文标题：</strong>LinkedList 落幕了吗？作者自己都不用</li><li><strong>本文链接：</strong><a href="" title="{page.title}">https://hi-dhl.com/2021/12/11/algorithm/05-linkedlist/</a></li><li><strong>版权声明：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://hi-dhl.com" title="{page.title}">hi-dhl</a></li></ul><p style="height:15px"></p></div><!--!--><h1 class="title is-4 is-size-4-mobile"></h1></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2021/11/28/kotlin/15-ReentrantLock/"><span class="level-item">Oracle 官方推荐，使用 ReentrantLock 需要注意的细节</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content template"><p align="center"><img src="http://cdn.51git.cn/2020-10-07-bytecode.png"></p><p>致力于分享一系列 Android 系统源码、逆向分析、算法、翻译、Jetpack 源码相关的文章，在技术的道路上一起前进</p><h3 class="title is-4">Android10 源码分析</h3><p>正在写一系列的 Android 10 源码分析的文章，了解系统源码，不仅有助于分析问题，在面试过程中，对我们也是非常有帮助的，如果你同我一样喜欢研究 Android 源码，可以关注我 GitHub 上的 <a href="https://github.com/hi-dhl/Android10-Source-Analysis">Android10-Source-Analysis</a>。</p><h3 class="title is-4">算法题库的归纳和总结</h3><p>由于 LeetCode 的题库庞大，每个分类都能筛选出数百道题，由于每个人的精力有限，不可能刷完所有题目，因此我按照经典类型题目去分类、和题目的难易程度去排序。</p><ul><li>数据结构： 数组、栈、队列、字符串、链表、树……</li><li>算法： 查找算法、搜索算法、位运算、排序、数学、……</li></ul><p>每道题目都会用 Java 和 kotlin 去实现，并且每道题目都有解题思路，如果你同我一样喜欢算法、LeetCode，可以关注我 GitHub 上的 LeetCode 题解：<a href="https://github.com/hi-dhl/Leetcode-Solutions-with-Java-And-Kotlin">Leetcode-Solutions-with-Java-And-Kotlin</a>。</p><h3 class="title is-4">精选国外的技术文章</h3><p>目前正在整理和翻译一系列精选国外的技术文章，不仅仅是翻译，很多优秀的英文技术文章提供了很好思路和方法，每篇文章都会有<strong>译者思考</strong>部分，对原文的更加深入的解读，可以关注我 GitHub 上的 <a href="https://github.com/hi-dhl/Technical-Article-Translation">Technical-Article-Translation</a>。</p><p></p></div></div><div class="card"><div class="card-content"><h3 class="title is-5">评论</h3><div class="content" id="valine-thread"></div><script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script><script src="https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js"></script><script>new Valine({
+            el: '#valine-thread' ,
+            notify: false,
+            verify: undefined,
+            appId: 'zfvr24HFhzQ5vtHkr4NQ1fmW-gzGzoHsz',
+            appKey: 'RChgr9mR005hgu4yiQ4WQU3O',
+            placeholder: '说点什么',
+            avatar: 'mm',
+            avatarForce: false,
+            meta: ["nick","mail","link"],
+            pageSize: 10,
+            visitor: false,
+            highlight: true,
+            recordIP: false
+        });</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1 is-sticky"><div class="card widget" id="toc" style="max-height: 500px;overflow: auto;"><div class="card-content"><div class="menu"><h3 class="menu-label">目录</h3><ul class="menu-list"><li><a class="is-flex" href="#LinkedList-特点"><span>LinkedList 特点</span></a></li><li><a class="is-flex" href="#LinkedList-存在的性能问题"><span>LinkedList 存在的性能问题</span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content size-small"><p><time dateTime="2021-12-11T08:48:00.168Z">2021-12-11</time></p><p class="title is-6"><a class="link-muted" href="/2021/12/11/algorithm/05-linkedlist/">LinkedList 落幕了吗？作者自己都不用</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2021-11-28T07:57:28.825Z">2021-11-28</time></p><p class="title is-6"><a class="link-muted" href="/2021/11/28/kotlin/15-ReentrantLock/">Oracle 官方推荐，使用 ReentrantLock 需要注意的细节</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2021-11-14T05:53:33.793Z">2021-11-14</time></p><p class="title is-6"><a class="link-muted" href="/2021/11/14/kotlin/14-valueclass/">Kotlin 宣布一个重磅特性 value class</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2021-11-01T01:54:19.586Z">2021-11-01</time></p><p class="title is-6"><a class="link-muted" href="/2021/11/01/kotlin/13-Kotlin-LiveData/">Google 宣布废弃 LiveData.observe 方法</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2021-10-14T01:02:29.585Z">2021-10-14</time></p><p class="title is-6"><a class="link-muted" href="/2021/10/14/algorithm/04-loop-queue/">独家 | 跟源码学数据结构 | 循环队列</a></p><p class="is-uppercase"></p></div></article></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile is-marginless" href="/categories/Android/"><span class="level-start"><span class="level-item">Android</span></span><span class="level-end"><span class="level-item tag">6</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Android-12/"><span class="level-start"><span class="level-item">Android 12</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Android-AndroidStudio/"><span class="level-start"><span class="level-item">Android,AndroidStudio</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Android10/"><span class="level-start"><span class="level-item">Android10</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/AndroidStudio/"><span class="level-start"><span class="level-item">AndroidStudio</span></span><span class="level-end"><span class="level-item tag">5</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Jetpack/"><span class="level-start"><span class="level-item">Jetpack</span></span><span class="level-end"><span class="level-item tag">15</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Kotlin/"><span class="level-start"><span class="level-item">Kotlin</span></span><span class="level-end"><span class="level-item tag">14</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Linux/"><span class="level-start"><span class="level-item">Linux</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><span class="level-start"><span class="level-item">数据结构</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E6%9D%82%E8%B0%88/"><span class="level-start"><span class="level-item">杂谈</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E7%AE%97%E6%B3%95%E5%8A%A8%E7%94%BB/"><span class="level-start"><span class="level-item">算法动画</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/translated/"><span class="level-start"><span class="level-item">译文</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E8%AF%91%E6%96%87-AndroidStudio/"><span class="level-start"><span class="level-item">译文,AndroidStudio</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E8%AF%91%E6%96%87-Kotlin/"><span class="level-start"><span class="level-item">译文,Kotlin</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/Android/"><span class="tag">Android</span><span class="tag is-grey-lightest">8</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android-12/"><span class="tag">Android 12</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E5%8C%85%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-包管理系统</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-窗口管理系统</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-资源管理系统</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/AndroidStudio/"><span class="tag">AndroidStudio</span><span class="tag is-grey-lightest">7</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android%E6%BA%90%E7%A0%81/"><span class="tag">Android源码</span><span class="tag is-grey-lightest">7</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Compose/"><span class="tag">Compose</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Fragment/"><span class="tag">Fragment</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Jetpack/"><span class="tag">Jetpack</span><span class="tag is-grey-lightest">20</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Koin/"><span class="tag">Koin</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Kotlin/"><span class="tag">Kotlin</span><span class="tag is-grey-lightest">19</span></a></div><div class="control"><a class="tags has-addons" href="/tags/LeetCode/"><span class="tag">LeetCode</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Linux/"><span class="tag">Linux</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Protobuf/"><span class="tag">Protobuf</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/RxJava/"><span class="tag">RxJava</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Shell/"><span class="tag">Shell</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/kotlin/"><span class="tag">kotlin</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%8A%A8%E7%94%BB/"><span class="tag">动画</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/"><span class="tag">多线程</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><span class="tag">数据结构</span><span class="tag is-grey-lightest">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%9D%82%E8%B0%88/"><span class="tag">杂谈</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%AE%97%E6%B3%95/"><span class="tag">算法</span><span class="tag is-grey-lightest">5</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%AF%91%E6%96%87/"><span class="tag">译文</span><span class="tag is-grey-lightest">9</span></a></div></div></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level-item"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img class="logo-img" src="/img/logo.png" alt="dhl" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="dhl" height="28"></a><p class="size-small"><span>&copy; 2021 dhl</span>  <a href="http://www.beian.miit.gov.cn/" target="_blank">京ICP备18050211号-2</a>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p><p></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            site: {
+                url: 'https://www.hi-dhl.com',
+                external_link: {"enable":true,"exclude":[]}
+            },
+            article: {
+                highlight: {
+                    clipboard: false,
+                    fold: ''
+                }
+            }
+        };</script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><script src="https://s9.cnzz.com/z_stat.php?id=1278919895&amp;web_id=1278919895" async></script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><script src="/js/imaegoo/universe.js"></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>
