@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://www.hi-dhl.com/2021/12/14/android/08-Android-history/</loc>
+    <lastmod>2021-12-13</lastmod>
+  </url>  <url>
+    <loc>https://www.hi-dhl.com/2021/05/23/android/07-Android-resource/</loc>
+    <lastmod>2021-12-12</lastmod>
+  </url>  <url>
     <loc>https://www.hi-dhl.com/2021/12/11/algorithm/05-linkedlist/</loc>
     <lastmod>2021-12-11</lastmod>
   </url>  <url>
@@ -53,9 +59,6 @@
     <lastmod>2021-06-29</lastmod>
   </url>  <url>
     <loc>https://www.hi-dhl.com/2021/06/12/Note/leetcode-0-200/</loc>
-    <lastmod>2021-06-12</lastmod>
-  </url>  <url>
-    <loc>https://www.hi-dhl.com/2021/05/23/android/07-Android-resource/</loc>
     <lastmod>2021-06-12</lastmod>
   </url>  <url>
     <loc>https://www.hi-dhl.com/2021/05/09/jetpack/13-compose/</loc>

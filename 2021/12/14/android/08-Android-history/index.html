@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="generator" content="Hexo 4.2.1"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Android 进化史 1.0 到 12 ，还记得第一次使用是哪个版本？ - dhl</title><meta description="这篇文章概述了从 Android 首次面世到如今的发展历程（1.0 到 12 的进化史），Android 在视觉上、概念上和功能上都经历了一次又一次的转变。还记得你是从那一年开始接触 Android？"><meta property="og:type" content="blog"><meta property="og:title" content="Android 进化史 1.0 到 12 ，还记得第一次使用是哪个版本？"><meta property="og:url" content="https://www.hi-dhl.com/2021/12/14/android/08-Android-history/"><meta property="og:site_name" content="dhl"><meta property="og:description" content="这篇文章概述了从 Android 首次面世到如今的发展历程（1.0 到 12 的进化史），Android 在视觉上、概念上和功能上都经历了一次又一次的转变。还记得你是从那一年开始接触 Android？"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="http://img.hi-dhl.com/16393009533679.jpg"><meta property="article:published_time" content="2021-12-13T16:25:59.484Z"><meta property="article:modified_time" content="2021-12-13T16:27:47.978Z"><meta property="article:author" content="dhl"><meta property="article:tag" content="Android10"><meta property="article:tag" content="AndroidStudio"><meta property="article:tag" content="buildSrc"><meta property="article:tag" content="kotlin"><meta property="article:tag" content="run"><meta property="article:tag" content="with"><meta property="article:tag" content="let"><meta property="article:tag" content="also"><meta property="article:tag" content="apply"><meta property="article:tag" content="Jetpack"><meta property="article:tag" content="算法动画"><meta property="article:tag" content="LeetCode"><meta property="article:tag" content="Stack"><meta property="article:tag" content="ArrayDeque"><meta property="article:tag" content="LinkedList"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="http://img.hi-dhl.com/16393009533679.jpg"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.hi-dhl.com/2021/12/14/android/08-Android-history/"},"headline":"dhl","image":["http://img.hi-dhl.com/16393009533679.jpg"],"datePublished":"2021-12-13T16:25:59.484Z","dateModified":"2021-12-13T16:27:47.978Z","author":{"@type":"Person","name":"dhl"},"description":"这篇文章概述了从 Android 首次面世到如今的发展历程（1.0 到 12 的进化史），Android 在视觉上、概念上和功能上都经历了一次又一次的转变。还记得你是从那一年开始接触 Android？"}</script><link rel="canonical" href="https://www.hi-dhl.com/2021/12/14/android/08-Android-history/"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" defer></script><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script></head><body class="is-2-column"><script type="text/javascript" src="/js/imaegoo/night.js"></script><canvas id="universe"></canvas><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img class="logo-img" src="/img/logo.png" alt="dhl" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="dhl" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">首页</a><a class="navbar-item" href="/categories">分类</a><a class="navbar-item" href="/categories/Jetpack">Jetpack</a><a class="navbar-item" href="/categories/Kotlin/">Kotlin</a><a class="navbar-item" href="/categories/Android10/">系统源码</a><a class="navbar-item" href="/categories/translated/">译文</a><a class="navbar-item" href="https://offer.hi-dhl.com">算法</a></div><div class="navbar-end"><a class="navbar-item night" id="night-nav" title="Night Mode" href="javascript:;"><i class="fas fa-moon" id="night-icon"></i></a><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/hi-dhl"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><div class="card-image"><span class="image is-7by3"><img class="thumbnail" src="http://img.hi-dhl.com/16393009533679.jpg" alt="Android 进化史 1.0 到 12 ，还记得第一次使用是哪个版本？"></span></div><article class="card-content article" role="article"><h1 class="title is-3 is-size-4-mobile"></h1><h1 class="title is-3 is-size-4-mobile">Android 进化史 1.0 到 12 ，还记得第一次使用是哪个版本？</h1><div class="article-meta size-small level is-mobile"><div class="level-left"><span class="mr-2"><i class="fa fa-calendar"></i></span><time class="level-item" dateTime="2021-12-13T16:25:59.484Z" title="2021-12-13T16:25:59.484Z">2021-12-14</time><span class="mr-2"> <i class="fa fa-folder"></i></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="mr-2"> <i class="fa fa-tag"></i></span><span class="level-item"><a class="link-muted" href="/tags/Android/">Android</a></span></div></div><div class="level-left article-meta size-small is-mobile"></div><div><p style="height:15px"></p><ul class="page-blockquote"><li>如果评论区没有及时回复，欢迎来公众号：ByteCode 咨询</li><li>公众号：ByteCode。致力于分享最新技术原创文章，涉及 Kotlin、Jetpack、算法、译文、系统源码相关的文章</li><li></li></ul><p style="height:15px"></p></div><div class="content"><blockquote>
+<ul>
+<li>原标题：Android versions: A living history from 1.0 to 12</li>
+<li>原地址：<a href="https://www.computerworld.com/article/3235946/android-versions-a-living-history-from-1-0-to-today.html">https://…android-versions-a-living-history-from-1-0-to-today……</a></li>
+<li>原作者：By JR Raphael</li>
+<li>译者：DHL</li>
+<li>本文已收录于仓库 <a href="https://github.com/hi-dhl/Technical-Article-Translation">Technical-Article-Translation</a></li>
+</ul>
+</blockquote>
+<p>这篇文章概述了从 Android 首次面世到如今的发展历程（1.0 到 12 的进化史），Android 在视觉上、概念上和功能上都经历了一次又一次的转变。还记得你是从那一年开始接触 Android 的吗？ 还记得你的第一款 Android 手机系统是那个版本吗？</p>
+<p>在文末将会用一张表格总结一下 Android 系统版本、API 级别、VERSION_CODE 、时间线之间的对应关系。可以直接跳到文末查看。</p>
+<h3 id="早期的版本-Android-1-0-和-1-1"><a href="#早期的版本-Android-1-0-和-1-1" class="headerlink" title="早期的版本 Android 1.0 和 1.1"></a>早期的版本 Android 1.0 和 1.1</h3><p>Android 初版 1.0 于 2008 年正式亮相，当时的东西都很简单，软件部分包含了一套早期的谷歌应用程序，如 Gmail、Maps、Calendar 和 YouTube，这些 App 都集成到操作系统中。</p>
+<p><img src="http://img.hi-dhl.com/16392329497259.jpg" alt=""></p>
+<h3 id="Android-1-5-Cupcake"><a href="#Android-1-5-Cupcake" class="headerlink" title="Android 1.5: Cupcake"></a>Android 1.5: Cupcake</h3><p>2009 年 4 月发布 Android 1.5 Cupcake，Android 传统的甜品命名方式也随之诞生。Cupcake 对 Android 的界面进行了大量改进，最重要的改进就是屏幕键盘，这是手机摆脱曾经无处不在的实体键盘模式所必需的。</p>
+<p>其次 Cupcake 还增加了 widget 的功能，这很快就成为了 Android 最具特色的功能之一。</p>
+<p><img src="http://img.hi-dhl.com/16392335808109.jpg" alt=""></p>
+<h3 id="Android-1-6-Donut"><a href="#Android-1-6-Donut" class="headerlink" title="Android 1.6: Donut"></a>Android 1.6: Donut</h3><p>2009 年 9 月 Android 1.6 Donut 面世，Donut 的出现，填补了 Android 中很多不足之处，其中包括操作系统可以在各种不同屏幕尺寸和分辨率上运行，同时还增加了 Verizon 等 CDMA 网络的支持，这在 Android 即将到来的爆炸式增长中发挥关键作用。</p>
+<p><img src="http://img.hi-dhl.com/16392338370196.jpg" alt=""></p>
+<h3 id="Android-2-0-to-2-1-Eclair"><a href="#Android-2-0-to-2-1-Eclair" class="headerlink" title="Android 2.0 to 2.1: Eclair"></a>Android 2.0 to 2.1: Eclair</h3><p>在 Donut 发布不久之后，紧接着在 2009 年 10 月发布了 Eclair，该版本添加了语音导航、实时交通信息和 动态壁纸以及语音文本等等功能。</p>
+<p> <img src="http://img.hi-dhl.com/16392349163993.jpg" alt=""></p>
+<h3 id="Android-2-2-Froyo"><a href="#Android-2-2-Froyo" class="headerlink" title="Android 2.2: Froyo"></a>Android 2.2: Froyo</h3><p>2010 年 5 月推出了 Android 2.2 Froyo，主要围绕着底层的性能改进。另外 Froyo 添加了一些重要的前置功能，包括添加主屏幕的底部导航、语音导航，点击一些图标、或者语音去完成一些基本功能。</p>
+<p><img src="http://img.hi-dhl.com/16392352076395.jpg" alt=""></p>
+<h3 id="Android-2-3-Gingerbread"><a href="#Android-2-3-Gingerbread" class="headerlink" title="Android 2.3: Gingerbread"></a>Android 2.3: Gingerbread</h3><p>2010 年 12 月发布 Android 2.3 Gingerbread，绿色一直是 Android 机器人吉祥物的颜色， 随着 Gingerbread 的出现，绿色成为操作系统外观不可或缺的一部分。黑色和绿色渗透了整个 UI, Android 开始缓慢走向独特的设计之路。</p>
+<p><img src="http://img.hi-dhl.com/16392358518283.jpg" alt=""></p>
+<h3 id="Android-3-0-和-3-2-Honeycomb"><a href="#Android-3-0-和-3-2-Honeycomb" class="headerlink" title="Android 3.0 和 3.2: Honeycomb"></a>Android 3.0 和 3.2: Honeycomb</h3><p>2011 年 2 月 Honeycomb 问世，Android 3.0 是随着 Motorola Xoom 的发布而发布的，仅面向平板。</p>
+<p>在新上任的设计总监 Matias Duarte 的指导下，在 Honeycomb 上 Android 推出了一个全新的 UI。将平台的标志绿色换成了蓝色，并充分利用平板电脑的屏幕空间。</p>
+<p><img src="http://img.hi-dhl.com/16392363121959.jpg" alt=""></p>
+<p>虽然平板电脑专用界面的概念并没有持续太久，但是 Honeycomb 的许多想法为如今的 Android 奠定了基础。在 Honeycomb 上首次使用了屏幕按钮当做导航，它标志着永久溢出菜单按钮的结束，它在最近的应用列表中引入了类似卡片的用户界面的概念。</p>
+<h3 id="Android-4-0-Ice-Cream-Sandwich"><a href="#Android-4-0-Ice-Cream-Sandwich" class="headerlink" title="Android 4.0: Ice Cream Sandwich"></a>Android 4.0: Ice Cream Sandwich</h3><p>2011 年 10 月 发布了 Android 4.0 Ice Cream Sandwich（ICS），这次发布完善了 Honeycomb 引入的视觉概念，并将平板电脑和手机统一为单一的 UI。</p>
+<p>ICS 保留了蓝色作为整个系统的亮点。它还保留了屏幕按钮和用于应用切换的卡片外观等核心系统元素。</p>
+<p>在 Android 4.0 上滑动成为了操作系统中不可或缺的一部分，在当时颇具革命性的功能，可以滑动通知和最近的应用程序等内容。</p>
+<p><img src="http://img.hi-dhl.com/16392366366349.jpg" alt=""></p>
+<h3 id="Android-4-1-和-4-3-Jelly-Bean"><a href="#Android-4-1-和-4-3-Jelly-Bean" class="headerlink" title="Android 4.1 和 4.3: Jelly Bean"></a>Android 4.1 和 4.3: Jelly Bean</h3><p>2012 年 7 月发布了 Jelly Bean，这次的发布为操作系统添加了大量的平衡和润色，大大提高了 Android 系统对普通用户的吸引力。</p>
+<p>Jelly Bea 为我们提供了可扩展的交互式通知、一个扩展的语音搜索系统，以及一个更好的显示搜索结果的界面。多用户支持也开始发挥作用，尽管这只是在平板电脑上，以及 Android 快速设置面板。</p>
+<p>Jelly Bean 推出了一个被大肆宣传的在锁屏上放置小工具，和多年来 Android 的许多功能一样，这个功能在几年后悄然消失了。</p>
+<p><img src="http://img.hi-dhl.com/16392371459553.jpg" alt=""></p>
+<h3 id="Android-4-4-KitKat"><a href="#Android-4-4-KitKat" class="headerlink" title="Android 4.4: KitKat"></a>Android 4.4: KitKat</h3><p>2013 年 10 月发布了 Android 4.4 KitKat，KitKat 提供了更明亮的背景，透明的状态栏和白色图标让操作系统具有更现代的外观。在这个版本中 Google 首次尝试为其服务提供一个完整的主屏幕。</p>
+<p><img src="http://img.hi-dhl.com/16392374049210.jpg" alt=""></p>
+<h3 id="Android-5-0-和-5-1-Lollipop"><a href="#Android-5-0-和-5-1-Lollipop" class="headerlink" title="Android 5.0 和 5.1: Lollipop"></a>Android 5.0 和 5.1: Lollipop</h3><p>2014 年 11 月发布了 Android 5.0 Lollipop，从本质上重新定义了 Android。在 Lollipop 上推出了 Material Design，它带来了一个全新的外观，应用到了安卓系统、应用程序，覆盖了 Google 很多产品。</p>
+<p>这种卡片设计的概念在 Android 中随处可见，现在它已经成为了核心的 UI 设计，覆盖到了所有内容的外观，从显示在屏幕上的一目了然的通知，到最近的应用列表。</p>
+<p><img src="http://img.hi-dhl.com/16392809385965.jpg" alt=""></p>
+<p>在 Lollipop 上引入了大量新功能，实现真正的免提语音控制，多用户的支持，以及一个优先级模式更好地管理通知。不幸的是，大量新的功能，也带来了一堆麻烦的 Bug，其中许多问题直到第二年的 5.1 才被完全解决。</p>
+<h3 id="Android-6-0-Marshmallow"><a href="#Android-6-0-Marshmallow" class="headerlink" title="Android 6.0: Marshmallow"></a>Android 6.0: Marshmallow</h3><p>2015 年 10 月发布了 Android 6.0 Marshmallow，从这个版本开始，开启了谷歌每年发布一个主要 Android 版本的趋势。</p>
+<p>在 Marshmallow 上有个最吸引人眼球的功能，那就是主屏幕上搜索功能，正如我当时所说的，它拥有许多未被充分开发的潜力。</p>
+<p>Marshmallow 也引入了一些具有持久影响的功能，包括更细粒度的应用权限，支持指纹识别器和 USB-C。</p>
+<p><img src="http://img.hi-dhl.com/16392858690478.jpg" alt=""></p>
+<h3 id="Android-7-0-和-7-1-Nougat"><a href="#Android-7-0-和-7-1-Nougat" class="headerlink" title="Android 7.0 和 7.1: Nougat"></a>Android 7.0 和 7.1: Nougat</h3><p>2016 年 8 月发布了 Nougat，它提供了一个原生的分屏模式，另外在这个版本上也增加了一些较小但仍然重要的功能，比如可以在应用程序之间进行拍照。</p>
+<p>Nougat 也发布了 Google Assistant，与此同时，在 Nougat 问世的两个月后，谷歌发布了首款完全自制的手机 Pixel。Google Assistant 将成为 Android 和其他大多数谷歌产品的重要组成部分。</p>
+<p><img src="http://img.hi-dhl.com/16392861112281.jpg" alt=""></p>
+<h3 id="Android-8-0-和-8-1-Oreo"><a href="#Android-8-0-和-8-1-Oreo" class="headerlink" title="Android 8.0 和 8.1: Oreo"></a>Android 8.0 和 8.1: Oreo</h3><p>2017 年 8 月发布了 Oreo，这个版本完善了很多细节，包括图片模式，通知休眠选项，以及如何很好地控制应用程序通知，调整 Android 和 Chrome OS，并改善使用 Android 应用程序在 chromebook 上的体验。</p>
+<p><img src="http://img.hi-dhl.com/16392874967665.jpg" alt=""></p>
+<h3 id="Android-9-Pie"><a href="#Android-9-Pie" class="headerlink" title="Android 9: Pie"></a>Android 9: Pie</h3><p>2018 年 8 月发布了 Android 9 Pie，这个版本比较大的变化就是混合手势 / 按钮导航系统，还有一些值得注意的功能，比如一个新的数字健康控制面板，以及更智能的电力和屏幕亮度管理系统。更智能地处理 Wi-Fi 热点，对 Android的 省电模式是一个很大的改进，以及各种隐私和安全增强。</p>
+<p><img src="http://img.hi-dhl.com/16392882412762.jpg" alt=""></p>
+<h3 id="Android-10"><a href="#Android-10" class="headerlink" title="Android 10"></a>Android 10</h3><p>2019 年 9 月发布了 Android 10，从这个版本开始不再以甜品命名，而是通过数字的方式来命名，这个版本带来了全新的 Android 手势导航。在底层，Android 10 引入了一个新的设置，允许更快速的推出小的补丁。更新了权限系统, 让用户可以更好的控制应用程序是如何访问位置数据。</p>
+<p><img src="http://img.hi-dhl.com/16392889824952.jpg" alt=""></p>
+<h3 id="Android-11"><a href="#Android-11" class="headerlink" title="Android 11"></a>Android 11</h3><p>2020 年 2 月发布了 Android 11, 从本质上和表面上看都是一个相当大的安卓更新。这一版本最重要的变化是围绕隐私，这一更新建立在 Android 10 更新的权限系统的基础上，增加了用户授予应用特定权限的能力，这些权限与位置访问、摄像头访问和麦克风访问有关，但仅限于一次性使用。</p>
+<p><img src="http://img.hi-dhl.com/16392909614581.jpg" alt=""></p>
+<p>Android 11 还限制了后台定位权限，使得应用程序更难请求。它还引入了一项新功能，那些几个月没有打开的应用程序将自动撤销其权限，除非你主动选择重新授权。</p>
+<p>Android 11 改进了系统通知区域，强调并简化了与对话相关的提醒，它推出了一款新的流线型媒体播放器，可以在一个空间内控制所有音频和视频播放应用程序。</p>
+<p><img src="http://img.hi-dhl.com/16392911775063.jpg" alt=""></p>
+<h3 id="Android-12"><a href="#Android-12" class="headerlink" title="Android 12"></a>Android 12</h3><p>2021 年 10 月左右正式发布了 Android 12 最终版本，并在发布了新的 Pixel 6 和 Pixel 6 Pro 手机后，很快推送到了到自己的 Pixel 设备上。</p>
+<p>与前几个 Android 版本不同的是，Android 12 最大的进步主要体现在表面上。自 2014 年的 Android 5.0(Lollipop) 推出了 Material Design，在 Andriod 12 基于这个对界面进行了最大的重塑。</p>
+<p><img src="http://img.hi-dhl.com/16392929228692.jpg" alt=""></p>
+<p>除了界面的变化之外，Android 12 重新设计了 Android 小部件，以及在性能、安全和隐私方面的一系列重要增强。限制了不同的应用程序是如何使用你的数据。</p>
+<p><img src="http://img.hi-dhl.com/16392932657493.jpg" alt=""></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>最后用一张表格总结一下，Android 系统版本、API 级别、VERSION_CODE 、时间线之间的对应关系。</p>
+<p><strong>PS:</strong> </p>
+<ul>
+<li>实时更新地址：<a href="https://www.hi-dhl.com/2021/05/23/android/07-Android-resource">https://www.hi-dhl.com/2021/05/23/android/07-Android-resource</a></li>
+<li>从 Android Q 开始不再以甜品命名，且直接称 Android Q 为 Android 10。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>版本号</th>
+<th>发版日期</th>
+<th>API 级别</th>
+<th>VERSION_CODE</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Android 1.0</td>
+<td>1.0</td>
+<td>2008年9月</td>
+<td>1</td>
+<td>BASE</td>
+</tr>
+<tr>
+<td>Android 1.1</td>
+<td>1.1</td>
+<td>2009年2月</td>
+<td>2</td>
+<td>BASE_1_1</td>
+</tr>
+<tr>
+<td>Android Cupcake（纸杯蛋糕）</td>
+<td>1.5</td>
+<td>2009年4月</td>
+<td>3</td>
+<td>CUPCAKE</td>
+</tr>
+<tr>
+<td>Android Donut（甜甜圈）</td>
+<td>1.6</td>
+<td>2009年9月</td>
+<td>4</td>
+<td>DONUT</td>
+</tr>
+<tr>
+<td>Android Eclair（闪电泡芙）</td>
+<td>2.0 – 2.1</td>
+<td>2009年10月</td>
+<td>5 – 7</td>
+<td>ECLAIR_MR1（2.1.x）<br/> ECLAIR_0_1（2.0.1）<br/> ECLAIR（2.0）</td>
+</tr>
+<tr>
+<td>Android Froyo（优格冰淇淋）</td>
+<td>2.2 – 2.2.3</td>
+<td>2010年5月</td>
+<td>8</td>
+<td>FROYO</td>
+</tr>
+<tr>
+<td>Android Gingerbread（姜饼）</td>
+<td>2.3 – 2.3.7</td>
+<td>2010年12月</td>
+<td>9 - 10</td>
+<td>GINGERBREAD_MR1（ 2.3.3 -  2.3.4）<br/> GINGERBREAD（2.3、2.3.1、2.3.2）</td>
+</tr>
+<tr>
+<td>Android Honeycomb（蜂巢）</td>
+<td>3.0 – 3.2.6</td>
+<td>2011年2月</td>
+<td>11 - 13</td>
+<td>HONEYCOMB_MR2（3.2）<br/> HONEYCOMB_MR1（3.1x） <br/> HONEYCOMB（3.0.x）</td>
+</tr>
+<tr>
+<td>Android Ice Cream Sandwich（冰淇淋三明治）</td>
+<td>4.0 – 4.0.4</td>
+<td>2011年10月</td>
+<td>14 - 15</td>
+<td>ICE_CREAM_SANDWICH_MR1（4.0.3、4.0.4）<br/>  ICE_CREAM_SANDWICH （4.0、4.0.1、4.0.2）</td>
+</tr>
+<tr>
+<td>Android Jelly Bean（果冻豆）</td>
+<td>4.1 – 4.3.1</td>
+<td>2012年7月</td>
+<td>16 – 18</td>
+<td>JELLY_BEAN_MR2（4.3） <br/> JELLY_BEAN_MR1（4.2 - 4.2.2）<br/> JELLY_BEAN（4.1 - 4.1.1）</td>
+</tr>
+<tr>
+<td>Android KitKat（奇巧巧克力）</td>
+<td>4.4 – 4.4.4</td>
+<td>2013年10月</td>
+<td>19 - 20</td>
+<td>KITKAT</td>
+</tr>
+<tr>
+<td>Android Lollipop（棒棒糖）</td>
+<td>5.0 – 5.1.1</td>
+<td>2014年11月</td>
+<td>21 - 22</td>
+<td>LOLLIPOP_MR1（5.1） <br/> LOLLIPOP（5.0）</td>
+</tr>
+<tr>
+<td>Android Marshmallow（棉花糖）</td>
+<td>6.0 – 6.0.1</td>
+<td>2015年10月</td>
+<td>23</td>
+<td>M</td>
+</tr>
+<tr>
+<td>Android Nougat（牛轧糖）</td>
+<td>7.0 – 7.1.2</td>
+<td>2016年8月</td>
+<td>24 - 25</td>
+<td>N_MR1（7.1 - 7.11） N（7.0）</td>
+</tr>
+<tr>
+<td>Android Oreo（奥利奥）</td>
+<td>8.0 – 8.1</td>
+<td>2017年8月</td>
+<td>26 – 27</td>
+<td>O_MR1（8.1）  O （8.0）</td>
+</tr>
+<tr>
+<td>Android Pie（派）</td>
+<td>9</td>
+<td>2018年8月</td>
+<td>28</td>
+<td>P</td>
+</tr>
+<tr>
+<td>Android 10</td>
+<td>10</td>
+<td>2019年9月</td>
+<td>29</td>
+<td>Q</td>
+</tr>
+<tr>
+<td>Android 11</td>
+<td>11</td>
+<td>2020年2月</td>
+<td>30</td>
+<td>R</td>
+</tr>
+<tr>
+<td>Android 12</td>
+<td>12</td>
+<td>2021年10月</td>
+<td>31</td>
+<td>S</td>
+</tr>
+</tbody></table>
+<p align="center">
+<br/>
+<p align="center"><b>如果有帮助 点个赞 就是对我最大的鼓励</b></p>
+<p align="center"><b>代码不止，文章不停</b></p>
+<p align="center"><b>欢迎关注公众号：ByteCode，持续分享最新的技术</b></p>
+<br/>
+</p>
+
+<hr>
+<p>最后推荐长期更新和维护的项目：</p>
+<ul>
+<li><p>个人博客，将所有文章进行分类，欢迎前去查看 <a href="https://hi-dhl.com">https://hi-dhl.com</a></p>
+</li>
+<li><p>KtKit 小巧而实用，用 Kotlin 语言编写的工具库，欢迎前去查看 <a href="https://github.com/hi-dhl/KtKit">KtKit</a></p>
+</li>
+<li><p>计划建立一个最全、最新的 AndroidX Jetpack 相关组件的实战项目 以及 相关组件原理分析文章，正在逐渐增加 Jetpack 新成员，仓库持续更新，欢迎前去查看 <a href="https://github.com/hi-dhl/AndroidX-Jetpack-Practice">AndroidX-Jetpack-Practice</a></p>
+</li>
+<li><p>LeetCode / 剑指 offer / 国内外大厂面试题 / 多线程 题解，语言 Java 和 kotlin，包含多种解法、解题思路、时间复杂度、空间复杂度分析<br/></p>
+  <image src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cde6d3ba158742d1a821390fad86d50c~tplv-k3u1fbpfcp-zoom-1.image" width = "500px"/>
+
+<ul>
+<li>剑指 offer 及国内外大厂面试题解：<a href="https://offer.hi-dhl.com">在线阅读</a></li>
+<li>LeetCode 系列题解：<a href="https://leetcode.hi-dhl.com">在线阅读</a></li>
+</ul>
+</li>
+</ul>
+<p><strong>近期必读热门文章</strong></p>
+<ul>
+<li><a href="https://mp.weixin.qq.com/s/YK0yG1jt9W9Zbb2wbXIE5g">LinkedList 落幕了吗？</a></li>
+<li><a href="https://mp.weixin.qq.com/s/9NMpEP-7mABh44Wc3-E8DA">Oracle 官方推荐，使用 ReentrantLock 需要注意的细节</a></li>
+<li><a href="https://mp.weixin.qq.com/s/oS8r2DieTYBhFuyWF6jx9w">Kotlin 宣布一个重磅特性</a></li>
+<li><a href="https://mp.weixin.qq.com/s/fp1ZOmqAcEBv2f7ec1r-zw">Google 宣布废弃 LiveData.observe 方法</a></li>
+<li><a href="https://mp.weixin.qq.com/s/7ZoBeSK97j4YWXTGX9vEYA">使用 kotlin 需要注意的一个细节</a></li>
+<li><a href="https://mp.weixin.qq.com/s/8dAbt1-mcCVLWLXKC-1_xw">影响性能的 Kotlin 代码（一）</a></li>
+<li><a href="https://mp.weixin.qq.com/s/1jTdPgXbNl38smOnN2k1MA">Jetpack Splashscreen 解析 | 助力新生代 IT 农民工 事半功倍</a></li>
+<li><a href="https://mp.weixin.qq.com/s/lcLJB0MFaYX1lQXtJ3M88g">为数不多的人知道的 Kotlin 技巧及解析(三)</a></li>
+<li><a href="https://juejin.im/post/6847902224467623950">为数不多的人知道的 Kotlin 技巧以及 原理解析（二）</a></li>
+<li><a href="https://juejin.im/post/5edfd7c9e51d45789a7f206d">为数不多的人知道的 Kotlin 技巧以及 原理解析（一）</a></li>
+<li><a href="https://mp.weixin.qq.com/s/sYj_-wqENr9Jaw1p8iP4Jg">揭秘 Kotlin 中的 == 和 ===</a></li>
+<li><a href="https://mp.weixin.qq.com/s/0O-ZnbVnHUnh3jCnthKgHA">Kotlin 密封类进化了</a></li>
+<li><a href="https://mp.weixin.qq.com/s/VNxFVGvDU-X3lfenehkGtw">Kotlin 中的密封类 优于 带标签的类</a></li>
+<li><a href="https://mp.weixin.qq.com/s/X1jEUFS8vmRF9ybkmVy5zQ">Kotlin Sealed 是什么？为什么 Google 都在用</a></li>
+<li><a href="https://mp.weixin.qq.com/s/BPuUy85MsREmWSQ3a6WVvQ">Android 12 行为变更，对应用产生的影响</a></li>
+<li><a href="https://mp.weixin.qq.com/s/QjU5cBEkQMc3Pxf-Zsdobg">图解多平台 AndroidStudio 技巧(三)</a></li>
+</ul>
+</div><div><p style="height:15px"></p><ul class="page-copyright"><li><strong>本文作者：</strong>hi-dhl</li><li><strong>本文标题：</strong>Android 进化史 1.0 到 12 ，还记得第一次使用是哪个版本？</li><li><strong>本文链接：</strong><a href="" title="{page.title}">https://hi-dhl.com/2021/12/14/android/08-Android-history/</a></li><li><strong>版权声明：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://hi-dhl.com" title="{page.title}">hi-dhl</a></li></ul><p style="height:15px"></p></div><!--!--><h1 class="title is-4 is-size-4-mobile"></h1></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2021/12/11/algorithm/05-linkedlist/"><span class="level-item">LinkedList 落幕了吗？作者自己都不用</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content template"><p align="center"><img src="http://cdn.51git.cn/2020-10-07-bytecode.png"></p><p>致力于分享一系列 Android 系统源码、逆向分析、算法、翻译、Jetpack 源码相关的文章，在技术的道路上一起前进</p><h3 class="title is-4">Android10 源码分析</h3><p>正在写一系列的 Android 10 源码分析的文章，了解系统源码，不仅有助于分析问题，在面试过程中，对我们也是非常有帮助的，如果你同我一样喜欢研究 Android 源码，可以关注我 GitHub 上的 <a href="https://github.com/hi-dhl/Android10-Source-Analysis">Android10-Source-Analysis</a>。</p><h3 class="title is-4">算法题库的归纳和总结</h3><p>由于 LeetCode 的题库庞大，每个分类都能筛选出数百道题，由于每个人的精力有限，不可能刷完所有题目，因此我按照经典类型题目去分类、和题目的难易程度去排序。</p><ul><li>数据结构： 数组、栈、队列、字符串、链表、树……</li><li>算法： 查找算法、搜索算法、位运算、排序、数学、……</li></ul><p>每道题目都会用 Java 和 kotlin 去实现，并且每道题目都有解题思路，如果你同我一样喜欢算法、LeetCode，可以关注我 GitHub 上的 LeetCode 题解：<a href="https://github.com/hi-dhl/Leetcode-Solutions-with-Java-And-Kotlin">Leetcode-Solutions-with-Java-And-Kotlin</a>。</p><h3 class="title is-4">精选国外的技术文章</h3><p>目前正在整理和翻译一系列精选国外的技术文章，不仅仅是翻译，很多优秀的英文技术文章提供了很好思路和方法，每篇文章都会有<strong>译者思考</strong>部分，对原文的更加深入的解读，可以关注我 GitHub 上的 <a href="https://github.com/hi-dhl/Technical-Article-Translation">Technical-Article-Translation</a>。</p><p></p></div></div><div class="card"><div class="card-content"><h3 class="title is-5">评论</h3><div class="content" id="valine-thread"></div><script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script><script src="https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js"></script><script>new Valine({
+            el: '#valine-thread' ,
+            notify: false,
+            verify: undefined,
+            appId: 'zfvr24HFhzQ5vtHkr4NQ1fmW-gzGzoHsz',
+            appKey: 'RChgr9mR005hgu4yiQ4WQU3O',
+            placeholder: '说点什么',
+            avatar: 'mm',
+            avatarForce: false,
+            meta: ["nick","mail","link"],
+            pageSize: 10,
+            visitor: false,
+            highlight: true,
+            recordIP: false
+        });</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1 is-sticky"><div class="card widget" id="toc" style="max-height: 500px;overflow: auto;"><div class="card-content"><div class="menu"><h3 class="menu-label">目录</h3><ul class="menu-list"><li><a class="is-flex" href="#早期的版本-Android-1-0-和-1-1"><span>早期的版本 Android 1.0 和 1.1</span></a></li><li><a class="is-flex" href="#Android-1-5-Cupcake"><span>Android 1.5: Cupcake</span></a></li><li><a class="is-flex" href="#Android-1-6-Donut"><span>Android 1.6: Donut</span></a></li><li><a class="is-flex" href="#Android-2-0-to-2-1-Eclair"><span>Android 2.0 to 2.1: Eclair</span></a></li><li><a class="is-flex" href="#Android-2-2-Froyo"><span>Android 2.2: Froyo</span></a></li><li><a class="is-flex" href="#Android-2-3-Gingerbread"><span>Android 2.3: Gingerbread</span></a></li><li><a class="is-flex" href="#Android-3-0-和-3-2-Honeycomb"><span>Android 3.0 和 3.2: Honeycomb</span></a></li><li><a class="is-flex" href="#Android-4-0-Ice-Cream-Sandwich"><span>Android 4.0: Ice Cream Sandwich</span></a></li><li><a class="is-flex" href="#Android-4-1-和-4-3-Jelly-Bean"><span>Android 4.1 和 4.3: Jelly Bean</span></a></li><li><a class="is-flex" href="#Android-4-4-KitKat"><span>Android 4.4: KitKat</span></a></li><li><a class="is-flex" href="#Android-5-0-和-5-1-Lollipop"><span>Android 5.0 和 5.1: Lollipop</span></a></li><li><a class="is-flex" href="#Android-6-0-Marshmallow"><span>Android 6.0: Marshmallow</span></a></li><li><a class="is-flex" href="#Android-7-0-和-7-1-Nougat"><span>Android 7.0 和 7.1: Nougat</span></a></li><li><a class="is-flex" href="#Android-8-0-和-8-1-Oreo"><span>Android 8.0 和 8.1: Oreo</span></a></li><li><a class="is-flex" href="#Android-9-Pie"><span>Android 9: Pie</span></a></li><li><a class="is-flex" href="#Android-10"><span>Android 10</span></a></li><li><a class="is-flex" href="#Android-11"><span>Android 11</span></a></li><li><a class="is-flex" href="#Android-12"><span>Android 12</span></a></li><li><a class="is-flex" href="#总结"><span>总结</span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content size-small"><p><time dateTime="2021-12-13T16:25:59.484Z">2021-12-14</time></p><p class="title is-6"><a class="link-muted" href="/2021/12/14/android/08-Android-history/">Android 进化史 1.0 到 12 ，还记得第一次使用是哪个版本？</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2021-12-11T08:48:00.168Z">2021-12-11</time></p><p class="title is-6"><a class="link-muted" href="/2021/12/11/algorithm/05-linkedlist/">LinkedList 落幕了吗？作者自己都不用</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2021-11-28T07:57:28.825Z">2021-11-28</time></p><p class="title is-6"><a class="link-muted" href="/2021/11/28/kotlin/15-ReentrantLock/">Oracle 官方推荐，使用 ReentrantLock 需要注意的细节</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2021-11-14T05:53:33.793Z">2021-11-14</time></p><p class="title is-6"><a class="link-muted" href="/2021/11/14/kotlin/14-valueclass/">Kotlin 宣布一个重磅特性 value class</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2021-11-01T01:54:19.586Z">2021-11-01</time></p><p class="title is-6"><a class="link-muted" href="/2021/11/01/kotlin/13-Kotlin-LiveData/">Google 宣布废弃 LiveData.observe 方法</a></p><p class="is-uppercase"></p></div></article></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile is-marginless" href="/categories/Android/"><span class="level-start"><span class="level-item">Android</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Android-12/"><span class="level-start"><span class="level-item">Android 12</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Android-AndroidStudio/"><span class="level-start"><span class="level-item">Android,AndroidStudio</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Android10/"><span class="level-start"><span class="level-item">Android10</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/AndroidStudio/"><span class="level-start"><span class="level-item">AndroidStudio</span></span><span class="level-end"><span class="level-item tag">5</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Jetpack/"><span class="level-start"><span class="level-item">Jetpack</span></span><span class="level-end"><span class="level-item tag">15</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Kotlin/"><span class="level-start"><span class="level-item">Kotlin</span></span><span class="level-end"><span class="level-item tag">14</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Linux/"><span class="level-start"><span class="level-item">Linux</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><span class="level-start"><span class="level-item">数据结构</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E6%9D%82%E8%B0%88/"><span class="level-start"><span class="level-item">杂谈</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E7%AE%97%E6%B3%95%E5%8A%A8%E7%94%BB/"><span class="level-start"><span class="level-item">算法动画</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/translated/"><span class="level-start"><span class="level-item">译文</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E8%AF%91%E6%96%87-AndroidStudio/"><span class="level-start"><span class="level-item">译文,AndroidStudio</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E8%AF%91%E6%96%87-Kotlin/"><span class="level-start"><span class="level-item">译文,Kotlin</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/Android/"><span class="tag">Android</span><span class="tag is-grey-lightest">9</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android-12/"><span class="tag">Android 12</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E5%8C%85%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-包管理系统</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-窗口管理系统</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-资源管理系统</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/AndroidStudio/"><span class="tag">AndroidStudio</span><span class="tag is-grey-lightest">7</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android%E6%BA%90%E7%A0%81/"><span class="tag">Android源码</span><span class="tag is-grey-lightest">7</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Compose/"><span class="tag">Compose</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Fragment/"><span class="tag">Fragment</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Jetpack/"><span class="tag">Jetpack</span><span class="tag is-grey-lightest">20</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Koin/"><span class="tag">Koin</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Kotlin/"><span class="tag">Kotlin</span><span class="tag is-grey-lightest">19</span></a></div><div class="control"><a class="tags has-addons" href="/tags/LeetCode/"><span class="tag">LeetCode</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Linux/"><span class="tag">Linux</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Protobuf/"><span class="tag">Protobuf</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/RxJava/"><span class="tag">RxJava</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Shell/"><span class="tag">Shell</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/kotlin/"><span class="tag">kotlin</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%8A%A8%E7%94%BB/"><span class="tag">动画</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/"><span class="tag">多线程</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><span class="tag">数据结构</span><span class="tag is-grey-lightest">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%9D%82%E8%B0%88/"><span class="tag">杂谈</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%AE%97%E6%B3%95/"><span class="tag">算法</span><span class="tag is-grey-lightest">5</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%AF%91%E6%96%87/"><span class="tag">译文</span><span class="tag is-grey-lightest">9</span></a></div></div></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level-item"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img class="logo-img" src="/img/logo.png" alt="dhl" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="dhl" height="28"></a><p class="size-small"><span>&copy; 2021 dhl</span>  <a href="http://www.beian.miit.gov.cn/" target="_blank">京ICP备18050211号-2</a>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p><p></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            site: {
+                url: 'https://www.hi-dhl.com',
+                external_link: {"enable":true,"exclude":[]}
+            },
+            article: {
+                highlight: {
+                    clipboard: false,
+                    fold: ''
+                }
+            }
+        };</script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><script src="https://s9.cnzz.com/z_stat.php?id=1278919895&amp;web_id=1278919895" async></script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><script src="/js/imaegoo/universe.js"></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>
