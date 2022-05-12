@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="generator" content="Hexo 4.2.1"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>揭秘反射真的很耗时吗，射10万次用时多久 - dhl</title><meta description="反射慢多少？反射会占用多少内存？创建 1 个对象或者创建 10 万个对象耗时多少？单次反射或者 10 万次反射耗时多少？在我们的脑海中没有一个直观的概念，而今天这篇文章将会告诉你"><meta property="og:type" content="blog"><meta property="og:title" content="揭秘反射真的很耗时吗，射10万次用时多久"><meta property="og:url" content="https://www.hi-dhl.com/2022/05/12/kotlin/21-reflect/"><meta property="og:site_name" content="dhl"><meta property="og:description" content="反射慢多少？反射会占用多少内存？创建 1 个对象或者创建 10 万个对象耗时多少？单次反射或者 10 万次反射耗时多少？在我们的脑海中没有一个直观的概念，而今天这篇文章将会告诉你"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://img.hi-dhl.com/reflect.png"><meta property="article:published_time" content="2022-05-12T06:37:26.221Z"><meta property="article:modified_time" content="2022-05-12T06:40:22.108Z"><meta property="article:author" content="dhl"><meta property="article:tag" content="Android10"><meta property="article:tag" content="AndroidStudio"><meta property="article:tag" content="buildSrc"><meta property="article:tag" content="kotlin"><meta property="article:tag" content="run"><meta property="article:tag" content="with"><meta property="article:tag" content="let"><meta property="article:tag" content="also"><meta property="article:tag" content="apply"><meta property="article:tag" content="Jetpack"><meta property="article:tag" content="App Startup"><meta property="article:tag" content="Paging3"><meta property="article:tag" content="Hilt"><meta property="article:tag" content="Dagger"><meta property="article:tag" content="Koin"><meta property="article:tag" content="Jetpack"><meta property="article:tag" content="MVVM"><meta property="article:tag" content="Repository"><meta property="article:tag" content="Kotlin Flow"><meta property="article:tag" content="sealed"><meta property="article:tag" content="RemoteMediator"><meta property="article:tag" content="SealedClasses"><meta property="article:tag" content="SealedInterface"><meta property="article:tag" content="Equality"><meta property="article:tag" content="LiveData"><meta property="article:tag" content="valueclass"><meta property="article:tag" content="DataClass"><meta property="article:tag" content="Array"><meta property="article:tag" content="Iterable"><meta property="article:tag" content="Sequence"><meta property="article:tag" content="ContextReceivers"><meta property="article:tag" content="Reflect"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="https://img.hi-dhl.com/reflect.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.hi-dhl.com/2022/05/12/kotlin/21-reflect/"},"headline":"dhl","image":["https://img.hi-dhl.com/reflect.png"],"datePublished":"2022-05-12T06:37:26.221Z","dateModified":"2022-05-12T06:40:22.108Z","author":{"@type":"Person","name":"dhl"},"description":"反射慢多少？反射会占用多少内存？创建 1 个对象或者创建 10 万个对象耗时多少？单次反射或者 10 万次反射耗时多少？在我们的脑海中没有一个直观的概念，而今天这篇文章将会告诉你"}</script><link rel="canonical" href="https://www.hi-dhl.com/2022/05/12/kotlin/21-reflect/"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" defer></script><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script></head><body class="is-2-column"><script type="text/javascript" src="/js/imaegoo/night.js"></script><canvas id="universe"></canvas><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img class="logo-img" src="/img/logo.png" alt="dhl" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="dhl" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">首页</a><a class="navbar-item" href="/categories">分类</a><a class="navbar-item" href="/categories/Jetpack">Jetpack</a><a class="navbar-item" href="/categories/Kotlin/">Kotlin</a><a class="navbar-item" href="/categories/Android10/">系统源码</a><a class="navbar-item" href="/categories/translated/">译文</a><a class="navbar-item" href="https://offer.hi-dhl.com">算法</a></div><div class="navbar-end"><a class="navbar-item night" id="night-nav" title="Night Mode" href="javascript:;"><i class="fas fa-moon" id="night-icon"></i></a><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/hi-dhl"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><div class="card-image"><span class="image is-7by3"><img class="thumbnail" src="https://img.hi-dhl.com/reflect.png" alt="揭秘反射真的很耗时吗，射10万次用时多久"></span></div><article class="card-content article" role="article"><h1 class="title is-3 is-size-4-mobile"></h1><h1 class="title is-3 is-size-4-mobile">揭秘反射真的很耗时吗，射10万次用时多久</h1><div class="article-meta size-small level is-mobile"><div class="level-left"><span class="mr-2"><i class="fa fa-calendar"></i></span><time class="level-item" dateTime="2022-05-12T06:37:26.221Z" title="2022-05-12T06:37:26.221Z">2022-05-12</time><span class="mr-2"> <i class="fa fa-folder"></i></span><span class="level-item"><a class="link-muted" href="/categories/Kotlin/">Kotlin</a></span><span class="mr-2"> <i class="fa fa-tag"></i></span><span class="level-item"><a class="link-muted" href="/tags/Kotlin/">Kotlin</a></span></div></div><div class="level-left article-meta size-small is-mobile"></div><div><p style="height:15px"></p><ul class="page-blockquote"><li>如果评论区没有及时回复，欢迎来公众号：ByteCode 咨询</li><li>公众号：ByteCode。致力于分享最新技术原创文章，涉及 Kotlin、Jetpack、算法、译文、系统源码相关的文章</li><li></li></ul><p style="height:15px"></p></div><div class="content"><p>全文分为 <strong>视频版</strong> 和 <strong>文字版</strong>，</p>
+<ul>
+<li><strong>文字版：</strong> 侧重于细节上的知识点更多、更加详细</li>
+<li><strong>视频版：</strong> 通过动画展示讲解，更加的清楚、直观</li>
+</ul>
+<p><a href="https://b23.tv/Hprua24">视频版本地址：https://b23.tv/Hprua24</a></p>
+<p>无论是在面试过程中，还是看网络上各种技术文章，只要提到反射，不可避免都会提到一个问题，反射会影响性能吗？影响有多大？如果在写业务代码的时候，你用到了反射，都会被 review 人发出灵魂拷问，为什么要用反射，有没有其它的解决办法。</p>
+<p>而网上的答案都是千篇一律，比如反射慢、反射过程中频繁的创建对象占用更多内存、频繁的触发 GC 等等。那么反射慢多少？反射会占用多少内存？创建 1 个对象或者创建 10 万个对象耗时多少？单次反射或者 10 万次反射耗时多少？在我们的脑海中没有一个直观的概念，而今天这篇文章将会告诉你。</p>
+<p>这篇文章，设计了几个常用的场景，一起讨论一下反射是否真的很耗时？最后会以图表的形式展示。</p>
+<h3 id="测试工具及方案"><a href="#测试工具及方案" class="headerlink" title="测试工具及方案"></a>测试工具及方案</h3><p>在开始之前我们需要定义一个反射类 <code>Person</code>。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class Person &#123;</span><br><span class="line">    var age &#x3D; 10</span><br><span class="line">    </span><br><span class="line">    fun getName(): String &#123;</span><br><span class="line">        return &quot;I am DHL&quot;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    companion object &#123;</span><br><span class="line">        fun getAddress(): String &#x3D; &quot;BJ&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>针对上面的测试类，设计了以下几个常用的场景，验证反射前后的耗时。</p>
+<ul>
+<li>创建对象</li>
+<li>方法调用</li>
+<li>属性调用</li>
+<li>伴生对象</li>
+</ul>
+<p><strong>测试工具及代码：</strong> </p>
+<p>JMH (Java Microbenchmark Harness)，这是 Oracle 开发的一个基准测试工具，他们比任何人都了解 JIT 以及 JVM 的优化对测试过程中的影响，所以使用这个工具可以尽可能的保证结果的可靠性。</p>
+<blockquote>
+<p>基准测试是测试应用性能的一种方法，在特定条件下对某一对象的性能指标进行测试</p>
+</blockquote>
+<p>本文的测试代码已经上传到 <a href="https://github.com/hi-dhl/KtPractice">github 仓库 KtPractice</a> 欢迎前往查看。</p>
+<p><a href="https://github.com/hi-dhl/KtPractice">github 仓库 KtPractice: https://github.com/hi-dhl/KtPractice</a></p>
+<p><strong>为什么使用 JMH</strong></p>
+<p>因为 JVM 会对代码做各种优化，如果只是在代码前后打印时间戳，这样计算的结果是不置信的，因为忽略了 JVM 在执行过程中，对代码进行优化产生的影响。而 JMH 会尽可能的减少这些优化对最终结果的影响。</p>
+<p><strong>测试方案</strong> </p>
+<ul>
+<li>在单进程、单线程中，针对以上四个场景，每个场景测试五轮，每轮循环 10 万次，计算它们的平均值</li>
+<li>在执行之前，需要对代码进行预热，预热不会作为最终结果，预热的目的是为了构造一个相对稳定的环境，保证结果的可靠性。因为 JVM 会对执行频繁的代码，尝试编译为机器码，从而提高执行速度。而预热不仅包含编译为机器码，还包含 JVM 各种优化算法，尽量减少 JVM 的优化，构造一个相对稳定的环境，降低对结果造成的影响。</li>
+<li>JMH 提供 Blackhole，通过 Blackhole 的 consume 来避免 JIT 带来的优化</li>
+</ul>
+<h3 id="Kotlin-和-Java-的反射机制"><a href="#Kotlin-和-Java-的反射机制" class="headerlink" title="Kotlin 和 Java 的反射机制"></a>Kotlin 和 Java 的反射机制</h3><p>本文测试代码全部使用 Kotlin，Koltin 是完美兼容 Java 的，所以同样也可以使用 Java 的反射机制，但是 Kotlin 自己也封装了一套反射机制，并不是用来取代 Java 的，是 Java 的增强版，因为 Kotlin 有自己的语法特点比如<strong>扩展方法</strong> 、<strong>伴生对象</strong> 、<strong>可空类型的检查</strong>等等，如果想使用 Kotlin 反射机制，需要引入以下库。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">implementation &quot;org.jetbrains.kotlin:kotlin-reflect:$kotlin_version&quot;</span><br></pre></td></tr></table></figure>
+
+<p>在开始分析，我们需要对比 Java 了解一下 Kotlin 反射基本语法。</p>
+<ul>
+<li>kotlin 的 <code>KClass</code> 对应 Java 的 <code>Class</code>，我们可以通过以下方式完成 <code>KClass</code> 和 <code>Class</code> 之间互相转化 </li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; 获取 Class</span><br><span class="line">Person().javaClass</span><br><span class="line">Person()::class.java</span><br><span class="line">Person::class.java</span><br><span class="line">Class.forName(&quot;com.hi-dhl.demo.Person&quot;)</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 获取 KClass</span><br><span class="line">Person().javaClass.kotlin</span><br><span class="line">Person::class</span><br><span class="line">Class.forName(&quot;com.hi-dhl.demo.Person&quot;).kotlin</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>kotlin 的 <code>KProperty</code> 对应 Java 的 <code>Field</code>，Java 的 <code>Field</code> 有 <code>getter/setter</code> 方法，但是在 Kotlin 中没有 <code>Field</code>，分为了 <code>KProperty</code> 和 <code>KMutableProperty</code>，当变量用 <code>val</code> 声明的时候，即属性为  <code>KProperty</code>，如果变量用 <code>var</code> 声明的时候，即属性为 <code>KMutableProperty</code></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; Java 的获取方式</span><br><span class="line">Person().javaClass.getDeclaredField(&quot;age&quot;)</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Koltin 的获取方式</span><br><span class="line">Person::class.declaredMemberProperties.find &#123; it.name &#x3D;&#x3D; &quot;age&quot; &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在 Kotlin 中 <strong>函数</strong> 、<strong>属性</strong> 以及 <strong>构造函数</strong> 的超类型都是 <code>KCallable</code>，对应的子类型是 <code>KFunction</code> (函数、构造方法等等) 和 <code>KProperty / KMutableProperty</code> (属性)，而 Kotlin 中的 <code>KCallable</code> 对应 Java 的 <code>AccessibleObject</code>, 其子类型分别是 <code>Method</code> 、 <code>Field</code> 、 <code>Constructor</code></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; Java</span><br><span class="line">Person().javaClass.getConstructor().newInstance() &#x2F;&#x2F; 构造方法</span><br><span class="line">Person().javaClass.getDeclaredMethod(&quot;getName&quot;) &#x2F;&#x2F; 成员方法</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Kotlin</span><br><span class="line">Person::class.primaryConstructor?.call() &#x2F;&#x2F; 构造方法</span><br><span class="line">Person::class.declaredFunctions.find &#123; it.name &#x3D;&#x3D; &quot;getName&quot; &#125;  &#x2F;&#x2F; 成员方法</span><br></pre></td></tr></table></figure>
+
+<p>无论是使用 Java 还是 Kotlin 最终测试出来的结论都是一样的，了解完基本反射语法之后，我们分别测试上述四种场景反射前后的耗时。</p>
+<h3 id="创建对象"><a href="#创建对象" class="headerlink" title="创建对象"></a>创建对象</h3><p><strong>正常创建对象</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@Benchmark</span><br><span class="line">fun createInstance(bh: Blackhole) &#123;</span><br><span class="line">    for (index in 0 until 100_000) &#123;</span><br><span class="line">        bh.consume(Person())</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>五轮测试平均耗时 <code>0.578 ms/op</code> 。需要重点注意，这里使用了 JMH 提供 <code>Blackhole</code>，通过 <code>Blackhole</code> 的 <code>consume()</code> 方法来避免 JIT 带来的优化, 让结果更加接近真实。</p>
+<p>在对象创建过程中，会先检查类是否已经加载，如果类已经加载了，会直接为对象分配空间，其中最耗时的阶段其实是类的加载过程（加载-&gt;验证-&gt;准备-&gt;解析-&gt;初始化）。</p>
+<p><strong>通过反射创建对象</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@Benchmark</span><br><span class="line">fun createReflectInstance(bh: Blackhole) &#123;</span><br><span class="line">    for (index in 0 until 100_000) &#123;</span><br><span class="line">        bh.consume(Person::class.primaryConstructor?.call())</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>五轮测试平均耗时 <code>4.710 ms/op</code>，是正常创建对象的 <code>9.4 倍</code>，这个结果是很惊人，如果将中间操作（获取构造方法）从循环中提取出来，那么结果会怎么样呢。</p>
+<p><strong>反射优化</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@Benchmark</span><br><span class="line">fun createReflectInstanceAccessibleTrue(bh: Blackhole) &#123;</span><br><span class="line">    val constructor &#x3D; Person::class.primaryConstructor</span><br><span class="line">    for (index in 0 until 100_000) &#123;</span><br><span class="line">        bh.consume(constructor?.call())</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>正如你所见，我将中间操作（获取构造方法）从循环中提取出来，五轮测试平均耗时 <code>1.018  ms/op</code>，速度得到了很大的提升，相比反射优化前速度提升了 <code>4.7</code> 倍，但是如果我们在将安全检查功能关掉呢。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">constructor?.isAccessible &#x3D; true</span><br></pre></td></tr></table></figure>
+
+<p><code>isAccessible</code> 是用来判断是否需要进行安全检査，设置为 <code>true</code> 表示关掉安全检查，将会减少安全检査产生的耗时，五轮测试平均耗时 <code>0.943  ms/op</code>，反射速度进一步提升了。</p>
+<p>几轮测试最后的结果如下图示。</p>
+<p><img src="https://img.hi-dhl.com/2022050812.002.png" alt=""></p>
+<h3 id="方法调用"><a href="#方法调用" class="headerlink" title="方法调用"></a>方法调用</h3><p><strong>正常调用</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@Benchmark</span><br><span class="line">fun callMethod(bh: Blackhole) &#123;</span><br><span class="line">    val person &#x3D; Person()</span><br><span class="line">    for (index in 0 until 100_000) &#123;</span><br><span class="line">        bh.consume(person.getName())</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>五轮测试平均耗时 <code>0.422 ms/op</code>。</p>
+<p><strong>反射调用</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@Benchmark</span><br><span class="line">fun callReflectMethod(bh: Blackhole) &#123;</span><br><span class="line">    val person &#x3D; Person()</span><br><span class="line">    for (index in 0 until 100_000) &#123;</span><br><span class="line">        val method &#x3D; Person::class.declaredFunctions.find &#123; it.name &#x3D;&#x3D; &quot;getName&quot; &#125;</span><br><span class="line">        bh.consume(method?.call(person))</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>五轮测试平均耗时 <code>10.533  ms/op</code>，是正常调用的 <code>26 倍</code>。如果我们将中间操作（获取 <code>getName</code> 代码）从循环中提取出来，结果会怎么样呢。</p>
+<p><strong>反射优化</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@Benchmark</span><br><span class="line">fun callReflectMethodAccessiblFalse(bh: Blackhole) &#123;</span><br><span class="line">    val person &#x3D; Person()</span><br><span class="line">    val method &#x3D; Person::class.declaredFunctions.find &#123; it.name &#x3D;&#x3D; &quot;getName&quot; &#125;</span><br><span class="line">    for (index in 0 until 100_000) &#123;</span><br><span class="line">        bh.consume(method?.call(person))</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>将中间操作（获取 <code>getName</code> 代码）从循环中提取出来了，五轮测试平均耗时 <code>0.844  ms/op</code>，速度得到了很大的提升，相比反射优化前速度提升了 <code>13</code> 倍，如果在将安全检查关掉呢。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">method?.isAccessible &#x3D; true</span><br></pre></td></tr></table></figure>
+
+<p>五轮测试平均耗时 <code>0.687  ms/op</code>，反射速度进一步提升了。</p>
+<p>几轮测试最后的结果如下图示。</p>
+<p><img src="https://img.hi-dhl.com/2022050812.004.png" alt=""></p>
+<h3 id="属性调用"><a href="#属性调用" class="headerlink" title="属性调用"></a>属性调用</h3><p><strong>正常调用</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@Benchmark</span><br><span class="line">fun callPropertie(bh: Blackhole) &#123;</span><br><span class="line">    val person &#x3D; Person()</span><br><span class="line">    for (index in 0 until 100_000) &#123;</span><br><span class="line">        bh.consume(person.age)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>五轮测试平均耗时 <code>0.241 ms/op</code> 。</p>
+<p><strong>反射调用</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@Benchmark</span><br><span class="line">fun callReflectPropertie(bh: Blackhole) &#123;</span><br><span class="line">    val person &#x3D; Person()</span><br><span class="line">    for (index in 0 until 100_000) &#123;</span><br><span class="line">        val propertie &#x3D; Person::class.declaredMemberProperties.find &#123; it.name &#x3D;&#x3D; &quot;age&quot; &#125;</span><br><span class="line">        bh.consume(propertie?.call(person))</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>五轮测试平均耗时 <code>12.432 ms/op</code>，是正常调用的 <code>62 倍</code>，然后我们将中间操作（获取属性的代码）从循环中提出来。</p>
+<p><strong>反射优化</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@Benchmark</span><br><span class="line">fun callReflectPropertieAccessibleFalse(bh: Blackhole) &#123;</span><br><span class="line">    val person &#x3D; Person::class.createInstance()</span><br><span class="line">    val propertie &#x3D; Person::class.declaredMemberProperties.find &#123; it.name &#x3D;&#x3D; &quot;age&quot; &#125;</span><br><span class="line">    for (index in 0 until 100_000) &#123;</span><br><span class="line">        bh.consume(propertie?.call(person))</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>将中间操作（获取属性的代码）从循环中提出来之后，五轮测试平均耗时 <code>1.362  ms/op</code>，速度得到了很大的提升，相比反射优化前速度提升了 <code>8</code> 倍，我们在将安全检查关掉，看一下结果。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">propertie?.isAccessible &#x3D; true</span><br></pre></td></tr></table></figure>
+
+<p>五轮测试平均耗时 <code>1.202  ms/op</code>，反射速度进一步提升了。</p>
+<p>几轮测试最后的结果如下图示。</p>
+<p><img src="https://img.hi-dhl.com/2022050812.003.png" alt=""></p>
+<h3 id="伴生对象"><a href="#伴生对象" class="headerlink" title="伴生对象"></a>伴生对象</h3><p><strong>正常调用</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@Benchmark</span><br><span class="line">fun callCompaion(bh: Blackhole) &#123;</span><br><span class="line">    for (index in 0 until 100_000) &#123;</span><br><span class="line">        bh.consume(Person.getAddress())</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>五轮测试平均耗时 <code>0.470 ms/op</code> 。</p>
+<p><strong>反射调用</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@Benchmark</span><br><span class="line">fun createReflectCompaion(bh: Blackhole) &#123;</span><br><span class="line">    val classes &#x3D; Person::class</span><br><span class="line">    val personInstance &#x3D; classes.companionObjectInstance</span><br><span class="line">    val personObject &#x3D; classes.companionObject</span><br><span class="line">    for (index in 0 until 100_000) &#123;</span><br><span class="line">        val compaion &#x3D; personObject?.declaredFunctions?.find &#123; it.name &#x3D;&#x3D; &quot;getAddress&quot; &#125;</span><br><span class="line">        bh.consume(compaion?.call(personInstance))</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>五轮测试平均耗时 <code>5.661 ms/op</code>，是正常调用的 <code>11 倍</code>，然后我们在看一下将中间操作（获取 <code>getAddress</code> 代码）从循环中提出来的结果。</p>
+<p><strong>反射优化</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@Benchmark</span><br><span class="line">fun callReflectCompaionAccessibleFalse(bh: Blackhole) &#123;</span><br><span class="line">    val classes &#x3D; Person::class</span><br><span class="line">    val personInstance &#x3D; classes.companionObjectInstance</span><br><span class="line">    val personObject &#x3D; classes.companionObject</span><br><span class="line">    val compaion &#x3D; personObject?.declaredFunctions?.find &#123; it.name &#x3D;&#x3D; &quot;getAddress&quot; &#125;</span><br><span class="line">    for (index in 0 until 100_000) &#123;</span><br><span class="line">        bh.consume(compaion?.call(personInstance))</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>将中间操作（获取 <code>getAddress</code> 代码）从循环中提出来，五轮测试平均耗时 <code>0.840 ms/op</code>，速度得到了很大的提升，相比反射优化前速度提升了 <code>7</code> 倍，现在我们在将安全检查关掉。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">compaion?.isAccessible &#x3D; true</span><br></pre></td></tr></table></figure>
+
+<p>五轮测试平均耗时 <code>0.702  ms/op</code>，反射速度进一步提升了。</p>
+<p>几轮测试最后的结果如下图所示。</p>
+<p><img src="https://img.hi-dhl.com/2022050811.png" alt=""></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>我们对比了四种常用的场景： <strong>创建对象</strong>、<strong>方法调用</strong>、<strong>属性调用</strong>、<strong>伴生对象</strong>。分别测试了反射前后的耗时，最后汇总一下五轮 10 万次测试平均值。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>正常调用</th>
+<th>反射</th>
+<th>反射优化后</th>
+<th>反射优化后关掉安全检查</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>创建对象</td>
+<td>0.578 ms/op</td>
+<td>4.710 ms/op</td>
+<td>1.018  ms/op</td>
+<td>0.943  ms/op</td>
+</tr>
+<tr>
+<td>方法调用</td>
+<td>0.422 ms/op</td>
+<td>10.533  ms/op</td>
+<td>0.844  ms/op</td>
+<td>0.687  ms/op</td>
+</tr>
+<tr>
+<td>属性调用</td>
+<td>0.241 ms/op</td>
+<td>12.432 ms/op</td>
+<td>1.362  ms/op</td>
+<td>1.202  ms/op</td>
+</tr>
+<tr>
+<td>伴生对象</td>
+<td>0.470 ms/op</td>
+<td>5.661 ms/op</td>
+<td>0.840  ms/op</td>
+<td>0.702  ms/op</td>
+</tr>
+</tbody></table>
+<p>每个场景反射前后的耗时如下图所示。</p>
+<p><img src="https://img.hi-dhl.com/20220509001.png" alt=""></p>
+<p>在我们的印象中，反射就是恶魔，影响会非常大，但是从上面的表格看来，反射确实会有一定的影响，但是如果我们合理使用反射，优化后的反射结果并没有想象的那么大，这里有几个建议。</p>
+<ul>
+<li>在频繁的使用反射的场景中，将反射中间操作提取出来缓存好，下次在使用反射直接从缓存中取即可</li>
+<li>关掉安全检查，可以进一步提升性能</li>
+</ul>
+<p>最后我们在看一下单次创建对象和单次反射创建对象的耗时，如下图所示。</p>
+<p><img src="https://img.hi-dhl.com/165165596558991.jpg" alt=""></p>
+<p><code>Score</code> 表示结果，<code>Error</code> 表示误差范围，在考虑误差的情况下，它们的耗时差距在 <strong>微妙别以内</strong>。</p>
+<p>当然根据设备的不同（高端机、低端机），还有系统、复杂的类等等因素，反射所产生的影响也是不同的。反射在实际项目中应用的非常的广泛，很多设计和开发都和反射有关，比如通过反射去调用字节码文件、调用系统隐藏 Api、动态代理的设计模式，Android 逆向、著名的 Spring 框架、各类 Hook 框架等等。</p>
+<p><a href="https://github.com/hi-dhl/KtPractice">文章中的代码已经上传到 github 仓库 KtPractice: https://github.com/hi-dhl/KtPractice</a></p>
+<br/>
+
+<p><strong>全文到这里就结束了，感谢你的阅读，如果有帮助，欢迎 <code>在看</code> 、 <code>点赞</code> 、 <code>收藏</code> 、 <code>分享</code> 给身边的朋友。</strong></p>
+<p><strong>真诚推荐你关注我，公众号：ByteCode ，持续分享硬核原创内容，Kotlin、Jetpack、性能优化、系统源码、算法及数据结构、动画、大厂面经。</strong></p>
+<br/>
+
+<hr>
+<p><strong>近期必读热门文章</strong></p>
+<ul>
+<li><a href="https://mp.weixin.qq.com/s/IQeV4jlAz2YtRw1KafxuAQ">揭秘 Kotlin 1.6.20 重磅功能 Context Receivers</a></li>
+<li><a href="https://mp.weixin.qq.com/s/gDvd6NLyNc9rsC4kWFFzOA">程序员挑战龙拳|用代码实现刘畊宏龙拳，代码VS刘畊宏</a></li>
+<li><a href="https://mp.weixin.qq.com/s/rRa-EBAgFENurfVfYCrUbA">Stack Overflow 上最热门的 10 个 Kotlin 问题</a></li>
+<li><a href="https://mp.weixin.qq.com/s/qbsslnyp-WGBRubFdVahDA">value class 完全代替 typealias？</a></li>
+<li><a href="https://mp.weixin.qq.com/s/NuqAYoUq_0OorM1rVHUEHA">Android 12 已来，你的 App 崩溃了吗？</a></li>
+<li><a href="https://mp.weixin.qq.com/s/fp1ZOmqAcEBv2f7ec1r-zw">Google 宣布废弃 LiveData.observe 方法</a></li>
+<li><a href="https://mp.weixin.qq.com/s/7ZoBeSK97j4YWXTGX9vEYA">使用 kotlin 需要注意的一个细节</a></li>
+<li><a href="https://mp.weixin.qq.com/s/8dAbt1-mcCVLWLXKC-1_xw">影响性能的 Kotlin 代码（一）</a></li>
+<li><a href="https://mp.weixin.qq.com/s/lcLJB0MFaYX1lQXtJ3M88g">为数不多的人知道的 Kotlin 技巧及解析(三)</a></li>
+<li><a href="https://mp.weixin.qq.com/s/sYj_-wqENr9Jaw1p8iP4Jg">揭秘 Kotlin 中的 == 和 ===</a></li>
+</ul>
+<p><strong>最后推荐长期更新和维护的项目：</strong></p>
+<ul>
+<li><p>个人博客，将所有文章进行分类，欢迎前去查看 <a href="https://hi-dhl.com">https://hi-dhl.com</a></p>
+</li>
+<li><p>KtKit 小巧而实用，用 Kotlin 语言编写的工具库，欢迎前去查看 <a href="https://github.com/hi-dhl/KtKit">KtKit</a></p>
+</li>
+<li><p>计划建立一个最全、最新的 AndroidX Jetpack 相关组件的实战项目以及相关组件原理分析文章，正在逐渐增加 Jetpack 新成员，仓库持续更新，欢迎前去查看 <a href="https://github.com/hi-dhl/AndroidX-Jetpack-Practice">AndroidX-Jetpack-Practice</a></p>
+</li>
+<li><p>LeetCode / 剑指 offer / 国内外大厂面试题 / 多线程题解，语言 Java 和 kotlin，包含多种解法、解题思路、时间复杂度、空间复杂度分析<br/></p>
+</li>
+</ul>
+<p><img src="https://img.hi-dhl.com/cde6d3ba158742d1a821390fad1111.png" alt=""></p>
+<ul>
+<li>剑指 offer 及国内外大厂面试题解：<a href="https://offer.hi-dhl.com">在线阅读</a></li>
+<li>LeetCode 系列题解：<a href="https://leetcode.hi-dhl.com">在线阅读</a></li>
+</ul>
+</div><div><p style="height:15px"></p><ul class="page-copyright"><li><strong>本文作者：</strong>hi-dhl</li><li><strong>本文标题：</strong>揭秘反射真的很耗时吗，射10万次用时多久</li><li><strong>本文链接：</strong><a href="" title="{page.title}">https://hi-dhl.com/2022/05/12/kotlin/21-reflect/</a></li><li><strong>版权声明：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://hi-dhl.com" title="{page.title}">hi-dhl</a></li></ul><p style="height:15px"></p></div><!--!--><h1 class="title is-4 is-size-4-mobile"></h1></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2022/05/12/kotlin/20-Context-Receivers/"><span class="level-item">揭秘 Kotlin 1.6.20 重磅功能 Context Receivers</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content template"><p align="center"><img src="http://cdn.51git.cn/2020-10-07-bytecode.png"></p><p>致力于分享一系列 Android 系统源码、逆向分析、算法、翻译、Jetpack 源码相关的文章，在技术的道路上一起前进</p><h3 class="title is-4">Android10 源码分析</h3><p>正在写一系列的 Android 10 源码分析的文章，了解系统源码，不仅有助于分析问题，在面试过程中，对我们也是非常有帮助的，如果你同我一样喜欢研究 Android 源码，可以关注我 GitHub 上的 <a href="https://github.com/hi-dhl/Android10-Source-Analysis">Android10-Source-Analysis</a>。</p><h3 class="title is-4">算法题库的归纳和总结</h3><p>由于 LeetCode 的题库庞大，每个分类都能筛选出数百道题，由于每个人的精力有限，不可能刷完所有题目，因此我按照经典类型题目去分类、和题目的难易程度去排序。</p><ul><li>数据结构： 数组、栈、队列、字符串、链表、树……</li><li>算法： 查找算法、搜索算法、位运算、排序、数学、……</li></ul><p>每道题目都会用 Java 和 kotlin 去实现，并且每道题目都有解题思路，如果你同我一样喜欢算法、LeetCode，可以关注我 GitHub 上的 LeetCode 题解：<a href="https://github.com/hi-dhl/Leetcode-Solutions-with-Java-And-Kotlin">Leetcode-Solutions-with-Java-And-Kotlin</a>。</p><h3 class="title is-4">精选国外的技术文章</h3><p>目前正在整理和翻译一系列精选国外的技术文章，不仅仅是翻译，很多优秀的英文技术文章提供了很好思路和方法，每篇文章都会有<strong>译者思考</strong>部分，对原文的更加深入的解读，可以关注我 GitHub 上的 <a href="https://github.com/hi-dhl/Technical-Article-Translation">Technical-Article-Translation</a>。</p><p></p></div></div><div class="card"><div class="card-content"><h3 class="title is-5">评论</h3><div class="content" id="valine-thread"></div><script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script><script src="https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js"></script><script>new Valine({
+            el: '#valine-thread' ,
+            notify: false,
+            verify: undefined,
+            appId: 'zfvr24HFhzQ5vtHkr4NQ1fmW-gzGzoHsz',
+            appKey: 'RChgr9mR005hgu4yiQ4WQU3O',
+            placeholder: '说点什么',
+            avatar: 'mm',
+            avatarForce: false,
+            meta: ["nick","mail","link"],
+            pageSize: 10,
+            visitor: false,
+            highlight: true,
+            recordIP: false
+        });</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1 is-sticky"><div class="card widget" id="toc" style="max-height: 500px;overflow: auto;"><div class="card-content"><div class="menu"><h3 class="menu-label">目录</h3><ul class="menu-list"><li><a class="is-flex" href="#测试工具及方案"><span>测试工具及方案</span></a></li><li><a class="is-flex" href="#Kotlin-和-Java-的反射机制"><span>Kotlin 和 Java 的反射机制</span></a></li><li><a class="is-flex" href="#创建对象"><span>创建对象</span></a></li><li><a class="is-flex" href="#方法调用"><span>方法调用</span></a></li><li><a class="is-flex" href="#属性调用"><span>属性调用</span></a></li><li><a class="is-flex" href="#伴生对象"><span>伴生对象</span></a></li><li><a class="is-flex" href="#总结"><span>总结</span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content size-small"><p><time dateTime="2022-05-12T06:37:26.221Z">2022-05-12</time></p><p class="title is-6"><a class="link-muted" href="/2022/05/12/kotlin/21-reflect/">揭秘反射真的很耗时吗，射10万次用时多久</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2022-05-12T06:35:05.575Z">2022-05-12</time></p><p class="title is-6"><a class="link-muted" href="/2022/05/12/kotlin/20-Context-Receivers/">揭秘 Kotlin 1.6.20 重磅功能 Context Receivers</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2022-04-25T14:08:39.158Z">2022-04-25</time></p><p class="title is-6"><a class="link-muted" href="/2022/04/25/Note/10-vpn/">科学上网 | 十年前，他打开了通往自由世界的大门</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2022-04-25T14:04:25.435Z">2022-04-25</time></p><p class="title is-6"><a class="link-muted" href="/2022/04/25/Note/09-longquan/">程序员 PK 刘畊宏，我用代码实现龙拳了</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2022-04-18T15:24:40.433Z">2022-04-18</time></p><p class="title is-6"><a class="link-muted" href="/2022/04/18/translate/10-startup/">Android 11 提高 App 冷启动速度 5% 以上</a></p><p class="is-uppercase"></p></div></article></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile is-marginless" href="/categories/Android/"><span class="level-start"><span class="level-item">Android</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Android-12/"><span class="level-start"><span class="level-item">Android 12</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Android-AndroidStudio/"><span class="level-start"><span class="level-item">Android,AndroidStudio</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Android10/"><span class="level-start"><span class="level-item">Android10</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/AndroidStudio/"><span class="level-start"><span class="level-item">AndroidStudio</span></span><span class="level-end"><span class="level-item tag">5</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Jetpack/"><span class="level-start"><span class="level-item">Jetpack</span></span><span class="level-end"><span class="level-item tag">15</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Kotlin/"><span class="level-start"><span class="level-item">Kotlin</span></span><span class="level-end"><span class="level-item tag">20</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Linux/"><span class="level-start"><span class="level-item">Linux</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E5%B7%A5%E5%85%B7/"><span class="level-start"><span class="level-item">工具</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><span class="level-start"><span class="level-item">数据结构</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E6%9D%82%E8%B0%88/"><span class="level-start"><span class="level-item">杂谈</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E7%AE%97%E6%B3%95%E5%8A%A8%E7%94%BB/"><span class="level-start"><span class="level-item">算法动画</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E7%B3%BB%E7%BB%9F/"><span class="level-start"><span class="level-item">系统</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/translated/"><span class="level-start"><span class="level-item">译文</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E8%AF%91%E6%96%87-AndroidStudio/"><span class="level-start"><span class="level-item">译文,AndroidStudio</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E8%AF%91%E6%96%87-Kotlin/"><span class="level-start"><span class="level-item">译文,Kotlin</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/Android/"><span class="tag">Android</span><span class="tag is-grey-lightest">10</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android-12/"><span class="tag">Android 12</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E5%8C%85%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-包管理系统</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-窗口管理系统</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-资源管理系统</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/AndroidStudio/"><span class="tag">AndroidStudio</span><span class="tag is-grey-lightest">7</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android%E6%BA%90%E7%A0%81/"><span class="tag">Android源码</span><span class="tag is-grey-lightest">7</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Compose/"><span class="tag">Compose</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Fragment/"><span class="tag">Fragment</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Jetpack/"><span class="tag">Jetpack</span><span class="tag is-grey-lightest">20</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Koin/"><span class="tag">Koin</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Kotlin/"><span class="tag">Kotlin</span><span class="tag is-grey-lightest">25</span></a></div><div class="control"><a class="tags has-addons" href="/tags/LeetCode/"><span class="tag">LeetCode</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Linux/"><span class="tag">Linux</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Protobuf/"><span class="tag">Protobuf</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/RxJava/"><span class="tag">RxJava</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Shell/"><span class="tag">Shell</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/kotlin/"><span class="tag">kotlin</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%8A%A8%E7%94%BB/"><span class="tag">动画</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/"><span class="tag">多线程</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%B7%A5%E5%85%B7/"><span class="tag">工具</span><span class="tag is-grey-lightest">5</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><span class="tag">数据结构</span><span class="tag is-grey-lightest">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%9D%82%E8%B0%88/"><span class="tag">杂谈</span><span class="tag is-grey-lightest">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%AE%97%E6%B3%95/"><span class="tag">算法</span><span class="tag is-grey-lightest">5</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%B3%BB%E7%BB%9F/"><span class="tag">系统</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%AF%91%E6%96%87/"><span class="tag">译文</span><span class="tag is-grey-lightest">11</span></a></div></div></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level-item"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img class="logo-img" src="/img/logo.png" alt="dhl" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="dhl" height="28"></a><p class="size-small"><span>&copy; 2022 dhl</span>  <a href="http://www.beian.miit.gov.cn/" target="_blank">京ICP备18050211号-2</a>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p><p></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            site: {
+                url: 'https://www.hi-dhl.com',
+                external_link: {"enable":true,"exclude":[]}
+            },
+            article: {
+                highlight: {
+                    clipboard: false,
+                    fold: ''
+                }
+            }
+        };</script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><script src="https://s9.cnzz.com/z_stat.php?id=1278919895&amp;web_id=1278919895" async></script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><script src="/js/imaegoo/universe.js"></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>
