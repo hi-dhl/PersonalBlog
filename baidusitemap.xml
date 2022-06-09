@@ -2,15 +2,18 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.hi-dhl.com/2022/06/07/kotlin/23-function/</loc>
-    <lastmod>2022-06-07</lastmod>
+    <lastmod>2022-06-09</lastmod>
+  </url>  <url>
+    <loc>https://www.hi-dhl.com/2021/07/14/kotlin/10-kotlin-equality/</loc>
+    <lastmod>2022-06-08</lastmod>
   </url>  <url>
     <loc>https://www.hi-dhl.com/2022/05/20/kotlin/22-iterable-Sequence/</loc>
-    <lastmod>2022-05-20</lastmod>
-  </url>  <url>
-    <loc>https://www.hi-dhl.com/2022/05/12/kotlin/20-Context-Receivers/</loc>
-    <lastmod>2022-05-12</lastmod>
+    <lastmod>2022-06-08</lastmod>
   </url>  <url>
     <loc>https://www.hi-dhl.com/2022/05/12/kotlin/21-reflect/</loc>
+    <lastmod>2022-06-08</lastmod>
+  </url>  <url>
+    <loc>https://www.hi-dhl.com/2022/05/12/kotlin/20-Context-Receivers/</loc>
     <lastmod>2022-05-12</lastmod>
   </url>  <url>
     <loc>https://www.hi-dhl.com/2022/04/25/Note/09-longquan/</loc>
@@ -99,9 +102,6 @@
   </url>  <url>
     <loc>https://www.hi-dhl.com/2020/08/22/android/03-adb/</loc>
     <lastmod>2021-07-15</lastmod>
-  </url>  <url>
-    <loc>https://www.hi-dhl.com/2021/07/14/kotlin/10-kotlin-equality/</loc>
-    <lastmod>2021-07-14</lastmod>
   </url>  <url>
     <loc>https://www.hi-dhl.com/2021/06/29/kotlin/09-kotlin-interface/</loc>
     <lastmod>2021-06-29</lastmod>
