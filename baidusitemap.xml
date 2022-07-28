@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://www.hi-dhl.com/2022/07/28/performance/01-reflect/</loc>
+    <lastmod>2022-07-28</lastmod>
+  </url>  <url>
     <loc>https://www.hi-dhl.com/2022/07/25/kotlin/26-reflect-performance/</loc>
-    <lastmod>2022-07-24</lastmod>
+    <lastmod>2022-07-28</lastmod>
   </url>  <url>
     <loc>https://www.hi-dhl.com/2022/07/10/kotlin/25-genericsclear/</loc>
     <lastmod>2022-07-10</lastmod>

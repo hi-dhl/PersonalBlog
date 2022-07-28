@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="generator" content="Hexo 4.2.1"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>谁动了我的内存，揭秘 OOM 崩溃下降 90% 的秘密 - 程序员DHL</title><meta description="通过这篇文章你将学习到，内存相关的知识点，以及那些因素会导致 OOM 崩溃和相对应的解决方案"><meta property="og:type" content="blog"><meta property="og:title" content="谁动了我的内存，揭秘 OOM 崩溃下降 90% 的秘密"><meta property="og:url" content="https://www.hi-dhl.com/2022/07/28/performance/01-reflect/"><meta property="og:site_name" content="程序员DHL"><meta property="og:description" content="通过这篇文章你将学习到，内存相关的知识点，以及那些因素会导致 OOM 崩溃和相对应的解决方案"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://img.hi-dhl.com/oom_banner_qr.png"><meta property="article:published_time" content="2022-07-28T01:37:04.044Z"><meta property="article:modified_time" content="2022-07-28T01:39:04.809Z"><meta property="article:author" content="程序员DHL"><meta property="article:tag" content="Android10"><meta property="article:tag" content="AndroidStudio"><meta property="article:tag" content="buildSrc"><meta property="article:tag" content="kotlin"><meta property="article:tag" content="run"><meta property="article:tag" content="with"><meta property="article:tag" content="let"><meta property="article:tag" content="also"><meta property="article:tag" content="apply"><meta property="article:tag" content="Jetpack"><meta property="article:tag" content="App Startup"><meta property="article:tag" content="Paging3"><meta property="article:tag" content="Hilt"><meta property="article:tag" content="Dagger"><meta property="article:tag" content="Koin"><meta property="article:tag" content="Jetpack"><meta property="article:tag" content="MVVM"><meta property="article:tag" content="Repository"><meta property="article:tag" content="Kotlin Flow"><meta property="article:tag" content="sealed"><meta property="article:tag" content="RemoteMediator"><meta property="article:tag" content="SealedClasses"><meta property="article:tag" content="SealedInterface"><meta property="article:tag" content="Equality"><meta property="article:tag" content="LiveData"><meta property="article:tag" content="valueclass"><meta property="article:tag" content="DataClass"><meta property="article:tag" content="Array"><meta property="article:tag" content="Iterable"><meta property="article:tag" content="Sequence"><meta property="article:tag" content="ContextReceivers"><meta property="article:tag" content="Reflect"><meta property="article:tag" content="Sequence"><meta property="article:tag" content="Iterable"><meta property="article:tag" content="generics"><meta property="article:tag" content="OOM"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="https://img.hi-dhl.com/oom_banner_qr.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.hi-dhl.com/2022/07/28/performance/01-reflect/"},"headline":"程序员DHL","image":["https://img.hi-dhl.com/oom_banner_qr.png"],"datePublished":"2022-07-28T01:37:04.044Z","dateModified":"2022-07-28T01:39:04.809Z","author":{"@type":"Person","name":"程序员DHL"},"description":"通过这篇文章你将学习到，内存相关的知识点，以及那些因素会导致 OOM 崩溃和相对应的解决方案"}</script><link rel="canonical" href="https://www.hi-dhl.com/2022/07/28/performance/01-reflect/"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" defer></script><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script></head><body class="is-2-column"><script type="text/javascript" src="/js/imaegoo/night.js"></script><canvas id="universe"></canvas><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img class="logo-img" src="/img/logo.png" alt="程序员DHL" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="程序员DHL" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">首页</a><a class="navbar-item" href="/categories">分类</a><a class="navbar-item" href="/categories/Jetpack">Jetpack</a><a class="navbar-item" href="/categories/Kotlin/">Kotlin</a><a class="navbar-item" href="/categories/Android10/">系统源码</a><a class="navbar-item" href="/categories/translated/">译文</a><a class="navbar-item" href="https://offer.hi-dhl.com">算法</a></div><div class="navbar-end"><a class="navbar-item night" id="night-nav" title="Night Mode" href="javascript:;"><i class="fas fa-moon" id="night-icon"></i></a><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/hi-dhl"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><div class="card-image"><span class="image is-7by3"><img class="thumbnail" src="https://img.hi-dhl.com/oom_banner_qr.png" alt="谁动了我的内存，揭秘 OOM 崩溃下降 90% 的秘密"></span></div><article class="card-content article" role="article"><h1 class="title is-3 is-size-4-mobile"></h1><h1 class="title is-3 is-size-4-mobile">谁动了我的内存，揭秘 OOM 崩溃下降 90% 的秘密</h1><div class="article-meta size-small level is-mobile"><div class="level-left"><span class="mr-2"><i class="fa fa-calendar"></i></span><time class="level-item" dateTime="2022-07-28T01:37:04.044Z" title="2022-07-28T01:37:04.044Z">2022-07-28</time><span class="mr-2"> <i class="fa fa-folder"></i></span><span class="level-item"><a class="link-muted" href="/categories/Kotlin/">Kotlin</a></span><span class="mr-2"> <i class="fa fa-tag"></i></span><span class="level-item"><a class="link-muted" href="/tags/Kotlin/">Kotlin</a><span> , </span><a class="link-muted" href="/tags/Java/">Java</a><span> , </span><a class="link-muted" href="/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/">性能优化</a><span> , </span><a class="link-muted" href="/tags/OOM/">OOM</a></span></div></div><div class="level-left article-meta size-small is-mobile"></div><div><p style="height:15px"></p><ul class="page-blockquote"><li>如果评论区没有及时回复，欢迎来公众号：ByteCode 咨询</li><li>公众号：ByteCode。致力于分享最新技术原创文章，涉及 Kotlin、Jetpack、算法、译文、系统源码相关的文章</li><li></li></ul><p style="height:15px"></p></div><div class="content"><blockquote>
+<p>Hi 大家好，我是 DHL。公众号：ByteCode ，专注分享有趣硬核原创内容，Kotlin、Jetpack、性能优化、系统源码、算法及数据结构、动画、大厂面经</p>
+</blockquote>
+<p>最近一直在做内存和 ANR 相关的优化，接下来我将会花几篇文章梳理一下内存相关的优化，以及我是如何将 OOM 崩溃率下降 90%。</p>
+<p>今天这篇文章主要介绍内存相关的知识点，以及那些因素会导致 OOM 崩溃和相对应的解决方案，所以通过这篇文章你将学习到以下内容：</p>
+<ul>
+<li>什么是虚拟内存和物理内存</li>
+<li>32 位和 64 位设备可用虚拟内存分别是多少</li>
+<li>为什么虚拟内存不足主要发生在 32 位的设备上</li>
+<li>如何解决虚拟内存不足的问题</li>
+<li>App 启动完成之后，虚拟内存的分布</li>
+<li>如何解决 Java 堆内存不足的问题</li>
+<li>Java 堆上还有很多可用的内存，为什么还会出现 OOM</li>
+<li>做性能优化时，需要关心那些指标数据</li>
+</ul>
+<p>不知道小伙伴们有没有经历过，相同的优化方案，A 应用上线之后，崩溃率下降很多，但是 B 应用上线只有一点点收益，每个优化方案，在不同的 App 上所得到的优化效果未必一样，因为每个 App 在不同的国家和地区面对的用户群体不一样，因此机型也都不一样，所以我们需要了解内存相关的知识点，结合线上和线下数据，对自己的 App 进行归因，对症下药，才能取得较大的收益。</p>
+<p>内存是极其稀缺的资源，不合理的使用会导致可用内存越来越少，可能会引发卡顿、ANR、OOM 崩溃、Native 崩溃等等，严重影响用户的体验。所以当我们在做性能优化的时候，内存优化是非常重要的环节。</p>
+<p>初期在做内存优化的时候，在我们的脑海里都会有一个潜意识「内存占用越少越好」，在某些情况下是不对的。例如在高端机上我们可以多分配点内存，可以提升用户的体验，但是在低端机上内存本身就很小，所以我们应尽量减少内存的分配。例如针对损耗性能的动画、特效等等，在低端机上是不是可以关掉，或者关掉硬件加速、采用其他的方案代替，这样不仅可以减少崩溃，还可以减少卡顿，提高用户体验。</p>
+<p>因为 Java 有自动回收机制，所以在开发过程中，很少有人会去关心内存问题，在脑海中都会有一个潜意识 GC 会自动回收，所以用完不会主动释放掉无用资源例如 Bitmap、动画、播放器等等，等待 GC 来回收，在实际项目中，依赖 GC 是不可靠的。首先 GC 自动回收机制具有不确定性，GC 也分为了不同的类型，如果发生 Full GC 时，会触发 stop the work 事件，会使 App 变得更加严重。</p>
+<p>另外 GC 的回收机制根据可达性分析算法判断一个对象是否可以被回收，如果存在内存泄露，GC 是不会回收这些资源的，逐渐累积，当达到堆的内存上限时，发生 OOM 崩溃了，所以你要保证自己不要写出内存泄露的代码，以及团队其他人不要写出内存泄露的代码，然而实际情况这是不可能的，所以依靠 GC 自动回收机制这种想法是不可靠的。虽然 Java 有内存回收机制，但是我们应该在脑海中保留内存管理的意识，所以当申请完内存，退出或者不在使用时，及时释放掉内存。真正做到 <strong>用时分配，及时释放</strong>。</p>
+<p>可用内存越来越少时，严重时会导致 OOM 崩溃，做过 OOM 优化的朋友应该会发现，线上捕获的大部分 OOM 崩溃堆栈，都是压死骆驼的最后一根稻草，并不是问题的根本所在，所以我们需要对 OOM 崩溃进行归因，找到占用内存的大头。降低整机已使用的内存，从而降低 OOM 崩溃，因此我大概分为了以下几个方面。</p>
+<ul>
+<li>虚拟内存和物理内存</li>
+<li>堆内存<ul>
+<li>Java 堆内存溢出<ul>
+<li>分配的内存到达 Java 堆的上限</li>
+<li>可用内存很多，因为内存碎片化，没有足够的连续段的空间分配</li>
+<li>对象的单次分配或者多次分配累计过大，例如在循环动画中一直创建 Bitmap</li>
+</ul>
+</li>
+<li>内存泄露<ul>
+<li>堆内存泄露，指的是在程序运行时，给对象分配的内存，当程序退出或者退出界面时，分配的内存没有释放或者因为其他原因无法释放</li>
+<li>资源泄露，比如 FD、socket、线程等等，这些在每个手机上都是有数量的限制，如果使用了不释放，就会因为资源的耗尽而崩溃，我们在线上就出现过 FD 的泄露，导致崩溃率涨了 3 倍</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>FD 的数量超出当前手机的阈值</li>
+<li>线程的数量超出当前手机的阈值</li>
+</ul>
+<p>其中 FD 和线程崩溃占比很低，因此这不是我们前期优化的重点。这篇文章我们重点介绍 <strong>虚拟内存和物理内存</strong>，下篇文章将会介绍<strong>堆内存</strong>， <strong>堆内存</strong>是程序在运行过程中为对象分配内存的区域，它也属于虚拟内存的范围。</p>
+<h3 id="虚拟内存和物理内存"><a href="#虚拟内存和物理内存" class="headerlink" title="虚拟内存和物理内存"></a>虚拟内存和物理内存</h3><p>介绍虚拟内存之前，我们需要先介绍物理内存，物理内存就是实实在在的内存（即内存条），如果应用直接对物理内存操作，会存在很多问题：</p>
+<ul>
+<li>安全问题，应用之间的内存空间没有隔离，会导致应用 A 可以修改应用 B 的内存数据，这是非常不安全的</li>
+<li>内存空间利用率低，应用对内存的使用会出现内存碎片化的问题，即使还有很多内存可以用，但是没有足够的连续段的内存分配，而导致崩溃</li>
+<li>效率低，多个应用同时对物理内存进行读取和写入时，使用效率会非常低</li>
+</ul>
+<p>为了解决上面的问题，我们需要为每个应用分配 “中间内存” 最终会映射到物理内存上，这就是接下来要说的虚拟内存。</p>
+<p>操作系统会为每个应用分配一个独立的虚拟内存，实现应用间的内存隔离，避免了应用 A 修改应用 B 的内存数据的问题，虚拟内存最终会映射到物理内存上，当应用申请内存时，得到的是虚拟内存，只有真正执行写操作时，才会分配到物理内存，好处是应用可以使用连续的地址空间来访问不连续的物理内存。</p>
+<p>每个应用程序可使用的虚拟内存大小受 CPU 位宽及内核的限制。我们常说的 16 位 cpu，32 位 cpu，64 位 CPU，指的都是 CPU 的位宽，表示的是一次能够处理的数据宽度，即 CPU 能处理的 2 进制位数，即分别是 16bit，32bit 和 64bit。而目前市面上常用的是 32 位和 64 的设备。</p>
+<h3 id="32-位和-64-位设备可用虚拟内存分别是多少"><a href="#32-位和-64-位设备可用虚拟内存分别是多少" class="headerlink" title="32 位和 64 位设备可用虚拟内存分别是多少"></a>32 位和 64 位设备可用虚拟内存分别是多少</h3><p><strong>32 位设备可以使用的虚拟内存大小 3GB</strong></p>
+<p>32 位 CPU 架构的设备可使用的地址空间大小为 <code>2^32=4GB</code>, 虚拟内存空间分为 <strong>内核空间</strong> 和 <strong>用户空间</strong>，系统提供了三种虚拟地址空间分配的参数，代表用户空间可访问的虚拟地址空间大小。</p>
+<ul>
+<li>VMSPLIT_3G : 默认值，表示用户空间可使用 3GB 的低地址，剩下的 1GB 高地址分配给内核</li>
+<li>VMSPLIT_2G : 表示用户空间可使用 2GB 的低地址</li>
+<li>VMSPLIT_1G : 表示用户空间可使用 1GB 的低地址</li>
+</ul>
+<p><strong>64 位应用可以使用的虚拟内存大小 512GB</strong></p>
+<p>64 位 CPU 架构的设备虽然拥有 64 位的地址空间，但是不是全部都可以使用的，为了后期的扩展，只能使用部分地址。</p>
+<p>Android 默认的虚拟地址的长度配置为 CONFIG_ARM64_VA_BITS=39，即 Android 的 64 位应用可使用的地址空间大小为 <code>2^39=512GB</code>。</p>
+<p>当 32 位应用在 64 位的设备上运行时，可使用 4GB 虚拟地址空间，而 64 位应用可使用 512GB 的空间。因此在 64 位机器上不存在虚拟空间不足的问题。因此在 2019 年的时候 Google Play 要求除了提供 32 位的版本之外，还需要提供 64 位的版本。</p>
+<p>在我们的 OOM 崩溃设备中，32 位的设备占比 50%+ 以上，虚拟内存不足主要发生在 32 位的设备上。</p>
+<h3 id="为什么虚拟内存不足主要发生在-32-位的设备上"><a href="#为什么虚拟内存不足主要发生在-32-位的设备上" class="headerlink" title="为什么虚拟内存不足主要发生在 32 位的设备上"></a>为什么虚拟内存不足主要发生在 32 位的设备上</h3><p>在 32 位的设备上，受地址空间最大内存 4 GB 限制，内核空间占用 1G，剩下的 3G 是用户空间，我们可以通过解析  <code>/process/pid/smaps</code> 文件，查看当前虚拟内存分配情况。<br><a href="https://android.googlesource.com/platform/frameworks/base/+/3025ef332c29e255388f74b2afefe05f64bce07c/core/jni/android_os_Debug.cpp">https://android.googlesource/frameworks/….core/jni/android_os_Debug.cpp</a></p>
+<ul>
+<li>系统资源预分配，包含了 Zygote 进程初始化时，需要加载  Framework 层的代码和资源。供 Fork 出来的子进程可以直接使用。    Framework 资源包含：Framework 层 Java 代码、so、art 虚拟机、各种静态资源字体、文件等等</li>
+<li>系统预分配区域中其中 <code>[anon:libwebview reservation]</code> 区域占用 130MB 内存</li>
+<li>App 自身资源，包括 App 中的代码、资源、 App 直接或者间接开启线程消耗的栈空间、 App 申请的内存、内存文件映射等内容。</li>
+<li>Java 堆用于分配 <code>Java / Kotlin</code> 创建的对象。由 GC 管理和回收，GC 回收时将 <code>From Space</code> 里的对象复制到 <code>To Space</code>，这两片区域分别为 <code>dalvik-main space</code> 和 <code>dalvik-main space 1</code>, 这两片区域的大小和我当前测试机 Java 堆大小一样，都是 512 MB，如下图所示</li>
+</ul>
+<p><img src="https://img.hi-dhl.com/16585769585011.jpg" alt=""></p>
+<p>根据 Android 源码中的解释，Java 堆的大小应该是根据 <code>RAM Size</code> 来设置的，这是一个经验值，厂商是可以更改的，如果手机 Root 之后，自己也可以改，无论 RAM 多大，到目前为止 Java 堆的上限默认都是 512MB， <a href="https://android.googlesource.com/platform/frameworks/native/+/master/build">Google 源码的设置如下如下图所示</a>。</p>
+<p><img src="https://img.hi-dhl.com/heap1.png" alt=""></p>
+<table>
+<thead>
+<tr>
+<th>RAM (MB)-dalvik-heap. Mk</th>
+<th>heapsize (MB)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>phone-hdpi-dalvik-heap. Mk</td>
+<td>32</td>
+</tr>
+<tr>
+<td>512-dalvik-heap. Mk</td>
+<td>128</td>
+</tr>
+<tr>
+<td>1024-dalvik-heap. Mk</td>
+<td>256</td>
+</tr>
+<tr>
+<td>2048-dalvik-heap. Mk</td>
+<td>512</td>
+</tr>
+<tr>
+<td>4096-dalvik-heap. Mk</td>
+<td>512</td>
+</tr>
+<tr>
+<td>无论 RAM 多大，到目前为止堆的上限默认都是 512MB</td>
+<td></td>
+</tr>
+</tbody></table>
+<ul>
+<li>内存文件映射，mmap 是一种内存映射文件的方法，我们的 APK、Dex、so 等等都是通过 mmap 读取的，会导致虚拟内存增大，mmap 占用的内存跟读写有关系</li>
+</ul>
+<p>经过分析内核、系统资源、以及各 APP 的资源占用，最后留给我们使用的内存并不是很多，所以我们要合理使用系统资源，真正做到 <strong>“用时分配，及时释放”</strong>。</p>
+<h3 id="如何解决虚拟内存不足的问题"><a href="#如何解决虚拟内存不足的问题" class="headerlink" title="如何解决虚拟内存不足的问题"></a>如何解决虚拟内存不足的问题</h3><p>目前业界也有很多黑科技来释放因系统占用的虚拟内存不足的问题，这些黑科技可以参考微信分享的文章 <a href="https://mp.weixin.qq.com/s/ZbFQQ5AVsHy0YL_kKMAiYA">快速缓解 32 位 Android 环境下虚拟内存地址空间不足的“黑科技”</a>，大概有以下几个方面的优化。</p>
+<ul>
+<li>Native 线程默认的栈空间大小为 1M 左右，经过测试大部分情况下线程内执行的逻辑并不需要这么大的空间，因此 Native 线程栈空间减半，可以减少 <code>pthread_create</code> OOM 崩溃</li>
+<li>系统预分配区域中其中 <code>[anon:libwebview reservation]</code> 区域占用 130MB 内存，可以尝试释放 WebView 预分配的内存，减少一部分虚拟内存</li>
+<li>虚拟机堆空间减半，在上面提到过有两片大小相同的区域分别 <code>dalvik-main space</code> 和 <code>dalvik-main space 1</code>，虚拟机堆空间减半其实就是减少其中一个 <code>main space</code> 所占用的内存</li>
+<li>快手针对垃圾回收器 <code>jemalloc</code> 的优化，释放的是 <code>anon:libc_malloc</code> 所占用的虚拟内存 <a href="https://mp.weixin.qq.com/s/r7bapC-mobUXKrldAZKzzQ">快手 Android 内存分配器优化探索 (一)</a></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">以下统计的是在 Android 7.0 App 首次启动完成 libc_malloc 占用的虚拟内存 156MB</span><br><span class="line"></span><br><span class="line">Vss			Pss				Rss				name			</span><br><span class="line">159744 kB	81789 kB		82320 kB		[anon:libc_malloc]</span><br></pre></td></tr></table></figure>
+
+<p>Android 11 之前使用的垃圾回收器是 <code>jemalloc</code>，Android 11 之后默认使用的垃圾回收器是 <code>scudo</code>。</p>
+<h3 id="App-启动完成之后，虚拟内存的分布"><a href="#App-启动完成之后，虚拟内存的分布" class="headerlink" title="App 启动完成之后，虚拟内存的分布"></a>App 启动完成之后，虚拟内存的分布</h3><p>下图是 App 在 Android 7.0 上启动完成之后所占用的虚拟内存 (Vss)，不同系统、不同的 App 虚拟内存的分布都不一样，，我们可以通过解析  <code>/process/pid/smaps</code> 文件，查看自己的 App 虚拟内存分配情况。<br><a href="https://android.googlesource.com/platform/frameworks/base/+/3025ef332c29e255388f74b2afefe05f64bce07c/core/jni/android_os_Debug.cpp">https://android.googlesource/frameworks/….core/jni/android_os_Debug.cpp</a></p>
+<p><img src="https://img.hi-dhl.com/165867972735801.jpg" alt=""></p>
+<p>正如上图所示，主要分为三个部分：</p>
+<ul>
+<li>dalvik（即 Java 堆），程序在运行过程中为对象分配内存的区域</li>
+<li>程序文件 <code>dex</code> 、 <code>so</code> 、 <code>oat</code></li>
+<li>Native</li>
+</ul>
+<p>针对上面的问题，我们在项目中通过以下手段进行优化，重点优化 dalvik 占用的内存，因篇幅问题，将会在后面的文章中，做详细的分析：</p>
+<ul>
+<li>Android 3.0 ～ Android 7.0 上主要将 Bitmap 对象和像素数据统一放到 Java 堆中，Java 堆上限 512MB，而 Native 占用虚拟内存，32 的设备可使用 3GB，64 位的设备更大，因此我们可以尝试将 Bitmap 分配到 Native 上，缓解 Java 堆的压力，降低 OOM 崩溃，方案可以参考 <a href="https://mp.weixin.qq.com/s/S-YJ72qW_amYgIkBSEnsGg">抖音 Android 性能优化系列：Java OOM 优化之 NativeBitmap 方案</a></li>
+<li>使用第三方图片库时，需要针对高端机和低端机设置图片库不同的缓存大小，这样我们在高端机上保证体验的同时，降低低端机 OOM 崩溃率</li>
+<li>收敛 Bitmap，避免重复创建 Bitmap，退出界面及时释放掉资源（Bitmap、动画、播放器等等资源）</li>
+<li>内存回收兜底策略，当 <code>Activity</code> 或者 <code>Fragment</code> 泄露时，与之相关联的动画、Bitmap、 <code>DrawingCache</code> 、背景、监听器等等都无法释放，当我们退出界面时，递归遍历所有的子 view，释放相关的资源，降低内存泄露时所占用的内存</li>
+<li>收敛线程，祖传代码在项目中有很多地方使用了 <code>new Thread</code> 、 <code>AsyncTask</code> 、自己创建线程池等等操作，通过统一的线程池等手段减少 App 创建线程数量，降低系统的开销</li>
+<li>针对低端机和高端机采用不同的策略，减少低端机内存的占用</li>
+<li>内存泄露是永远也解决不完的，所以需要梳理一下 Top 系列泄露问题，重点解决占用内存最多的泄露，以及使用频率最高的场景所产生的泄露</li>
+<li>繁创建小对象，堆内存累计过大，这些一般都是有明显堆栈的，根据堆栈信息解决即可。例如在循环动画中一直创建 Bitmap</li>
+<li>大对象，堆的单次分配内存过大</li>
+<li>删减代码，减少 dex 文件占用的内存</li>
+<li>减少 App 中 dex 数量，非必要功能，可以通过动态下发</li>
+<li>按需加载 so 文件，不要提前加载所有的 so 文件，需要使用时再去加载</li>
+</ul>
+<p><strong>Java 堆上还有很多可用的内存，为什么还会出现 OOM</strong></p>
+<p>很多小伙伴们都问过我这么一个问题，大概归因了一下，主要有以下几个原因：</p>
+<ul>
+<li>内存碎片化，没有足够的连续段的内存分配</li>
+<li>虚拟内存不足</li>
+<li>线程或者 FD 的数量超过当前手机的阈值</li>
+</ul>
+<p>文章的最后想提一点，我们在做性能优化的时候，<strong>不仅要关心性能指标数据，还需要关心对业务指标数据的影响</strong>，比如对使用时长、留存等等能提升多少。</p>
+<p><strong>为什么需要关心业务指标数据？</strong></p>
+<p>性能指标数据，比如 OOM 崩溃率、Native 崩溃率、ANR 等等、可能只有客户端的小伙伴才知道 OOM、Native、ANR 是什么意思，但是其他人（产品经理、老板等等）他们是不知道的，也不会去关心这些，但是他们对使用时长、留存等业务指标数据更加的敏感，更能够体现做这件事的价值，这只是阐述了我自己的观点，每个人站的角度不一样，观点也不一样。</p>
+<p>全文到这里就结束了，这篇文章只是梳理一下内存相关的知识点，以及有那些因素会导致 OOM 崩溃和相对应的解决方案。下篇文章将会介绍<strong>堆内存</strong>， <strong>堆内存</strong>是程序在运行过程中为对象分配内存的区域。</p>
+<br/>
+
+<p>我正在参与掘金技术社区创作者签约计划招募活动，<a href="https://juejin.cn/post/7112770927082864653">点击链接报名投稿</a>。</p>
+<br/>
+
+<p><strong>感谢你的阅读，坚持原创不易，欢迎在看、点赞、分享给身边的小伙伴，我会持续分享原创干货！！！</strong></p>
+<p><strong>真诚推荐你关注我，公众号：ByteCode ，持续分享硬核原创内容，Kotlin、Jetpack、性能优化、系统源码、算法及数据结构、动画、大厂面经。</strong></p>
+<br/>
+
+<hr>
+<p><strong>近期必读热门文章</strong></p>
+<ul>
+<li><a href="https://mp.weixin.qq.com/s/AgEr6GhylkUfG_zWE5LTOw">反射技巧让你的性能提升 N 倍</a></li>
+<li><a href="https://mp.weixin.qq.com/s/brNq5OxitQ7WhPbA9y5lrA">90%人不懂的泛型局限性，泛型擦除，星投影</a></li>
+<li><a href="https://mp.weixin.qq.com/s/TqX2cLJFBe-NtxyGdGeYow">90%的人都不知道的知识点，Kotlin 和 Java 的协变和逆变</a></li>
+<li><a href="https://mp.weixin.qq.com/s/uz9giBia6cBeCRgQW2uG8w">CPU 如何记录函数调用过程和返回过程</a></li>
+<li><a href="https://mp.weixin.qq.com/s/Ah8Yau_UW07s6LnGjrG4hA">揭秘反射真的很耗时吗，射 10 万次耗时多久</a></li>
+<li><a href="https://mp.weixin.qq.com/s/IQeV4jlAz2YtRw1KafxuAQ">揭秘 Kotlin 1.6.20 重磅功能 Context Receivers</a></li>
+<li><a href="https://mp.weixin.qq.com/s/rRa-EBAgFENurfVfYCrUbA">Stack Overflow 上最热门的 10 个 Kotlin 问题</a></li>
+<li><a href="https://mp.weixin.qq.com/s/NuqAYoUq_0OorM1rVHUEHA">Android 12 已来，你的 App 崩溃了吗？</a></li>
+<li><a href="https://mp.weixin.qq.com/s/fp1ZOmqAcEBv2f7ec1r-zw">Google 宣布废弃 LiveData.observe 方法</a></li>
+<li><a href="https://mp.weixin.qq.com/s/8dAbt1-mcCVLWLXKC-1_xw">影响性能的 Kotlin 代码（一）</a></li>
+<li><a href="https://mp.weixin.qq.com/s/sYj_-wqENr9Jaw1p8iP4Jg">揭秘 Kotlin 中的 == 和 ===</a></li>
+</ul>
+<p><strong>最后推荐长期更新和维护的项目</strong></p>
+<ul>
+<li><p>个人博客，将所有文章进行分类，欢迎前去查看 <a href="https://hi-dhl.com">https://hi-dhl.com</a></p>
+</li>
+<li><p>KtKit 小巧而实用，用 Kotlin 语言编写的工具库，欢迎前去查看 <a href="https://github.com/hi-dhl/KtKit">KtKit</a></p>
+</li>
+<li><p>计划建立一个最全、最新的 AndroidX Jetpack 相关组件的实战项目以及相关组件原理分析文章，正在逐渐增加 Jetpack 新成员，仓库持续更新，欢迎前去查看 <a href="https://github.com/hi-dhl/AndroidX-Jetpack-Practice">AndroidX-Jetpack-Practice</a></p>
+</li>
+<li><p>LeetCode / 剑指 offer / 国内外大厂面试题 / 多线程题解，语言 Java 和 kotlin，包含多种解法、解题思路、时间复杂度、空间复杂度分析<br/></p>
+</li>
+</ul>
+<p><img src="https://img.hi-dhl.com/cde6d3ba158742d1a821390fad1111.png" alt=""></p>
+<ul>
+<li>剑指 offer 及国内外大厂面试题解：<a href="https://offer.hi-dhl.com">在线阅读</a></li>
+<li>LeetCode 系列题解：<a href="https://leetcode.hi-dhl.com">在线阅读</a></li>
+</ul>
+</div><div><p style="height:15px"></p><ul class="page-copyright"><li><strong>本文作者：</strong>hi-dhl</li><li><strong>本文标题：</strong>谁动了我的内存，揭秘 OOM 崩溃下降 90% 的秘密</li><li><strong>本文链接：</strong><a href="" title="{page.title}">https://hi-dhl.com/2022/07/28/performance/01-reflect/</a></li><li><strong>版权声明：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://hi-dhl.com" title="{page.title}">hi-dhl</a></li></ul><p style="height:15px"></p></div><!--!--><h1 class="title is-4 is-size-4-mobile"></h1></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2022/07/25/kotlin/26-reflect-performance/"><span class="level-item">反射技巧让你的性能提升 N 倍</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content template"><p align="center"><img src="http://cdn.51git.cn/2020-10-07-bytecode.png"></p><p>致力于分享一系列 Android 系统源码、逆向分析、算法、翻译、Jetpack 源码相关的文章，在技术的道路上一起前进</p><h3 class="title is-4">Android10 源码分析</h3><p>正在写一系列的 Android 10 源码分析的文章，了解系统源码，不仅有助于分析问题，在面试过程中，对我们也是非常有帮助的，如果你同我一样喜欢研究 Android 源码，可以关注我 GitHub 上的 <a href="https://github.com/hi-dhl/Android10-Source-Analysis">Android10-Source-Analysis</a>。</p><h3 class="title is-4">算法题库的归纳和总结</h3><p>由于 LeetCode 的题库庞大，每个分类都能筛选出数百道题，由于每个人的精力有限，不可能刷完所有题目，因此我按照经典类型题目去分类、和题目的难易程度去排序。</p><ul><li>数据结构： 数组、栈、队列、字符串、链表、树……</li><li>算法： 查找算法、搜索算法、位运算、排序、数学、……</li></ul><p>每道题目都会用 Java 和 kotlin 去实现，并且每道题目都有解题思路，如果你同我一样喜欢算法、LeetCode，可以关注我 GitHub 上的 LeetCode 题解：<a href="https://github.com/hi-dhl/Leetcode-Solutions-with-Java-And-Kotlin">Leetcode-Solutions-with-Java-And-Kotlin</a>。</p><h3 class="title is-4">精选国外的技术文章</h3><p>目前正在整理和翻译一系列精选国外的技术文章，不仅仅是翻译，很多优秀的英文技术文章提供了很好思路和方法，每篇文章都会有<strong>译者思考</strong>部分，对原文的更加深入的解读，可以关注我 GitHub 上的 <a href="https://github.com/hi-dhl/Technical-Article-Translation">Technical-Article-Translation</a>。</p><p></p></div></div><div class="card"><div class="card-content"><h3 class="title is-5">评论</h3><div class="content" id="valine-thread"></div><script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script><script src="https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js"></script><script>new Valine({
+            el: '#valine-thread' ,
+            notify: false,
+            verify: undefined,
+            appId: 'zfvr24HFhzQ5vtHkr4NQ1fmW-gzGzoHsz',
+            appKey: 'RChgr9mR005hgu4yiQ4WQU3O',
+            placeholder: '说点什么',
+            avatar: 'mm',
+            avatarForce: false,
+            meta: ["nick","mail","link"],
+            pageSize: 10,
+            visitor: false,
+            highlight: true,
+            recordIP: false
+        });</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1 is-sticky"><div class="card widget" id="toc" style="max-height: 500px;overflow: auto;"><div class="card-content"><div class="menu"><h3 class="menu-label">目录</h3><ul class="menu-list"><li><a class="is-flex" href="#虚拟内存和物理内存"><span>虚拟内存和物理内存</span></a></li><li><a class="is-flex" href="#32-位和-64-位设备可用虚拟内存分别是多少"><span>32 位和 64 位设备可用虚拟内存分别是多少</span></a></li><li><a class="is-flex" href="#为什么虚拟内存不足主要发生在-32-位的设备上"><span>为什么虚拟内存不足主要发生在 32 位的设备上</span></a></li><li><a class="is-flex" href="#如何解决虚拟内存不足的问题"><span>如何解决虚拟内存不足的问题</span></a></li><li><a class="is-flex" href="#App-启动完成之后，虚拟内存的分布"><span>App 启动完成之后，虚拟内存的分布</span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content size-small"><p><time dateTime="2022-07-28T01:37:04.044Z">2022-07-28</time></p><p class="title is-6"><a class="link-muted" href="/2022/07/28/performance/01-reflect/">谁动了我的内存，揭秘 OOM 崩溃下降 90% 的秘密</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2022-07-24T17:26:33.064Z">2022-07-25</time></p><p class="title is-6"><a class="link-muted" href="/2022/07/25/kotlin/26-reflect-performance/">反射技巧让你的性能提升 N 倍</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2022-07-10T06:20:44.679Z">2022-07-10</time></p><p class="title is-6"><a class="link-muted" href="/2022/07/10/kotlin/25-genericsclear/">90%人不懂的泛型局限性，泛型擦除，星投影</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2022-06-23T01:18:18.600Z">2022-06-23</time></p><p class="title is-6"><a class="link-muted" href="/2022/06/23/kotlin/24-generics/">90%的人都不懂的泛型，泛型的缺陷和应用场景</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2022-06-07T06:20:34.258Z">2022-06-07</time></p><p class="title is-6"><a class="link-muted" href="/2022/06/07/kotlin/23-function/">学习突破35岁焦虑，CPU记录函数调用过程，进互联大厂如此简单</a></p><p class="is-uppercase"></p></div></article></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile is-marginless" href="/categories/Android/"><span class="level-start"><span class="level-item">Android</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Android-12/"><span class="level-start"><span class="level-item">Android 12</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Android-AndroidStudio/"><span class="level-start"><span class="level-item">Android,AndroidStudio</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Android10/"><span class="level-start"><span class="level-item">Android10</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/AndroidStudio/"><span class="level-start"><span class="level-item">AndroidStudio</span></span><span class="level-end"><span class="level-item tag">5</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Jetpack/"><span class="level-start"><span class="level-item">Jetpack</span></span><span class="level-end"><span class="level-item tag">15</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Kotlin/"><span class="level-start"><span class="level-item">Kotlin</span></span><span class="level-end"><span class="level-item tag">26</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Linux/"><span class="level-start"><span class="level-item">Linux</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E5%B7%A5%E5%85%B7/"><span class="level-start"><span class="level-item">工具</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><span class="level-start"><span class="level-item">数据结构</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E6%9D%82%E8%B0%88/"><span class="level-start"><span class="level-item">杂谈</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E7%AE%97%E6%B3%95%E5%8A%A8%E7%94%BB/"><span class="level-start"><span class="level-item">算法动画</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E7%B3%BB%E7%BB%9F/"><span class="level-start"><span class="level-item">系统</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/translated/"><span class="level-start"><span class="level-item">译文</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E8%AF%91%E6%96%87-AndroidStudio/"><span class="level-start"><span class="level-item">译文,AndroidStudio</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E8%AF%91%E6%96%87-Kotlin/"><span class="level-start"><span class="level-item">译文,Kotlin</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/Android/"><span class="tag">Android</span><span class="tag is-grey-lightest">10</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android-12/"><span class="tag">Android 12</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E5%8C%85%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-包管理系统</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-窗口管理系统</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-资源管理系统</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/AndroidStudio/"><span class="tag">AndroidStudio</span><span class="tag is-grey-lightest">7</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android%E6%BA%90%E7%A0%81/"><span class="tag">Android源码</span><span class="tag is-grey-lightest">7</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Compose/"><span class="tag">Compose</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Fragment/"><span class="tag">Fragment</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Java/"><span class="tag">Java</span><span class="tag is-grey-lightest">5</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Jetpack/"><span class="tag">Jetpack</span><span class="tag is-grey-lightest">20</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Koin/"><span class="tag">Koin</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Kotlin/"><span class="tag">Kotlin</span><span class="tag is-grey-lightest">31</span></a></div><div class="control"><a class="tags has-addons" href="/tags/LeetCode/"><span class="tag">LeetCode</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Linux/"><span class="tag">Linux</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/OOM/"><span class="tag">OOM</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Protobuf/"><span class="tag">Protobuf</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/RxJava/"><span class="tag">RxJava</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Shell/"><span class="tag">Shell</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/kotlin/"><span class="tag">kotlin</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%8A%A8%E7%94%BB/"><span class="tag">动画</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/"><span class="tag">多线程</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%B7%A5%E5%85%B7/"><span class="tag">工具</span><span class="tag is-grey-lightest">5</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/"><span class="tag">性能优化</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><span class="tag">数据结构</span><span class="tag is-grey-lightest">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%9D%82%E8%B0%88/"><span class="tag">杂谈</span><span class="tag is-grey-lightest">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%AE%97%E6%B3%95/"><span class="tag">算法</span><span class="tag is-grey-lightest">5</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%B3%BB%E7%BB%9F/"><span class="tag">系统</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%AF%91%E6%96%87/"><span class="tag">译文</span><span class="tag is-grey-lightest">11</span></a></div></div></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level-item"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img class="logo-img" src="/img/logo.png" alt="程序员DHL" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="程序员DHL" height="28"></a><p class="size-small"><span>&copy; 2022 程序员DHL</span>  <a href="http://beian.miit.gov.cn/" target="_blank">京ICP备18050211号-2</a>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p><p></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            site: {
+                url: 'https://www.hi-dhl.com',
+                external_link: {"enable":true,"exclude":[]}
+            },
+            article: {
+                highlight: {
+                    clipboard: false,
+                    fold: ''
+                }
+            }
+        };</script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><script src="https://s9.cnzz.com/z_stat.php?id=1278919895&amp;web_id=1278919895" async></script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><script src="/js/imaegoo/universe.js"></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>
