@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="generator" content="Hexo 4.2.1"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Android 利器，我开发了云同步编译工具 - 程序员DHL</title><meta description="SyncKit 主要将本地的项目同步到远程设备，在远程设备上进行编译，然后将编译的结果拉回本地"><meta property="og:type" content="blog"><meta property="og:title" content="Android 利器，我开发了云同步编译工具"><meta property="og:url" content="https://www.hi-dhl.com/2022/10/11/AndroidStudio/sync/"><meta property="og:site_name" content="程序员DHL"><meta property="og:description" content="SyncKit 主要将本地的项目同步到远程设备，在远程设备上进行编译，然后将编译的结果拉回本地"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://img.hi-dhl.com/16633256791057.png"><meta property="article:published_time" content="2022-10-11T11:23:57.969Z"><meta property="article:modified_time" content="2022-10-11T11:27:31.794Z"><meta property="article:author" content="程序员DHL"><meta property="article:tag" content="Android10"><meta property="article:tag" content="AndroidStudio"><meta property="article:tag" content="buildSrc"><meta property="article:tag" content="kotlin"><meta property="article:tag" content="run"><meta property="article:tag" content="with"><meta property="article:tag" content="let"><meta property="article:tag" content="also"><meta property="article:tag" content="apply"><meta property="article:tag" content="Jetpack"><meta property="article:tag" content="算法动画"><meta property="article:tag" content="LeetCode"><meta property="article:tag" content="Stack"><meta property="article:tag" content="ArrayDeque"><meta property="article:tag" content="LinkedList"><meta property="article:tag" content="AndroidStudio"><meta property="article:tag" content="Intellij idea"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="https://img.hi-dhl.com/16633256791057.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.hi-dhl.com/2022/10/11/AndroidStudio/sync/"},"headline":"程序员DHL","image":["https://img.hi-dhl.com/16633256791057.png"],"datePublished":"2022-10-11T11:23:57.969Z","dateModified":"2022-10-11T11:27:31.794Z","author":{"@type":"Person","name":"程序员DHL"},"description":"SyncKit 主要将本地的项目同步到远程设备，在远程设备上进行编译，然后将编译的结果拉回本地"}</script><link rel="canonical" href="https://www.hi-dhl.com/2022/10/11/AndroidStudio/sync/"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" defer></script><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script></head><body class="is-2-column"><script type="text/javascript" src="/js/imaegoo/night.js"></script><canvas id="universe"></canvas><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img class="logo-img" src="/img/logo.png" alt="程序员DHL" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="程序员DHL" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">首页</a><a class="navbar-item" href="/categories">分类</a><a class="navbar-item" href="/categories/Jetpack">Jetpack</a><a class="navbar-item" href="/categories/Kotlin/">Kotlin</a><a class="navbar-item" href="/categories/Android10/">系统源码</a><a class="navbar-item" href="/categories/translated/">译文</a><a class="navbar-item" href="https://offer.hi-dhl.com">算法</a></div><div class="navbar-end"><a class="navbar-item night" id="night-nav" title="Night Mode" href="javascript:;"><i class="fas fa-moon" id="night-icon"></i></a><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/hi-dhl"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><div class="card-image"><span class="image is-7by3"><img class="thumbnail" src="https://img.hi-dhl.com/16633256791057.png" alt="Android 利器，我开发了云同步编译工具"></span></div><article class="card-content article" role="article"><h1 class="title is-3 is-size-4-mobile"></h1><h1 class="title is-3 is-size-4-mobile">Android 利器，我开发了云同步编译工具</h1><div class="article-meta size-small level is-mobile"><div class="level-left"><span class="mr-2"><i class="fa fa-calendar"></i></span><time class="level-item" dateTime="2022-10-11T11:23:57.969Z" title="2022-10-11T11:23:57.969Z">2022-10-11</time><span class="mr-2"> <i class="fa fa-folder"></i></span><span class="level-item"><a class="link-muted" href="/categories/AndroidStudio/">AndroidStudio</a></span><span class="mr-2"> <i class="fa fa-tag"></i></span><span class="level-item"><a class="link-muted" href="/tags/AndroidStudio/">AndroidStudio</a><span> , </span><a class="link-muted" href="/tags/%E5%B7%A5%E5%85%B7/">工具</a></span></div></div><div class="level-left article-meta size-small is-mobile"></div><div><p style="height:15px"></p><ul class="page-blockquote"><li>如果评论区没有及时回复，欢迎来公众号：ByteCode 咨询</li><li>公众号：ByteCode。致力于分享最新技术原创文章，涉及 Kotlin、Jetpack、算法、译文、系统源码相关的文章</li><li></li></ul><p style="height:15px"></p></div><div class="content"><blockquote>
+<p>Hi 大家好，我是 DHL。公众号：ByteCode ，专注分享有趣硬核原创内容，Kotlin、Jetpack、性能优化、系统源码、算法及数据结构、动画、大厂面经</p>
+</blockquote>
+<p>我相信使用过 MAC 的小伙伴们，无论是编译 Java 项目，还是 Android 项目，在编译稍微大点的项目，多多少少都会遇到下面的弹窗提示，当然 Win 也有类似的错误，只不过提示的方式不一样。我的 MAC 在当时买的时候是最高配，无奈现在的软件需要占用的资源越来越多。</p>
+<p><img src="https://img.hi-dhl.com/202210072314262.jpeg" alt=""></p>
+<p><img src="https://img.hi-dhl.com/202210072314263.jpeg" alt=""></p>
+<p>当你的电脑上同时出现上面两个提示，意味着你的电脑已经有些年代了，目前我正在使用的 MAC 陪伴我度过了 8 年的时间，虽然我的主要方向是 Android，但是在此期间我开发过 PHP、Python、C++、逆向、JavaEE、Kotlin、前端等等项目，因此电脑上装了很多互相依赖的开发工具包。</p>
+<p>如果换电脑，对个人而言成本是非常高的，意味着很多软件以及开发工具包都需要重新安装，并且新电脑的系统版本很高，很多软件都用不了，需要寻找新的替代品。还会遇到很多因为系统问题而导致的编译错误。所以我需要寻找一个在不换电脑（配置很低的）的情况，提高项目编译速度的方法，同时减少对电脑的资源占用，因此我就开发了一个云同步编译工具。</p>
+<p>在开发这个工具之前，我尝试在 github 上寻找类似的项目来解决现有的问题，我只找到了项目 <code>mainframer</code> ，但是这个项目作者已经好几年没有在维护这个项目了，使用起来比较麻烦，<code>idea</code> 配置也比较麻烦。并不能完全解决我遇到的问题，因此云同步编译工具 <code>SyncKit</code> 就诞生了。</p>
+<p><code>SyncKit</code> 是基于 <code>Intellij idea</code> 开发的插件，适用于 <code>AndroidStudio</code> 以及 <code>jetbrains</code> 旗下的所有 <code>idea</code> 软件，主要将本地的项目同步到远程设备，在<strong>远程设备</strong>上进行编译，然后将编译的结果拉回本地。</p>
+<p><strong>远程设备</strong>可以是 Nas、另外一台备用电脑、云端（阿里云、腾讯云、华为云等等）、 Docker 虚拟出来的容器等等。</p>
+<p>我有一台 NAS，配上同步编译工具（SyncKit），在配上内网穿透，就可以享受在任意地点进行数据同步和远程编译。</p>
+<p>（PS：内网穿透是我自己搭的一个服务，可以通过任意一个网络，访问家里的 NAS）</p>
+<p><code>SyncKit</code> 支持以下功能：</p>
+<ul>
+<li>支持数据同步到远程设备</li>
+<li>支持增量同步，本地文件有修改或者新增才会同步到远程设备</li>
+<li>文件过滤功能，过滤掉不需要同步的文件</li>
+<li>远程编译功能</li>
+<li>对于 Android 应用，一键完成远程编译、自动安装、打开目标 Activity</li>
+<li>一键安装常用工具，部署开发环境<ul>
+<li>一键安装 <strong>JDK11</strong></li>
+<li>一键安装 <strong>Android SDK</strong></li>
+<li>一键安装 <strong>Android NDK</strong></li>
+</ul>
+</li>
+<li>支持 Mac 、ubuntu</li>
+</ul>
+<p>TODO:</p>
+<ul>
+<li><input disabled="" type="checkbox"> 支持命令行</li>
+<li><input disabled="" type="checkbox"> 支持 Win</li>
+<li><input disabled="" type="checkbox"> 支持数据双向同步</li>
+<li><input disabled="" type="checkbox"> 支持多台远程设备间切换</li>
+<li><input disabled="" type="checkbox"> 支持 AAB 打包</li>
+</ul>
+<p>代码已经上传到 Github 欢迎前往仓库 <a href="https://github.com/hi-dhl/SyncKit">hi-dhl/SyncKit</a>  查看，如果有帮助欢迎在仓库 <a href="https://github.com/hi-dhl/SyncKit">hi-dhl/SyncKit</a> 右上角点个 star，如果你在使用过程中有任何问题，或者有其它的需求，欢迎给我提 issue。</p>
+<p><strong>hi-dhl/SyncKit</strong></p>
+<p><a href="https://github.com/hi-dhl/SyncKit">https://github.com/hi-dhl/SyncKit</a></p>
+<h3 id="如何安装工具"><a href="#如何安装工具" class="headerlink" title="如何安装工具"></a>如何安装工具</h3><ul>
+<li>方法一：点击下发<a href="https://github.com/hi-dhl/SyncKit/releases">链接</a>，下载最新版本 <code>SyncKit-version.zip</code>，文件 <code>SyncKit-version.zip</code> 不需要解压，拖拽到 idea 开发工具中，将会自动安装，点击重启即可。<ul>
+<li><a href="https://github.com/hi-dhl/SyncKit/releases">下载地址一：https://github.com/hi-dhl/SyncKit/releases</a>（实时更新）</li>
+<li><a href="https://plugins.jetbrains.com/plugin/19948-synckit/versions">下载地址二：https://plugins.jetbrains.com/plugin/19948-synckit/versions</a>（需要官方审核，更新比较慢）</li>
+</ul>
+</li>
+<li>方法二：<code>idea 开发工具 -&gt; Preferences -&gt; Plugins</code> 搜索 SyncKit，安装重启即可</li>
+</ul>
+<p>安装成功之后，将会在工具栏上出现下面的图标。</p>
+<p><img src="https://img.hi-dhl.com/202210072314264.jpeg" alt=""></p>
+<h3 id="工具如何使用"><a href="#工具如何使用" class="headerlink" title="工具如何使用"></a>工具如何使用</h3><ul>
+<li>按照图示，点击 「插件配置」，或者按快捷键<ul>
+<li>Win：<code>alt shift 5</code>   </li>
+<li>Mac：<code>option shift 5</code></li>
+</ul>
+</li>
+</ul>
+<p><img src="https://img.hi-dhl.com/202210072314265.jpeg" alt=""></p>
+<ul>
+<li>上一步操作完之后，将会弹出一个对话框，输入对应的 Host（IP 或者域名）、端口号、用户名即可，其它都是可选的</li>
+</ul>
+<p><img src="https://img.hi-dhl.com/202210072314266.jpeg" alt=""></p>
+<ul>
+<li>配置 ssh 无密码访问远程设备（可选）</li>
+</ul>
+<p>如果你已经配置了，这一步可忽略，如果你没有配置，按照下面的步骤执行，否则你每次执行的时候，都需要输入密码。</p>
+<ul>
+<li>执行下面命令，获取本地电脑的 <code>SSH public key</code></li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cat ~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure>
+
+<p>如果你的电脑之前没有安装过 SSH，执行下面命令安装 SSH，一路回车，即可。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -C "test@qq. Com"</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>进入远程设备，执行下面命令，将上一步获取到的 <code>SSH public key</code>，追加到 <code>authorized_keys</code> 文件中</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">mkdir -p ~/.ssh &amp;&amp; echo $&#123;SSH_PUBLIC_KEY&#125; &gt;&gt; ~/.ssh/authorized_keys</span><br></pre></td></tr></table></figure>
+
+<p>上面都设置完之后，就可以开始使用云同步编译工具，进行远程编译，或者将本地文件同步到远程设备，如下图示。</p>
+<p><strong>点击「远程编译」将会出现如下界面</strong></p>
+<p><img src="https://img.hi-dhl.com/202210072314267.gif" alt=""></p>
+<h3 id="远程设备工具安装"><a href="#远程设备工具安装" class="headerlink" title="远程设备工具安装"></a>远程设备工具安装</h3><p>为了简化服务器的部署，我也提供了一键部署服务器环境，按需在远程设备上安装 <strong>JDK11</strong> 、<strong>Andriod SDK</strong> 、<strong>Andriod NDK</strong>。</p>
+<p>同样也可以在本地执行脚本，安装对应的工具，点击「初始化」会在当前目录下生成 <code>.sync</code> 文件夹，在 <code>.sync/script</code> 文件夹下执行对应的脚本即可。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">bash install_jdk_11. Sh</span><br><span class="line">bash install_android_sdk. Sh</span><br><span class="line">bash install_android_ndk. Sh</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://img.hi-dhl.com/202210072314268.jpeg" alt=""></p>
+<h3 id="可选功能"><a href="#可选功能" class="headerlink" title="可选功能"></a>可选功能</h3><p><strong>自动打开 Activity</strong></p>
+<p>点击 「插件配置」将会弹出配置对话框，在 <strong>Launch Activity</strong> 中，按照提示，输入要打开的 Activity，将会在安装完 App 之后，自动打开 Activity。</p>
+<p><img src="https://img.hi-dhl.com/202210072314269.jpeg" alt=""></p>
+<p><strong>文件过滤功能</strong></p>
+<p>工具支持文件过滤功能，当我们同步文件到远程设备，可以过滤掉不需要同步的文件，点击 「插件配置」将会弹出配置对话框，在文件过滤文本框中，输入你不需要同步的文件。</p>
+<p><img src="https://img.hi-dhl.com/202210072314270.jpeg" alt=""></p>
+<p>工具默认会自动生成一些同步规则，应该满足 80% 的场景，如果有其他不需要同步的文件，在文件过滤文本框中，按照下面的格式，输入你不需要同步的文件，按行分割，一行一个，同步的时候，将会忽略这些文件。</p>
+<ul>
+<li>某个文件不需要同步，输入文件名即可，例如 <code>local.properties</code></li>
+<li>如果某个类型的文件不需要同步，输入文件扩展名即可，例如 <code>*.log</code></li>
+<li>如果某个文件夹不需要同步，输入文件夹加上 <code>/</code> 即可，例如 <code>build/</code></li>
+</ul>
+<p><strong>填入远程设备 SDK 或者 NDK 路径</strong></p>
+<p>在编译 Android 项目中，会自动识别 SDK 或者 NDK 路径，如果失败了，编译将会出错，这时需要手动输入远程设备 SDK 或者 NDK 路径。</p>
+<p><img src="https://img.hi-dhl.com/202210072314271.jpeg" alt=""></p>
+<h3 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h3><p><strong>问题一：</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ssh_askpass: exec (/usr/X11R6/bin/ssh-askpass): No such file or directory</span><br></pre></td></tr></table></figure>
+
+<p>按照如下方式解决：</p>
+<ul>
+<li>确认在远程设备文件 <code>~/.ssh/authorized_keys</code>，是否正确添加了本机的 <code>SSH public key</code>，执行下面命令，如果不需要输入密码，表示正确添加了</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ssh -p 端口号 user@host</span><br><span class="line"></span><br><span class="line">例如:</span><br><span class="line">ssh -p 22 root@192.160.0.100</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果已经添加了，尝试执行下面命令即可解决，方案来自<a href="https://stackoverflow.com/questions/52885928/vs-code-gives-me-an-ssh-askpass-error-when-i-try-to-push-the-changes-to-my-githu">stackoverflow.com</a></li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ssh-keyscan -t rsa bitbucket. Org &gt;&gt; ~/. Ssh/known_hosts</span><br></pre></td></tr></table></figure>
+
+<p><strong>问题二：</strong></p>
+<figure class="highlight groovy"><table><tr><td class="code"><pre><span class="line">Execution failed <span class="keyword">for</span> task <span class="string">' :app: parseDebugLocalResources'</span>.</span><br><span class="line">&gt; Could not resolve all files <span class="keyword">for</span> configuration <span class="string">' :app: androidApis'</span>.</span><br><span class="line">   &gt; Failed to transform android. Jar to match attributes &#123;artifactType=android-platform-attr, org. Gradle. Libraryelements=jar, org. Gradle. Usage=java-runtime&#125;.</span><br><span class="line">      &gt; Execution failed <span class="keyword">for</span> <span class="string">PlatformAttrTransform:</span> <span class="regexp">/root/</span>build<span class="regexp">/android-sdk/</span>platforms<span class="regexp">/android-32/</span>android. Jar.</span><br><span class="line">         &gt; <span class="regexp">/root/</span>build<span class="regexp">/android-sdk/</span>platforms<span class="regexp">/android-32/</span>android. Jar</span><br></pre></td></tr></table></figure>
+
+<p>这可能是因为第一次下载 <code>android-32</code> 时网络问题被中断，导致文件 <code>/root/build/android-sdk/platforms/android-32/android.jar</code> 不存在，我们可以手动删除 <code>android-32</code> 文件夹，然后重新执行远程编译，会重新下载 <code>android-32</code>，如果下载速度比较慢，可以在当前项目中，添加 <code>alyun maven</code> 仓库，其它版本的 SDK 处理的方案都是一样的。</p>
+<p><strong>问题三：</strong> </p>
+<p>在使用云同步编译工具（SyncKit）时，提示缺少工具而导致失败，执行下面命令安装对应的工具即可。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum install -y rsync unzip wget</span><br></pre></td></tr></table></figure>
+
+<p>代码已经上传到 Github 欢迎前往仓库 <a href="https://github.com/hi-dhl/SyncKit">hi-dhl/SyncKit</a>  查看，如果有帮助欢迎在仓库 <a href="https://github.com/hi-dhl/SyncKit">hi-dhl/SyncKit</a> 右上角点个 star，如果你在使用过程中有任何问题，或者有其它的需求，欢迎给我提 issue。</p>
+<ul>
+<li><a href="https://github.com/hi-dhl/SyncKit">仓库 SyncKit：https://github.com/hi-dhl/SyncKit</a></li>
+<li><a href="https://github.com/hi-dhl/SyncKit/releases">下载地址：https://github.com/hi-dhl/SyncKit/releases</a></li>
+</ul>
+<br/>
+
+<p><strong>全文到这里就结束了，感谢你的阅读，坚持原创不易，欢迎在看、点赞、分享给身边的小伙伴，我会持续分享原创干货！！！</strong></p>
+<p><strong>真诚推荐你关注我，公众号：ByteCode ，持续分享硬核原创内容，Kotlin、Jetpack、性能优化、系统源码、算法及数据结构、动画、大厂面经。</strong></p>
+<br/>
+
+<hr>
+<p><strong>近期必读热门文章</strong></p>
+<ul>
+<li><a href="https://mp.weixin.qq.com/s/ExxJMyYZP3sd9pnvdiEFAg">Twitter 上有趣的代码</a></li>
+<li><a href="https://mp.weixin.qq.com/s/QZ6zZ6GoNpB5MWGi31k-UA">谁动了我的内存，揭秘 OOM 崩溃下降 90% 的秘密</a></li>
+<li><a href="https://mp.weixin.qq.com/s/AgEr6GhylkUfG_zWE5LTOw">反射技巧让你的性能提升 N 倍</a></li>
+<li><a href="https://mp.weixin.qq.com/s/brNq5OxitQ7WhPbA9y5lrA">90%人不懂的泛型局限性，泛型擦除，星投影</a></li>
+<li><a href="https://mp.weixin.qq.com/s/TqX2cLJFBe-NtxyGdGeYow">90%的人都不知道的知识点，Kotlin 和 Java 的协变和逆变</a></li>
+<li><a href="https://mp.weixin.qq.com/s/uz9giBia6cBeCRgQW2uG8w">CPU 如何记录函数调用过程和返回过程</a></li>
+<li><a href="https://mp.weixin.qq.com/s/Ah8Yau_UW07s6LnGjrG4hA">揭秘反射真的很耗时吗，射 10 万次耗时多久</a></li>
+<li><a href="https://mp.weixin.qq.com/s/IQeV4jlAz2YtRw1KafxuAQ">揭秘 Kotlin 1.6.20 重磅功能 Context Receivers</a></li>
+<li><a href="https://mp.weixin.qq.com/s/rRa-EBAgFENurfVfYCrUbA">Stack Overflow 上最热门的 10 个 Kotlin 问题</a></li>
+<li><a href="https://mp.weixin.qq.com/s/NuqAYoUq_0OorM1rVHUEHA">Android 12 已来，你的 App 崩溃了吗？</a></li>
+<li><a href="https://mp.weixin.qq.com/s/fp1ZOmqAcEBv2f7ec1r-zw">Google 宣布废弃 LiveData.observe 方法</a></li>
+<li><a href="https://mp.weixin.qq.com/s/8dAbt1-mcCVLWLXKC-1_xw">影响性能的 Kotlin 代码（一）</a></li>
+<li><a href="https://mp.weixin.qq.com/s/sYj_-wqENr9Jaw1p8iP4Jg">揭秘 Kotlin 中的 == 和 ===</a></li>
+</ul>
+<p><strong>最后推荐长期更新和维护的项目</strong></p>
+<ul>
+<li><p>个人博客，将所有文章进行分类，欢迎前去查看 <a href="https://hi-dhl.com">https://hi-dhl.com</a></p>
+</li>
+<li><p>KtKit 小巧而实用，用 Kotlin 语言编写的工具库，欢迎前去查看 <a href="https://github.com/hi-dhl/KtKit">KtKit</a></p>
+</li>
+<li><p>计划建立一个最全、最新的 AndroidX Jetpack 相关组件的实战项目以及相关组件原理分析文章，正在逐渐增加 Jetpack 新成员，仓库持续更新，欢迎前去查看 <a href="https://github.com/hi-dhl/AndroidX-Jetpack-Practice">AndroidX-Jetpack-Practice</a></p>
+</li>
+<li><p>LeetCode / 剑指 offer / 国内外大厂面试题 / 多线程题解，语言 Java 和 kotlin，包含多种解法、解题思路、时间复杂度、空间复杂度分析<br/></p>
+</li>
+</ul>
+<p><img src="https://img.hi-dhl.com/202210072314272.png" alt=""></p>
+<ul>
+<li>剑指 offer 及国内外大厂面试题解：<a href="https://offer.hi-dhl.com">在线阅读</a></li>
+<li>LeetCode 系列题解：<a href="https://leetcode.hi-dhl.com">在线阅读</a></li>
+</ul>
+</div><div><p style="height:15px"></p><ul class="page-copyright"><li><strong>本文作者：</strong>hi-dhl</li><li><strong>本文标题：</strong>Android 利器，我开发了云同步编译工具</li><li><strong>本文链接：</strong><a href="" title="{page.title}">https://hi-dhl.com/2022/10/11/AndroidStudio/sync/</a></li><li><strong>版权声明：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://hi-dhl.com" title="{page.title}">hi-dhl</a></li></ul><p style="height:15px"></p></div><!--!--><h1 class="title is-4 is-size-4-mobile"></h1></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2022/09/20/kotlin/27-kotlin-twitter/"><span class="level-item">Twitter 上有趣的代码</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content template"><p align="center"><img src="http://cdn.51git.cn/2020-10-07-bytecode.png"></p><p>致力于分享一系列 Android 系统源码、逆向分析、算法、翻译、Jetpack 源码相关的文章，在技术的道路上一起前进</p><h3 class="title is-4">Android10 源码分析</h3><p>正在写一系列的 Android 10 源码分析的文章，了解系统源码，不仅有助于分析问题，在面试过程中，对我们也是非常有帮助的，如果你同我一样喜欢研究 Android 源码，可以关注我 GitHub 上的 <a href="https://github.com/hi-dhl/Android10-Source-Analysis">Android10-Source-Analysis</a>。</p><h3 class="title is-4">算法题库的归纳和总结</h3><p>由于 LeetCode 的题库庞大，每个分类都能筛选出数百道题，由于每个人的精力有限，不可能刷完所有题目，因此我按照经典类型题目去分类、和题目的难易程度去排序。</p><ul><li>数据结构： 数组、栈、队列、字符串、链表、树……</li><li>算法： 查找算法、搜索算法、位运算、排序、数学、……</li></ul><p>每道题目都会用 Java 和 kotlin 去实现，并且每道题目都有解题思路，如果你同我一样喜欢算法、LeetCode，可以关注我 GitHub 上的 LeetCode 题解：<a href="https://github.com/hi-dhl/Leetcode-Solutions-with-Java-And-Kotlin">Leetcode-Solutions-with-Java-And-Kotlin</a>。</p><h3 class="title is-4">精选国外的技术文章</h3><p>目前正在整理和翻译一系列精选国外的技术文章，不仅仅是翻译，很多优秀的英文技术文章提供了很好思路和方法，每篇文章都会有<strong>译者思考</strong>部分，对原文的更加深入的解读，可以关注我 GitHub 上的 <a href="https://github.com/hi-dhl/Technical-Article-Translation">Technical-Article-Translation</a>。</p><p></p></div></div><div class="card"><div class="card-content"><h3 class="title is-5">评论</h3><div class="content" id="valine-thread"></div><script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script><script src="https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js"></script><script>new Valine({
+            el: '#valine-thread' ,
+            notify: false,
+            verify: undefined,
+            appId: 'zfvr24HFhzQ5vtHkr4NQ1fmW-gzGzoHsz',
+            appKey: 'RChgr9mR005hgu4yiQ4WQU3O',
+            placeholder: '说点什么',
+            avatar: 'mm',
+            avatarForce: false,
+            meta: ["nick","mail","link"],
+            pageSize: 10,
+            visitor: false,
+            highlight: true,
+            recordIP: false
+        });</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1 is-sticky"><div class="card widget" id="toc" style="max-height: 500px;overflow: auto;"><div class="card-content"><div class="menu"><h3 class="menu-label">目录</h3><ul class="menu-list"><li><a class="is-flex" href="#如何安装工具"><span>如何安装工具</span></a></li><li><a class="is-flex" href="#工具如何使用"><span>工具如何使用</span></a></li><li><a class="is-flex" href="#远程设备工具安装"><span>远程设备工具安装</span></a></li><li><a class="is-flex" href="#可选功能"><span>可选功能</span></a></li><li><a class="is-flex" href="#常见问题"><span>常见问题</span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content size-small"><p><time dateTime="2022-10-11T11:23:57.969Z">2022-10-11</time></p><p class="title is-6"><a class="link-muted" href="/2022/10/11/AndroidStudio/sync/">Android 利器，我开发了云同步编译工具</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2022-09-20T01:03:36.410Z">2022-09-20</time></p><p class="title is-6"><a class="link-muted" href="/2022/09/20/kotlin/27-kotlin-twitter/">Twitter 上有趣的代码</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2022-07-28T01:37:04.044Z">2022-07-28</time></p><p class="title is-6"><a class="link-muted" href="/2022/07/28/performance/01-reflect/">谁动了我的内存，揭秘 OOM 崩溃下降 90% 的秘密</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2022-07-24T17:26:33.064Z">2022-07-25</time></p><p class="title is-6"><a class="link-muted" href="/2022/07/25/kotlin/26-reflect-performance/">反射技巧让你的性能提升 N 倍</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2022-07-10T06:20:44.679Z">2022-07-10</time></p><p class="title is-6"><a class="link-muted" href="/2022/07/10/kotlin/25-genericsclear/">90%人不懂的泛型局限性，泛型擦除，星投影</a></p><p class="is-uppercase"></p></div></article></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile is-marginless" href="/categories/Android/"><span class="level-start"><span class="level-item">Android</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Android-12/"><span class="level-start"><span class="level-item">Android 12</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Android-AndroidStudio/"><span class="level-start"><span class="level-item">Android,AndroidStudio</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Android10/"><span class="level-start"><span class="level-item">Android10</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/AndroidStudio/"><span class="level-start"><span class="level-item">AndroidStudio</span></span><span class="level-end"><span class="level-item tag">6</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Jetpack/"><span class="level-start"><span class="level-item">Jetpack</span></span><span class="level-end"><span class="level-item tag">15</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Kotlin/"><span class="level-start"><span class="level-item">Kotlin</span></span><span class="level-end"><span class="level-item tag">27</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Linux/"><span class="level-start"><span class="level-item">Linux</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E5%B7%A5%E5%85%B7/"><span class="level-start"><span class="level-item">工具</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><span class="level-start"><span class="level-item">数据结构</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E6%9D%82%E8%B0%88/"><span class="level-start"><span class="level-item">杂谈</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E7%AE%97%E6%B3%95%E5%8A%A8%E7%94%BB/"><span class="level-start"><span class="level-item">算法动画</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E7%B3%BB%E7%BB%9F/"><span class="level-start"><span class="level-item">系统</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/translated/"><span class="level-start"><span class="level-item">译文</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E8%AF%91%E6%96%87-AndroidStudio/"><span class="level-start"><span class="level-item">译文,AndroidStudio</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E8%AF%91%E6%96%87-Kotlin/"><span class="level-start"><span class="level-item">译文,Kotlin</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/Android/"><span class="tag">Android</span><span class="tag is-grey-lightest">10</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android-12/"><span class="tag">Android 12</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E5%8C%85%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-包管理系统</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-窗口管理系统</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-资源管理系统</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/AndroidStudio/"><span class="tag">AndroidStudio</span><span class="tag is-grey-lightest">8</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android%E6%BA%90%E7%A0%81/"><span class="tag">Android源码</span><span class="tag is-grey-lightest">7</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Compose/"><span class="tag">Compose</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Fragment/"><span class="tag">Fragment</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Java/"><span class="tag">Java</span><span class="tag is-grey-lightest">6</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Jetpack/"><span class="tag">Jetpack</span><span class="tag is-grey-lightest">20</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Koin/"><span class="tag">Koin</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Kotlin/"><span class="tag">Kotlin</span><span class="tag is-grey-lightest">32</span></a></div><div class="control"><a class="tags has-addons" href="/tags/LeetCode/"><span class="tag">LeetCode</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Linux/"><span class="tag">Linux</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/OOM/"><span class="tag">OOM</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Protobuf/"><span class="tag">Protobuf</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/RxJava/"><span class="tag">RxJava</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Shell/"><span class="tag">Shell</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/kotlin/"><span class="tag">kotlin</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%8A%A8%E7%94%BB/"><span class="tag">动画</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/"><span class="tag">多线程</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%B7%A5%E5%85%B7/"><span class="tag">工具</span><span class="tag is-grey-lightest">6</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/"><span class="tag">性能优化</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><span class="tag">数据结构</span><span class="tag is-grey-lightest">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%9D%82%E8%B0%88/"><span class="tag">杂谈</span><span class="tag is-grey-lightest">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%AE%97%E6%B3%95/"><span class="tag">算法</span><span class="tag is-grey-lightest">5</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%B3%BB%E7%BB%9F/"><span class="tag">系统</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%AF%91%E6%96%87/"><span class="tag">译文</span><span class="tag is-grey-lightest">11</span></a></div></div></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level-item"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img class="logo-img" src="/img/logo.png" alt="程序员DHL" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="程序员DHL" height="28"></a><p class="size-small"><span>&copy; 2022 程序员DHL</span>  <a href="http://beian.miit.gov.cn/" target="_blank">京ICP备18050211号-2</a>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p><p></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            site: {
+                url: 'https://www.hi-dhl.com',
+                external_link: {"enable":true,"exclude":[]}
+            },
+            article: {
+                highlight: {
+                    clipboard: false,
+                    fold: ''
+                }
+            }
+        };</script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><script src="https://s9.cnzz.com/z_stat.php?id=1278919895&amp;web_id=1278919895" async></script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><script src="/js/imaegoo/universe.js"></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>
