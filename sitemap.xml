@@ -2,9 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://www.hi-dhl.com/2022/11/02/android/android13/</loc>
+    
+    <lastmod>2022-11-02T01:52:30.768Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.hi-dhl.com/2021/12/19/android/09-android12-crash/</loc>
+    
+    <lastmod>2022-11-02T01:52:13.848Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://www.hi-dhl.com/2022/10/11/AndroidStudio/sync/</loc>
     
-    <lastmod>2022-10-11T11:27:31.794Z</lastmod>
+    <lastmod>2022-10-16T14:40:24.930Z</lastmod>
     
   </url>
   
@@ -159,13 +173,6 @@
     <loc>https://www.hi-dhl.com/2021/12/27/kotlin/16-kotlin_extend_fun/</loc>
     
     <lastmod>2021-12-27T01:08:12.424Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.hi-dhl.com/2021/12/19/android/09-android12-crash/</loc>
-    
-    <lastmod>2021-12-19T04:54:26.182Z</lastmod>
     
   </url>
   
