@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="generator" content="Hexo 4.2.1"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>国外大厂面试题， 7 个 Android Lifecycle 重要的知识点 - 程序员DHL</title><meta description="Android Lifecycle 是非常重要的知识点，很多新的 Android 开发对 Android Lifecycle 不是很了解"><meta property="og:type" content="blog"><meta property="og:title" content="国外大厂面试题， 7 个 Android Lifecycle 重要的知识点"><meta property="og:url" content="https://www.hi-dhl.com/2022/11/15/jetpack/lifecycle/"><meta property="og:site_name" content="程序员DHL"><meta property="og:description" content="Android Lifecycle 是非常重要的知识点，很多新的 Android 开发对 Android Lifecycle 不是很了解"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://img.hi-dhl.com/202211131955512.png"><meta property="article:published_time" content="2022-11-15T01:49:12.402Z"><meta property="article:modified_time" content="2022-11-15T01:50:48.679Z"><meta property="article:author" content="程序员DHL"><meta property="article:tag" content="Android10"><meta property="article:tag" content="AndroidStudio"><meta property="article:tag" content="buildSrc"><meta property="article:tag" content="kotlin"><meta property="article:tag" content="run"><meta property="article:tag" content="with"><meta property="article:tag" content="let"><meta property="article:tag" content="also"><meta property="article:tag" content="apply"><meta property="article:tag" content="Jetpack"><meta property="article:tag" content="App Startup"><meta property="article:tag" content="Paging3"><meta property="article:tag" content="Hilt"><meta property="article:tag" content="Dagger"><meta property="article:tag" content="Koin"><meta property="article:tag" content="Jetpack"><meta property="article:tag" content="MVVM"><meta property="article:tag" content="Repository"><meta property="article:tag" content="Kotlin Flow"><meta property="article:tag" content="sealed"><meta property="article:tag" content="RemoteMediator"><meta property="article:tag" content="SharedPreferences"><meta property="article:tag" content="Jetpack DataStore"><meta property="article:tag" content="Proto DataStore"><meta property="article:tag" content="Protobuf"><meta property="article:tag" content="Compose"><meta property="article:tag" content="CoreSplashscreen"><meta property="article:tag" content="ViewModel"><meta property="article:tag" content="LiveData"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="https://img.hi-dhl.com/202211131955512.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.hi-dhl.com/2022/11/15/jetpack/lifecycle/"},"headline":"程序员DHL","image":["https://img.hi-dhl.com/202211131955512.png"],"datePublished":"2022-11-15T01:49:12.402Z","dateModified":"2022-11-15T01:50:48.679Z","author":{"@type":"Person","name":"程序员DHL"},"description":"Android Lifecycle 是非常重要的知识点，很多新的 Android 开发对 Android Lifecycle 不是很了解"}</script><link rel="canonical" href="https://www.hi-dhl.com/2022/11/15/jetpack/lifecycle/"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" defer></script><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script></head><body class="is-2-column"><script type="text/javascript" src="/js/imaegoo/night.js"></script><canvas id="universe"></canvas><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img class="logo-img" src="/img/logo.png" alt="程序员DHL" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="程序员DHL" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">首页</a><a class="navbar-item" href="/categories">分类</a><a class="navbar-item" href="/categories/Jetpack">Jetpack</a><a class="navbar-item" href="/categories/Kotlin/">Kotlin</a><a class="navbar-item" href="/categories/Android10/">系统源码</a><a class="navbar-item" href="/categories/translated/">译文</a><a class="navbar-item" href="https://offer.hi-dhl.com">算法</a></div><div class="navbar-end"><a class="navbar-item night" id="night-nav" title="Night Mode" href="javascript:;"><i class="fas fa-moon" id="night-icon"></i></a><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/hi-dhl"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><div class="card-image"><span class="image is-7by3"><img class="thumbnail" src="https://img.hi-dhl.com/202211131955512.png" alt="国外大厂面试题， 7 个 Android Lifecycle 重要的知识点"></span></div><article class="card-content article" role="article"><h1 class="title is-3 is-size-4-mobile"></h1><h1 class="title is-3 is-size-4-mobile">国外大厂面试题， 7 个 Android Lifecycle 重要的知识点</h1><div class="article-meta size-small level is-mobile"><div class="level-left"><span class="mr-2"><i class="fa fa-calendar"></i></span><time class="level-item" dateTime="2022-11-15T01:49:12.402Z" title="2022-11-15T01:49:12.402Z">2022-11-15</time><span class="mr-2"> <i class="fa fa-folder"></i></span><span class="level-item"><a class="link-muted" href="/categories/Jetpack/">Jetpack</a></span><span class="mr-2"> <i class="fa fa-tag"></i></span><span class="level-item"><a class="link-muted" href="/tags/Jetpack/">Jetpack</a></span></div></div><div class="level-left article-meta size-small is-mobile"></div><div><p style="height:15px"></p><ul class="page-blockquote"><li>如果评论区没有及时回复，欢迎来公众号：ByteCode 咨询</li><li>公众号：ByteCode。致力于分享最新技术原创文章，涉及 Kotlin、Jetpack、算法、译文、系统源码相关的文章</li><li></li></ul><p style="height:15px"></p></div><div class="content"><blockquote>
+<p>hi 大家好，我是 DHL。公众号：ByteCode ，分享有用、专注有用、有趣的硬核原创内容，Kotlin、Jetpack、性能优化、系统源码、算法及数据结构、大厂面经。</p>
+<ul>
+<li>面试题来源: <a href="https://medium.com/mobile-app-development-publication/android-lifecycle-interview-questions-that-some-got-wrong-926b39b19a61">https://medium.com/mobile-app-deve…</a></li>
+<li>已收录于仓库 <a href="https://github.com/hi-dhl/Technical-Article-Translation">Technical-Article-Translation</a></li>
+</ul>
+</blockquote>
+<p>习惯性的每天都会打开 medium 看一下技术相关的内容，偶然看到一位大佬分享和 <code>Android Lifecycle</code> 相关的面试题，觉得非常的有价值。</p>
+<p>在 Android 开发中 <code>Android Lifecycle</code> 是非常重要的知识点。但是不幸的是，我发现很多新的 Android 开发对 <code>Android Lifecycle</code> 不是很了解，导致在开发中遇到很多奇怪的问题。</p>
+<p>分享这些面试题，不仅仅是为了通过面试，更是为了让 Android 开发者基础更加的扎实，防止在开发中遇到很多奇怪的问题。</p>
+<h3 id="面试题一：Launch-Fragment-by-Default"><a href="#面试题一：Launch-Fragment-by-Default" class="headerlink" title="面试题一：Launch Fragment by Default"></a>面试题一：Launch Fragment by Default</h3><p><strong>问题:</strong></p>
+<p>花几秒钟思考一下，下面的代码有什么问题。</p>
+<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> : <span class="type">AppCompatActivity</span></span>() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_main)</span><br><span class="line"></span><br><span class="line">        supportFragmentManager</span><br><span class="line">           .beginTransaction()</span><br><span class="line">           .replace(R.id.container, MainFragment())</span><br><span class="line">           .commit()</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>错误的回答</strong></p>
+<ol>
+<li>没有使用 KTX 添加 <code>Fragment</code></li>
+<li>应该使用 <code>.add</code> 而不是 <code>.replace</code></li>
+</ol>
+<p><strong>正确的回答</strong></p>
+<p>如果 Activity 因意外被杀死并被恢复，会再次执行 <code>onCreate()</code> 方法，创建新的 Fragment，因此在栈中会存在 2 个  Fragment。在 Fragment 上的任何操作都可能被执行两次，这将会导致出现奇怪的问题。</p>
+<p><img src="https://img.hi-dhl.com/202211131955513.jpeg" alt=""></p>
+<p>为了防止 Activity 因意外被杀死而恢复，导致添加新的 Fragment，所以我们可以使用 <code>stateInstanceState == null</code> 作为判断条件，防止添加新的 Fragment，因此我们可以将上面的代码简单修改一下。</p>
+<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> : <span class="type">AppCompatActivity</span></span>() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_main)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (savedInstanceState == <span class="literal">null</span>) &#123;</span><br><span class="line">            supportFragmentManager</span><br><span class="line">                .beginTransaction()</span><br><span class="line">                .replace(R.id.container, MainFragment())</span><br><span class="line">                .commit()</span><br><span class="line">        &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="面试题二：Create-Fragment-with-Constructor"><a href="#面试题二：Create-Fragment-with-Constructor" class="headerlink" title="面试题二：Create Fragment with Constructor"></a>面试题二：Create Fragment with Constructor</h3><p><strong>问题：</strong></p>
+<p>如果往 Fragment 构造函数中添加参数，花几秒钟思考一下，下面的代码会有什么问题？</p>
+<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line">supportFragmentManager</span><br><span class="line">    .beginTransaction()</span><br><span class="line">    .replace(R.id.container, MainFragment())</span><br><span class="line">    .commit()</span><br><span class="line">    </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MainFragment</span></span>(<span class="keyword">private</span> <span class="keyword">val</span> repository: Repository): Fragment() &#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>错误的回答</strong></p>
+<ol>
+<li>我们可以使用 <code>.replace(R.id.container, MainFragment(repository))</code> 方法来代替</li>
+<li>它不会编译和运行</li>
+</ol>
+<p><strong>正确的回答</strong></p>
+<p>我们不应该直接用带参数的构造函数实例化任何 <code>Fragment()</code>，如果想使用带参数的构造函数实例化 <code>Fragment()</code>，可以使用 <code>FragmentFactory</code> 解决这个问题，这是在 <code>AndriodX Fragment 1.2.0</code> 中新增加的 API，详情可以查看另外一篇文章 <a href="https://mp.weixin.qq.com/s/AVHkgYX8OVzbF2nxwQJ3qA">Google 建议使用这些 Fragment 的新特性</a>。</p>
+<p>如果不使用 <code>AndriodX Fragment</code> 库，默认情况下系统是不支持的，虽然上面的代码可以正常编译运行，但是在运行过程当中，因为配置更改，导致在销毁恢复的过程中会崩溃，错误信息如下所示。</p>
+<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line">Caused <span class="keyword">by</span>: java.lang.NoSuchMethodException: MainFragment.&lt;<span class="keyword">init</span>&gt;</span><br></pre></td></tr></table></figure>
+
+<p>这是因为系统需要在某些情况下重新初始化它，比如配置更改，例如设备被旋转时，导致 Fragment 被销毁，如果没有默认空的构造函数，系统不知道如何重新初始化 Fragment 实例。</p>
+<p><img src="https://img.hi-dhl.com/202211131955514.jpeg" alt=""></p>
+<p>因此，我们总是需要确保实例化 Fragment 的时候有一个空的构造函数。</p>
+<h3 id="面试题三：Instantiate-ViewModel-Directly"><a href="#面试题三：Instantiate-ViewModel-Directly" class="headerlink" title="面试题三：Instantiate ViewModel Directly"></a>面试题三：Instantiate ViewModel Directly</h3><p><code>ViewModel</code> 是 Jetpack 架构组件成员之一，花几秒钟思考一下，下面的代码会有什么问题？</p>
+<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span>: <span class="type">AppCompatActivity</span></span>() &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> viewModel = MainViewModel()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span>  <span class="title">MainViewModel</span></span>(): ViewModel &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p><strong>错误回答</strong></p>
+<ol>
+<li>没有什么问题，可以正常编译运行</li>
+<li>我们还需要向它注入一些依赖项，例如 <code>MainViewModel (repository)</code></li>
+</ol>
+<p><strong>正确回答</strong></p>
+<p>我们不应该直接实例化 <code>ViewModel</code>。 <code>ViewModel</code> 是 Jetpack 架构组件成员之一，意味着它可以在配置更改时存活，例如设备旋转时，它比 Activity 有更长的生命周期。</p>
+<p>如果我们在代码中直接实例化 <code>ViewModel</code>，尽管它可以工作，但它将会变成一个普通的 <code>ViewModel</code>，失去原本拥有的特性。</p>
+<p>因此，要实例化 <code>ViewModel</code>，建议使用 <code>ViewModel KTX</code>，代码如下所示。</p>
+<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span>: <span class="type">AppCompatActivity</span></span>() &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> viewMode:MainViewModel <span class="keyword">by</span> viewModels()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>by viewModels ()</code> 会在重新启动或从已杀死的进程中恢复时，实例化一个新的 <code>ViewModel</code>。如果有配置更改，例如设备被旋转时，它将检查 <code>ViewModel</code> 是否已经创建，而不重新创建它</li>
+</ul>
+<p><img src="https://img.hi-dhl.com/202211131955515.jpeg" alt=""></p>
+<ul>
+<li><code>ViewModels()</code> 会根据需要自动注入 <code>SavedInstancestate</code> （例如 Activity 中的 <code>SavedInstanceState</code> 和 <code>Intent</code>），如果我们有其他依赖是通过 <code>Dagger Hilt</code> 注入，它将与 <code>ViewModel</code> 一起使用下面的参数</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="meta">@HiltViewModel</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyViewModel</span> <span class="meta">@Inject</span> <span class="keyword">constructor</span></span>(</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> repository: Repository,</span><br><span class="line">    savedStateHandle: SavedStateHandle</span><br><span class="line">) : ViewModel &#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="面试题四：ViewModel-as-StateRestoration-Solution"><a href="#面试题四：ViewModel-as-StateRestoration-Solution" class="headerlink" title="面试题四：ViewModel as StateRestoration Solution"></a>面试题四：ViewModel as StateRestoration Solution</h3><p><strong>问题：</strong></p>
+<p>Jetpack 架构组件提供的 <code>ViewModel</code> 的作用是什么？</p>
+<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span>: <span class="type">AppCompatActivity</span></span>() &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> viewMode:MainViewModel <span class="keyword">by</span> viewModels()</span><br><span class="line">    <span class="comment">// Some other Activity Code</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>错误回答</strong></p>
+<p><code>ViewModel</code> 是用于状态恢复，例如当 <code>Activity</code> 被杀死并重新启动时，<code>ViewModel</code> 是用来帮助恢复到原始状态。</p>
+<p><strong>正确回答</strong></p>
+<p><code>ViewModel</code> 实际上是 google 提供的 Jetpack 架构组件之一，它鼓励 Android 开发者使用 MVVM 设计模式。</p>
+<p>它还有其它重要的功能，例如设备旋转时，即使 <code>Activity</code> 和 <code>Fragment</code> 被销毁，它们各自的 <code>ViewModel</code> 仍会保留，Google 在 <code>ViewModel</code> 中提供了一个名为 <code>savedStateHandle</code> 参数，该参数用于保存和恢复数据。</p>
+<h3 id="面试题五：LiveData-as-State-Restoration-Solution"><a href="#面试题五：LiveData-as-State-Restoration-Solution" class="headerlink" title="面试题五：LiveData as State Restoration Solution"></a>面试题五：LiveData as State Restoration Solution</h3><p><strong>问题：</strong></p>
+<p>Jetpack 架构组件提供的 <code>LiveData</code> 的作用是什么。</p>
+<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Declaring it</span></span><br><span class="line"><span class="keyword">val</span> liveDataA = MutableLiveData&lt;String&gt;()</span><br><span class="line"><span class="comment">// Trigger the value change</span></span><br><span class="line">liveDataA.value = someValue</span><br></pre></td></tr></table></figure>
+
+<p><strong>错误回答：</strong></p>
+<p>它的存在是为了确保数据在 Activity 的生命周期中存活。当 Activity 在进程销毁返回时，数据将会自动恢复。</p>
+<p><strong>正确回答</strong></p>
+<p><code>LiveData</code> 本身不能在进程销毁中存活。它是一种特殊类型的数据，根据观察者（Activity 或 Fragment）的生命周期来控制其发出的值。</p>
+<p><img src="https://img.hi-dhl.com/202211131955516.jpeg" alt=""></p>
+<p><code>ViewModel</code> 在配置变更后仍然存在，所以 <code>ViewModel</code> 内部的 <code>LiveData</code> 也一样。这确保 <code>LiveData</code> 发射值按照下图控制。</p>
+<p><img src="https://img.hi-dhl.com/202211131955517.jpeg" alt=""></p>
+<p>然而 <code>LiveData</code> 本身不能在进程销毁中存活，当内存不足时，Activity 被系统杀死，<code>ViewModel</code> 本身也会被销毁。</p>
+<p>为了解决这个问题，Google 在 <code>ViewModel</code> 中提供了一个名为 <code>savedStateHandle</code> 参数，该参数用于保存和恢复数据，以便数据在进程销毁后继续存在。</p>
+<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="meta">@HiltViewModel</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyViewModel</span> <span class="meta">@Inject</span> <span class="keyword">constructor</span></span>(</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> repository: Repository,</span><br><span class="line">    savedStateHandle: SavedStateHandle</span><br><span class="line">) : ViewModel &#123;</span><br><span class="line">    <span class="comment">// Some other ViewModel Code</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>它是一种增强的机制，可以处理 <code>Intent</code> 和 <code>SavedInstanceState</code>，在以前的时候，这些都是由 <code>Activity</code> 单独处理的。</p>
+<p><img src="https://img.hi-dhl.com/202211131955518.jpeg" alt=""></p>
+<p>为了确保 <code>Livedata</code> 保存下来，我们可以在 <code>SavedStateHandle</code> 中检查 <code>Livedata</code> 是否已经创建。</p>
+<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="keyword">val</span> liveData = savedStateHandle.getLiveData&lt;String&gt;(KEY)</span><br></pre></td></tr></table></figure>
+
+<p>类似地，这也适用于 <code>stateFlow</code>，它可以在进程销毁中存活下来。</p>
+<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="keyword">val</span> stateFlow = savedStateHandle.getStateFlow&lt;String&gt;(KEY, <span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+<p>因此 <code>LiveData</code> 本身并不是用来恢复数据的。</p>
+<h3 id="面试题六：When-is-The-View-Destroyed-But-Not-the-Instance"><a href="#面试题六：When-is-The-View-Destroyed-But-Not-the-Instance" class="headerlink" title="面试题六：When is The View Destroyed But Not the Instance"></a>面试题六：When is The View Destroyed But Not the Instance</h3><p><strong>问题：</strong></p>
+<p>在 Activity 或 Fragment 通常会有一个视图。你能给我提供一个场景，实例的视图被破坏了，但实例（例如 Activity 或 Fragment）还存在。</p>
+<p><strong>错误回答</strong></p>
+<ol>
+<li>当配置发生变化时（例如设备旋转）</li>
+<li>当内存不足时，App 在后台运行，进程会杀死 App</li>
+</ol>
+<p><strong>正确回答</strong></p>
+<p>实际上 <code>Activity</code> 总是与其视图一起被销毁。因此，在 Activity 中没有 <code>onDestroyView ()</code> 生命周期方法。</p>
+<p>只有在 <code>Fragment</code> 中有 <code>onDestroyView ()</code> 生命周期方法。在大多数情况下 <code>Fragment</code> 和它的视图一起被销毁。</p>
+<p>但是通过 <code>Fragment transaction</code> 用一个 <code>Fragment</code> 替换另一个 <code>Fragment</code> 时，栈下面的 <code>Fragment</code> 仍然存在，但是它的视图被破坏了。</p>
+<p><img src="https://img.hi-dhl.com/202211131955519.jpeg" alt=""></p>
+<p>当一个 <code>Fragment</code> 被另一个 <code>Fragment</code> 替换时，会调用 <strong>onDestroyView ()</strong> 方法，但不会调用 <strong>onDestroy ()</strong> 或 <strong>onDetect ()</strong> 方法。</p>
+<p>正因为这种复杂性，在使用 <code>Fragment</code> 时，会遇到许多奇怪的问题。和 <code>Fragment</code> 相关的问题，将会在后面的文章中分享。</p>
+<h3 id="问题七：Lifecycle-Aware-Coroutine"><a href="#问题七：Lifecycle-Aware-Coroutine" class="headerlink" title="问题七：Lifecycle Aware Coroutine"></a>问题七：Lifecycle Aware Coroutine</h3><p>在 App 中使用协程，如何确保它们的生命周期可感知。</p>
+<p><strong>错误回答</strong></p>
+<ol>
+<li>对于普通视图，只需在 <code>Activity</code> 或 <code>Fragment</code> 中使用 <code>lifecycleScope</code>，在 <code>ViewModel</code> 中使用 <code>viewModelScope</code></li>
+<li>对于组合视图，需要使用 <code>stateFlow</code> 中的 <code>collectAsState()</code> 方法，因为当可组合函数不活动时，它不会收集</li>
+</ol>
+<p><strong>正确回答</strong></p>
+<p>对于普通视图，即使 <code>lifecycleScope</code> 是可用的，它在 <code>Activity</code> 或 <code>Fragment</code> 的整个生命周期中都处于活动状态。因为有时我们希望某些场景只在 <code>onStart()</code> 或 <code>onResume()</code> 之后处于活动状态。</p>
+<p>为此，我们需要在 <code>lifecycleScope</code> 中使用像 <code>repeatOnLifecycle</code> 这样的 API 提供额外的作用域。</p>
+<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line">lifecycleScope.launch &#123;</span><br><span class="line">    repeatOnLifecycle(Lifecycle.State.STARTED) &#123;</span><br><span class="line">        viewModel.stateFlowValue.collect &#123;</span><br><span class="line">            <span class="comment">// Do something</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>它们的变体如下图所示。</p>
+<p><img src="https://img.hi-dhl.com/202211131955520.jpeg" alt=""></p>
+<p>对于组合视图 <code>collectAsState()</code> 不会确保在组合函数处于活动状态时安全使用数据，它也不会停止继续发送 <code>StateFlow</code>，这会导致资源浪费。</p>
+<p>为了确保只在 <code>Activity</code> 或 <code>Fragment</code> 处于正确的生命周期时，例如在 <code>onStart ()</code> 之后发出，我们需要使用 <code>collectAsStateWithLifecycle ()</code> 和 <code>stateFlow</code> 中的 <code>WhileSubscribed (...)</code>。</p>
+<p>当我们在研究 <code>collectAsStateWithLifecycle()</code> 源码时，发现它也在使用  <code>repeatOnLifecycle(…)</code>。</p>
+<p><img src="https://img.hi-dhl.com/202211131955521.jpeg" alt=""></p>
+<br/>
+
+<p><strong>全文到这里就结束了，感谢你的阅读，坚持原创不易，欢迎在看、点赞、分享给身边的小伙伴，我会持续分享原创干货！！！</strong></p>
+<hr>
+<p>我开了一个云同步编译工具（SyncKit），主要用于本地写代码，同步到远程设备，在远程设备上进行编译，最后将编译的结果同步到本地，代码已经上传到 Github，欢迎前往仓库 <a href="https://github.com/hi-dhl/SyncKit">hi-dhl/SyncKit</a>  查看。</p>
+<ul>
+<li><a href="https://github.com/hi-dhl/SyncKit">仓库 SyncKit：https://github.com/hi-dhl/SyncKit</a></li>
+<li><a href="https://github.com/hi-dhl/SyncKit/releases">下载地址：https://github.com/hi-dhl/SyncKit/releases</a></li>
+</ul>
+<hr>
+<p><strong>真诚推荐你关注我，公众号：ByteCode ，持续分享硬核原创内容，Kotlin、Jetpack、性能优化、系统源码、算法及数据结构、动画、大厂面经。</strong></p>
+<div align="center">
+<table>
+<tr>
+<td><a href=" https://mp.weixin.qq.com/mp/homepage?__biz=MzAwNDgwMzU4Mw==&hid=9&sn=e90937096f96a747c08e27ab7a79545c&scene=1&devicetype=android-30&version=28001c57&lang=zh_CN&nettype=WIFI&ascene=7&session_us=gh_d4a2dd00574d&wx_header=3">公众号 ：ByteCode</a></td>
+ <td><a href=" https://space.bilibili.com/498153238">哔哩哔哩</a></td>
+ <td><a href=" https://juejin.im/user/2594503168898744">掘金</a></td>
+ <td><a href=" https://hi-dhl.com">博客</td>
+ <td><a href=" https://github.com/hi-dhl">Github</a></td>
+
+ </tr>
+ </table>
+</div>
+
+<hr>
+<p><strong>最新文章</strong></p>
+<ul>
+<li><a href="https://mp.weixin.qq.com/s/t_E6kOU2jTJ82pcJ7ZkdMA">Android 13这些权限废弃，你的应用受影响了吗？</a></li>
+<li><a href="https://mp.weixin.qq.com/s/NuqAYoUq_0OorM1rVHUEHA">Android 12 已来，你的 App 崩溃了吗？</a></li>
+<li><a href="https://mp.weixin.qq.com/s/jRlrtnOg6Ww-C_Xb6719EA">Android 利器，我开发了云同步编译工具</a></li>
+<li><a href="https://mp.weixin.qq.com/s/ExxJMyYZP3sd9pnvdiEFAg">Twitter 上有趣的代码</a></li>
+<li><a href="https://mp.weixin.qq.com/s/QZ6zZ6GoNpB5MWGi31k-UA">谁动了我的内存，揭秘 OOM 崩溃下降 90% 的秘密</a></li>
+<li><a href="https://mp.weixin.qq.com/s/AgEr6GhylkUfG_zWE5LTOw">反射技巧让你的性能提升 N 倍</a></li>
+<li><a href="https://mp.weixin.qq.com/s/brNq5OxitQ7WhPbA9y5lrA">90%人不懂的泛型局限性，泛型擦除，星投影</a></li>
+<li><a href="https://mp.weixin.qq.com/s/Ah8Yau_UW07s6LnGjrG4hA">揭秘反射真的很耗时吗，射 10 万次耗时多久</a></li>
+<li><a href="https://mp.weixin.qq.com/s/fp1ZOmqAcEBv2f7ec1r-zw">Google 宣布废弃 LiveData.observe 方法</a></li>
+<li><a href="https://mp.weixin.qq.com/s/8dAbt1-mcCVLWLXKC-1_xw">影响性能的 Kotlin 代码（一）</a></li>
+<li><a href="https://mp.weixin.qq.com/s/sYj_-wqENr9Jaw1p8iP4Jg">揭秘 Kotlin 中的 == 和 ===</a></li>
+</ul>
+<p><strong>开源新项目</strong></p>
+<ul>
+<li><p>云同步编译工具（SyncKit），本地写代码，远程编译，欢迎前去查看 <a href="https://github.com/hi-dhl/SyncKit">SyncKit</a></p>
+</li>
+<li><p>KtKit 小巧而实用，用 Kotlin 语言编写的工具库，欢迎前去查看 <a href="https://github.com/hi-dhl/KtKit">KtKit</a></p>
+</li>
+<li><p>最全、最新的 AndroidX Jetpack 相关组件的实战项目以及相关组件原理分析文章，正在逐渐增加 Jetpack 新成员，仓库持续更新，欢迎前去查看 <a href="https://github.com/hi-dhl/AndroidX-Jetpack-Practice">AndroidX-Jetpack-Practice</a></p>
+</li>
+<li><p>LeetCode / 剑指 offer，包含多种解题思路、时间复杂度、空间复杂度分析，<a href="https://leetcode.hi-dhl.com">在线阅读</a></p>
+</li>
+</ul>
+</div><div><p style="height:15px"></p><ul class="page-copyright"><li><strong>本文作者：</strong>hi-dhl</li><li><strong>本文标题：</strong>国外大厂面试题， 7 个 Android Lifecycle 重要的知识点</li><li><strong>本文链接：</strong><a href="" title="{page.title}">https://hi-dhl.com/2022/11/15/jetpack/lifecycle/</a></li><li><strong>版权声明：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://hi-dhl.com" title="{page.title}">hi-dhl</a></li></ul><p style="height:15px"></p></div><!--!--><h1 class="title is-4 is-size-4-mobile"></h1></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2022/11/02/android/android13/"><span class="level-item">Android 13 权限更新, 你的应用受影响了吗？</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content template"><p align="center"><img src="http://cdn.51git.cn/2020-10-07-bytecode.png"></p><p>致力于分享一系列 Android 系统源码、逆向分析、算法、翻译、Jetpack 源码相关的文章，在技术的道路上一起前进</p><h3 class="title is-4">Android10 源码分析</h3><p>正在写一系列的 Android 10 源码分析的文章，了解系统源码，不仅有助于分析问题，在面试过程中，对我们也是非常有帮助的，如果你同我一样喜欢研究 Android 源码，可以关注我 GitHub 上的 <a href="https://github.com/hi-dhl/Android10-Source-Analysis">Android10-Source-Analysis</a>。</p><h3 class="title is-4">算法题库的归纳和总结</h3><p>由于 LeetCode 的题库庞大，每个分类都能筛选出数百道题，由于每个人的精力有限，不可能刷完所有题目，因此我按照经典类型题目去分类、和题目的难易程度去排序。</p><ul><li>数据结构： 数组、栈、队列、字符串、链表、树……</li><li>算法： 查找算法、搜索算法、位运算、排序、数学、……</li></ul><p>每道题目都会用 Java 和 kotlin 去实现，并且每道题目都有解题思路，如果你同我一样喜欢算法、LeetCode，可以关注我 GitHub 上的 LeetCode 题解：<a href="https://github.com/hi-dhl/Leetcode-Solutions-with-Java-And-Kotlin">Leetcode-Solutions-with-Java-And-Kotlin</a>。</p><h3 class="title is-4">精选国外的技术文章</h3><p>目前正在整理和翻译一系列精选国外的技术文章，不仅仅是翻译，很多优秀的英文技术文章提供了很好思路和方法，每篇文章都会有<strong>译者思考</strong>部分，对原文的更加深入的解读，可以关注我 GitHub 上的 <a href="https://github.com/hi-dhl/Technical-Article-Translation">Technical-Article-Translation</a>。</p><p></p></div></div><div class="card"><div class="card-content"><h3 class="title is-5">评论</h3><div class="content" id="valine-thread"></div><script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script><script src="https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js"></script><script>new Valine({
+            el: '#valine-thread' ,
+            notify: false,
+            verify: undefined,
+            appId: 'zfvr24HFhzQ5vtHkr4NQ1fmW-gzGzoHsz',
+            appKey: 'RChgr9mR005hgu4yiQ4WQU3O',
+            placeholder: '说点什么',
+            avatar: 'mm',
+            avatarForce: false,
+            meta: ["nick","mail","link"],
+            pageSize: 10,
+            visitor: false,
+            highlight: true,
+            recordIP: false
+        });</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1 is-sticky"><div class="card widget" id="toc" style="max-height: 500px;overflow: auto;"><div class="card-content"><div class="menu"><h3 class="menu-label">目录</h3><ul class="menu-list"><li><a class="is-flex" href="#面试题一：Launch-Fragment-by-Default"><span>面试题一：Launch Fragment by Default</span></a></li><li><a class="is-flex" href="#面试题二：Create-Fragment-with-Constructor"><span>面试题二：Create Fragment with Constructor</span></a></li><li><a class="is-flex" href="#面试题三：Instantiate-ViewModel-Directly"><span>面试题三：Instantiate ViewModel Directly</span></a></li><li><a class="is-flex" href="#面试题四：ViewModel-as-StateRestoration-Solution"><span>面试题四：ViewModel as StateRestoration Solution</span></a></li><li><a class="is-flex" href="#面试题五：LiveData-as-State-Restoration-Solution"><span>面试题五：LiveData as State Restoration Solution</span></a></li><li><a class="is-flex" href="#面试题六：When-is-The-View-Destroyed-But-Not-the-Instance"><span>面试题六：When is The View Destroyed But Not the Instance</span></a></li><li><a class="is-flex" href="#问题七：Lifecycle-Aware-Coroutine"><span>问题七：Lifecycle Aware Coroutine</span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content size-small"><p><time dateTime="2022-11-15T01:49:12.402Z">2022-11-15</time></p><p class="title is-6"><a class="link-muted" href="/2022/11/15/jetpack/lifecycle/">国外大厂面试题， 7 个 Android Lifecycle 重要的知识点</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2022-11-02T01:49:41.895Z">2022-11-02</time></p><p class="title is-6"><a class="link-muted" href="/2022/11/02/android/android13/">Android 13 权限更新, 你的应用受影响了吗？</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2022-10-11T11:23:57.969Z">2022-10-11</time></p><p class="title is-6"><a class="link-muted" href="/2022/10/11/AndroidStudio/sync/">Android 利器，我开发了云同步编译工具</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2022-09-20T01:03:36.410Z">2022-09-20</time></p><p class="title is-6"><a class="link-muted" href="/2022/09/20/kotlin/27-kotlin-twitter/">Twitter 上有趣的代码</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2022-07-28T01:37:04.044Z">2022-07-28</time></p><p class="title is-6"><a class="link-muted" href="/2022/07/28/performance/01-reflect/">谁动了我的内存，揭秘 OOM 崩溃下降 90% 的秘密</a></p><p class="is-uppercase"></p></div></article></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile is-marginless" href="/categories/Android/"><span class="level-start"><span class="level-item">Android</span></span><span class="level-end"><span class="level-item tag">9</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Android-12/"><span class="level-start"><span class="level-item">Android 12</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Android-AndroidStudio/"><span class="level-start"><span class="level-item">Android,AndroidStudio</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Android10/"><span class="level-start"><span class="level-item">Android10</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/AndroidStudio/"><span class="level-start"><span class="level-item">AndroidStudio</span></span><span class="level-end"><span class="level-item tag">6</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Jetpack/"><span class="level-start"><span class="level-item">Jetpack</span></span><span class="level-end"><span class="level-item tag">16</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Kotlin/"><span class="level-start"><span class="level-item">Kotlin</span></span><span class="level-end"><span class="level-item tag">27</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Linux/"><span class="level-start"><span class="level-item">Linux</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E5%B7%A5%E5%85%B7/"><span class="level-start"><span class="level-item">工具</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><span class="level-start"><span class="level-item">数据结构</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E6%9D%82%E8%B0%88/"><span class="level-start"><span class="level-item">杂谈</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E7%AE%97%E6%B3%95%E5%8A%A8%E7%94%BB/"><span class="level-start"><span class="level-item">算法动画</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E7%B3%BB%E7%BB%9F/"><span class="level-start"><span class="level-item">系统</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/translated/"><span class="level-start"><span class="level-item">译文</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E8%AF%91%E6%96%87-AndroidStudio/"><span class="level-start"><span class="level-item">译文,AndroidStudio</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E8%AF%91%E6%96%87-Kotlin/"><span class="level-start"><span class="level-item">译文,Kotlin</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/Android/"><span class="tag">Android</span><span class="tag is-grey-lightest">11</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android-12/"><span class="tag">Android 12</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E5%8C%85%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-包管理系统</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-窗口管理系统</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-资源管理系统</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/AndroidStudio/"><span class="tag">AndroidStudio</span><span class="tag is-grey-lightest">8</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android%E6%BA%90%E7%A0%81/"><span class="tag">Android源码</span><span class="tag is-grey-lightest">7</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Compose/"><span class="tag">Compose</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Fragment/"><span class="tag">Fragment</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Java/"><span class="tag">Java</span><span class="tag is-grey-lightest">6</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Jetpack/"><span class="tag">Jetpack</span><span class="tag is-grey-lightest">21</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Koin/"><span class="tag">Koin</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Kotlin/"><span class="tag">Kotlin</span><span class="tag is-grey-lightest">32</span></a></div><div class="control"><a class="tags has-addons" href="/tags/LeetCode/"><span class="tag">LeetCode</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Linux/"><span class="tag">Linux</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/OOM/"><span class="tag">OOM</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Protobuf/"><span class="tag">Protobuf</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/RxJava/"><span class="tag">RxJava</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Shell/"><span class="tag">Shell</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/kotlin/"><span class="tag">kotlin</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%8A%A8%E7%94%BB/"><span class="tag">动画</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/"><span class="tag">多线程</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%B7%A5%E5%85%B7/"><span class="tag">工具</span><span class="tag is-grey-lightest">6</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/"><span class="tag">性能优化</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><span class="tag">数据结构</span><span class="tag is-grey-lightest">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%9D%82%E8%B0%88/"><span class="tag">杂谈</span><span class="tag is-grey-lightest">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%AE%97%E6%B3%95/"><span class="tag">算法</span><span class="tag is-grey-lightest">5</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%B3%BB%E7%BB%9F/"><span class="tag">系统</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%AF%91%E6%96%87/"><span class="tag">译文</span><span class="tag is-grey-lightest">11</span></a></div></div></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level-item"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img class="logo-img" src="/img/logo.png" alt="程序员DHL" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="程序员DHL" height="28"></a><p class="size-small"><span>&copy; 2022 程序员DHL</span>  <a href="http://beian.miit.gov.cn/" target="_blank">京ICP备18050211号-2</a>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p><p></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            site: {
+                url: 'https://www.hi-dhl.com',
+                external_link: {"enable":true,"exclude":[]}
+            },
+            article: {
+                highlight: {
+                    clipboard: false,
+                    fold: ''
+                }
+            }
+        };</script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><script src="https://s9.cnzz.com/z_stat.php?id=1278919895&amp;web_id=1278919895" async></script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><script src="/js/imaegoo/universe.js"></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>
