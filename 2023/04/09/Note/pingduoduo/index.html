@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="generator" content="Hexo 4.2.1"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>某大厂如何利用系统漏洞，控制用户整个手机系统 - 程序员DHL</title><meta description="Google 和俄罗斯知名的反病毒软件卡巴斯基石锤了，它利用系统的漏洞进行提权，肆意的操作用户的手机"><meta property="og:type" content="blog"><meta property="og:title" content="某大厂如何利用系统漏洞，控制用户整个手机系统"><meta property="og:url" content="https://www.hi-dhl.com/2023/04/09/Note/pingduoduo/"><meta property="og:site_name" content="程序员DHL"><meta property="og:description" content="Google 和俄罗斯知名的反病毒软件卡巴斯基石锤了，它利用系统的漏洞进行提权，肆意的操作用户的手机"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://img.hi-dhl.com/bug_qr.png"><meta property="article:published_time" content="2023-04-08T16:29:45.649Z"><meta property="article:modified_time" content="2023-04-08T16:34:32.226Z"><meta property="article:author" content="程序员DHL"><meta property="article:tag" content="源码"><meta property="article:tag" content="Android10"><meta property="article:tag" content="APK生成"><meta property="article:tag" content="APK打包"><meta property="article:tag" content="V1Signature"><meta property="article:tag" content="V2Signature"><meta property="article:tag" content="包管理系统"><meta property="article:tag" content="LeetCode"><meta property="article:tag" content="算法"><meta property="article:tag" content="剑指Offer"><meta property="article:tag" content="Jetpack DataStore"><meta property="article:tag" content="Proto DataStore"><meta property="article:tag" content="Protobuf"><meta property="article:tag" content="DataBinding"><meta property="article:tag" content="ViewBinding"><meta property="article:tag" content="写作"><meta property="article:tag" content="工具"><meta property="article:tag" content="导航"><meta property="article:tag" content="设计"><meta property="article:tag" content="开发"><meta property="article:tag" content="收藏夹"><meta property="article:tag" content="typora"><meta property="article:tag" content="疫情"><meta property="article:tag" content="阳了"><meta property="article:tag" content="小米"><meta property="article:tag" content="感染"><meta property="article:tag" content="裁员"><meta property="article:tag" content="漏洞"><meta property="article:tag" content="拼多多"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="https://img.hi-dhl.com/bug_qr.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.hi-dhl.com/2023/04/09/Note/pingduoduo/"},"headline":"程序员DHL","image":["https://img.hi-dhl.com/bug_qr.png"],"datePublished":"2023-04-08T16:29:45.649Z","dateModified":"2023-04-08T16:34:32.226Z","author":{"@type":"Person","name":"程序员DHL"},"description":"Google 和俄罗斯知名的反病毒软件卡巴斯基石锤了，它利用系统的漏洞进行提权，肆意的操作用户的手机"}</script><link rel="canonical" href="https://www.hi-dhl.com/2023/04/09/Note/pingduoduo/"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" defer></script><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script></head><body class="is-2-column"><script type="text/javascript" src="/js/imaegoo/night.js"></script><canvas id="universe"></canvas><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img class="logo-img" src="/img/logo.png" alt="程序员DHL" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="程序员DHL" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">首页</a><a class="navbar-item" href="/categories">分类</a><a class="navbar-item" href="/categories/Jetpack">Jetpack</a><a class="navbar-item" href="/categories/Kotlin/">Kotlin</a><a class="navbar-item" href="/categories/Android10/">系统源码</a><a class="navbar-item" href="/categories/translated/">译文</a><a class="navbar-item" href="https://offer.hi-dhl.com">算法</a></div><div class="navbar-end"><a class="navbar-item night" id="night-nav" title="Night Mode" href="javascript:;"><i class="fas fa-moon" id="night-icon"></i></a><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/hi-dhl"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><div class="card-image"><span class="image is-7by3"><img class="thumbnail" src="https://img.hi-dhl.com/bug_qr.png" alt="某大厂如何利用系统漏洞，控制用户整个手机系统"></span></div><article class="card-content article" role="article"><h1 class="title is-3 is-size-4-mobile"></h1><h1 class="title is-3 is-size-4-mobile">某大厂如何利用系统漏洞，控制用户整个手机系统</h1><div class="article-meta size-small level is-mobile"><div class="level-left"><span class="mr-2"><i class="fa fa-calendar"></i></span><time class="level-item" dateTime="2023-04-08T16:29:45.649Z" title="2023-04-08T16:29:45.649Z">2023-04-09</time><span class="mr-2"> <i class="fa fa-folder"></i></span><span class="level-item"><a class="link-muted" href="/categories/%E6%9D%82%E8%B0%88/">杂谈</a></span><span class="mr-2"> <i class="fa fa-tag"></i></span><span class="level-item"><a class="link-muted" href="/tags/%E6%9D%82%E8%B0%88/">杂谈</a></span></div></div><div class="level-left article-meta size-small is-mobile"></div><div><p style="height:15px"></p><ul class="page-blockquote"><li>如果评论区没有及时回复，欢迎来公众号：ByteCode 咨询</li><li>公众号：ByteCode。致力于分享最新技术原创文章，涉及 Kotlin、Jetpack、算法、译文、系统源码相关的文章</li><li></li></ul><p style="height:15px"></p></div><div class="content"><blockquote>
+<p>hi 大家好，我是 DHL。公众号：ByteCode ，专注有用、有趣的硬核原创内容，Kotlin、Jetpack、性能优化、系统源码、算法及数据结构、大厂面经。</p>
+</blockquote>
+<p>近期研究机构在 <a href="https://mp.weixin.qq.com/s/P_EYQxOEupqdU0BJMRqWsw">「DarkNavy」</a> 发文披露某国产 APP 利用系统漏洞提权，控制用户整个手机系统，达到了以下违规目的：</p>
+<ul>
+<li>攻击竞争对手 App</li>
+<li>窃取用户隐私数据</li>
+<li>逃避隐私合规监管</li>
+<li>用户无法卸载</li>
+<li>改写系统配置文件为自身保活</li>
+<li>隐蔽安装，提升装机量</li>
+<li>伪造提升 DAU/MAU</li>
+<li>通过远端“云控开关”控制非法行为的启动与暂停</li>
+<li>……</li>
+</ul>
+<blockquote>
+<p>PS：我已经将相关违规的 dex 转成了 Java 文件放到文末了，有兴趣的同学可以前往下载</p>
+</blockquote>
+<p>在国外该 APP 已经被 GooglePlay 下架。谷歌公司发言人埃德·费尔南德斯在一份声明中表示：“将拼多多 APP 下架是一种安全预防措施，谷歌的软件防护服务  <strong>Google Play Protect</strong>  将会阻止用户从谷歌商店中下载拼多多的 APP，并且已经下载了该 APP 的用户也会收到警告，提示他们进行卸载”。<br><a href="https://techcrunch.com/2023/03/20/google-flags-apps-made-by-popular-chinese-e-commerce-giant-as-malware/">https://techcrunch.com/2023/03/20/google-flags-apps-made-by-popular-chinese-e-commerce-giant-as-malware/</a></p>
+<p><img src="https://img.hi-dhl.com/202303251818608.jpg" alt="img"></p>
+<p>俄罗斯知名的反病毒软件卡巴斯基也石锤它，该实验室的研究人员证实该 App 安装恶意代码，操控用户的手机系统。</p>
+<p>该 APP 利用了 Android Parcel 序列化和反序列化不匹配系列漏洞，绕过系统校验，进行提权，获取系统级 StartAnyWhere 能力。这个漏洞最早是由 @BednarTildeOne 在 2014 年提交的 ParceledListSlice 漏洞。</p>
+<p><strong>什么是序列化和反序列化不匹配?</strong></p>
+<p>在 Android 中通过 Parcelable 序列化对象，而实现 Parcelable 接口，需要实现 <code>readFromParcel</code> 和 <code>writeToParcel</code> 函数。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">writeToParcel</span><span class="params">(Parcel dest, <span class="keyword">int</span> flags)</span> </span>&#123;</span><br><span class="line">    dest.writeLong(txPower);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">readFromParcel</span><span class="params">(Parcel in)</span> </span>&#123;</span><br><span class="line">    txPower = in.readInt();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对变量  <code>txPower</code>  在写入的时候通过  <code>writeLong</code>  方法写入，但是在读取的时候通过  <code>readInt</code>  方法读取。这就是序列化和反序列化不匹配。</p>
+<p>由于 Android 系统在大量的使用 IPC 都会进行序列化和反序列化，许多操作都会在  system_server  、Settings 应用、普通应用中来回传递。所以这个问题是非常常见的，这类问题对于普通人来说一般不会引起注意，但是 hacker 却可以利用它做出很多高危的事情，比如利用 Settings 和 system_server 进程的权限进行提权，发送任意 Intent，启动任意 Activity。</p>
+<p>我们用 CVE-2017-13288 漏洞来举个例子：</p>
+<ul>
+<li>普通 AppB 传递一个 Bundle 对象到  <code>system_server</code> 进程，这个 Bundle 对象中包含的一个恶意键值对 <code>{KEY_INTENT:intent}</code></li>
+<li>在  <code>system_server</code>  进程中进行反序列化，将恶意  <code>KEY_INTENT</code>  的内容读入到  <code>mData</code>  中，此时，恶意 <code>KEY_INTENT</code> 不是一个单独的键值对，因此可以逃避系统的  <code>checkIntent</code> 检查</li>
+<li>在  <code>system_server</code>  进程中再次将这个 Bundle 序列化，此时通过  <code>writeLong</code>  方法写入到 Bundle 中，因此为占据 8 个字节</li>
+<li>最终会传递到 Settings 系统应用（高权限 system 用户），在反序列化过程中，通过 <code>readInt</code>  方法进行读取，发生了 4 个字节的错位，因此把后面恶意  <code>KEY_INTENT</code>  的 4 字节 length （ByteArray 4 字节对齐）当做  <code>mData</code></li>
+</ul>
+<p>至此，键值对反序列化完成，恶意  <code>KEY_INTENT</code>  作为一个新的键值对就堂而皇之的出现了，最终的结果是取得 Settings 应用的权限（高权限 system 用户）发送任意 Intent，启动任意 Activity 的能力。例如，在  intent  中指定  Settings  中的   <code>com.android.settings.password.ChooseLockPassword</code>   为目标 Activity, 则可以在不需要原锁屏密码的情况下重设锁屏密码。</p>
+<p>在整个过程中，最重要的就是如何绕过系统的  <code>checkIntent</code> 检查，需要在 Bundle 中精确布置数据，详细的可以参考 <a href="https://xz.aliyun.com/t/2364#toc-2">Bundle风水——Android序列化与反序列化不匹配漏洞详解</a> 文章中的案例。<br/></p>
+<p><a href="https://xz">https://xz</a>. aliyun. com/t/2364 #toc -2</p>
+<p>这类漏洞并不是个例，历史上由于代码编写人员的粗心大意，曾经出现过许多因为「序列化与反序列化不匹配系列漏洞」 导致的提权漏洞，如下所示:</p>
+<ul>
+<li>CVE-2017-0806 GateKeeperResponse</li>
+<li>CVE-2017-0664 AccessibilityNodelnfo</li>
+<li>CVE-2017-13288 PeriodicAdvertisingReport</li>
+<li>CVE-2017-13289 ParcelableRttResults</li>
+<li>CVE-2017-13286 OutputConfiguration</li>
+<li>CVE-2017-13287 VerifyCredentialResponse</li>
+<li>CVE-2017-13310 ViewPager’s SavedState</li>
+<li>CVE-2017-13315 DcParamObject</li>
+<li>CVE-2017-13312 ParcelableCasData</li>
+<li>CVE-2017-13311 ProcessStats</li>
+<li>CVE-2018-9431 OSUInfo</li>
+<li>CVE-2018-9471 NanoAppFilter</li>
+<li>CVE-2018-9474 MediaPlayerTrackInfo</li>
+<li>CVE-2018-9522 StatsLogEventWrapper</li>
+<li>CVE-2018-9523 Parcel. wnteMapInternal0</li>
+<li>CVE-2021-0748 ParsingPackagelmpl</li>
+<li>CVE-2021-0928 OutputConfiguration</li>
+<li>CVE-2021-0685 ParsedIntentInfol</li>
+<li>CVE-2021-0921 ParsingPackagelmpl</li>
+<li>CVE-2021-0970 GpsNavigationMessage</li>
+<li>CVE-2021-39676 AndroidFuture</li>
+<li>CVE-2022-20135 GateKeeperResponse</li>
+<li>更多……</li>
+</ul>
+<p>在 2021 年的时候，AOSP 中针对 Bundle 提交了一个称为 <a href="https://cs.android.com/android/_/android/platform/frameworks/base/+/9ca6a5e21a1987fd3800a899c1384b22d23b6dee">LazyBundle(9ca6a5)</a> 的的修复，主要修复思想，在序列化时的时候，将对应数据的大小添加到头部，然后在反序列化的时候，通过检查头部去选择性跳过，在实际用到这些值的时候再去对特定数据进行反序列化。</p>
+<p>根据 「 深蓝洞察 」的报道，该 APP 第一步利用了多个安卓手机厂商 OEM 代码中的反序列化漏洞，进行提权，当提权成功之后，通过 App 控制了用户的整个手机系统，绕过隐私合规监管，大肆收集用户的隐私信息（包括社交媒体账户资料、位置信息、Wi-Fi 信息、基站信息甚至路由器信息等）。</p>
+<p>另外还利用手机厂商 OEM 代码中导出的 <code>root-path FileContentProvider</code>，进行 <code>System App</code> 和敏感系统应用文件读写。进而突破沙箱机制、绕开权限系统改写系统关键配置文件为自身保活，修改用户桌面 (Launcher) 配置隐藏自身或欺骗用户实现防卸载。</p>
+<p>不仅如此，它还进一步通过覆盖动态代码文件的方式劫持其他应用注入后门执行代码，进行更加隐蔽的长期驻留。甚至还实现了和间谍软件一样的遥控机制，通过远端“云控开关”控制非法行为的启动与暂停，来躲避检测。已有大量终端用户投诉反馈：该 App 存在莫名安装、泄漏隐私、无法卸载等问题。</p>
+<p>我将相关违规的 dex 转成了 Java 文件，并放到了 Android 项目中，方便有兴趣的同学查看，但是这个不方便公开，有兴趣的小伙伴，可以在后台留言，回复：pdd。</p>
+<p><img src="https://img.hi-dhl.com/202303091848268.png" alt="image-20230309184816642"></p>
+<p>原始的 dex 文件。<br/><br>地址： <a href="https://github.com/davinci1010/pinduoduo_backdoor">https://github.com/davinci1010/pinduoduo_backdoor</a></p>
+<p>漏洞详细的分析报告。<br/><br>地址： <a href="https://github.com/davincifans101/pinduoduo_backdoor_detailed_report">https://github.com/davincifans101/pinduoduo_backdoor_detailed_report</a></p>
+<p>拼多多 VMP 脱壳机。<br/><br>地址：<a href="https://github.com/davinci1012/pinduoduo_backdoor_unpacker">https://github.com/davinci1012/pinduoduo_backdoor_unpacker</a></p>
+<p>拼多多脱壳后的部分代码。<br/><br>地址：<a href="https://github.com/poorjobless/pinduoduo_backdoor_code">https://github.com/poorjobless/pinduoduo_backdoor_code</a></p>
+<p><strong>参考文章</strong></p>
+<ul>
+<li><a href="https://mp.weixin.qq.com/s/P_EYQxOEupqdU0BJMRqWsw">「 深蓝洞察 」2022 年度最“不可赦”漏洞</a></li>
+<li><a href="https://evilpan.com/2023/02/18/parcel-bugs/#aidl">Android 反序列化漏洞攻防史话</a></li>
+<li><a href="https://xz.aliyun.com/t/2364">Bundle风水——Android序列化与反序列化不匹配漏洞详解</a></li>
+</ul>
+<br/>
+
+<p><strong>全文到这里就结束了，感谢你的阅读，坚持原创不易，欢迎在看、点赞、分享给身边的小伙伴，我会持续分享原创干货！！！</strong></p>
+<p><strong>真诚推荐你关注我，公众号：ByteCode ，持续分享硬核原创内容，Kotlin、Jetpack、性能优化、系统源码、算法及数据结构、动画、大厂面经。</strong></p>
+<br/>
+
+<hr>
+<p>我开了一个云同步编译工具（SyncKit），主要用于本地写代码，然后同步到远程设备，在远程设备上进行编译，最将编译的结果同步到本地，代码已经上传到 Github，欢迎前往仓库 <a href="https://github.com/hi-dhl/SyncKit">hi-dhl/SyncKit</a>  查看。</p>
+<ul>
+<li><a href="https://github.com/hi-dhl/SyncKit">仓库 SyncKit：https://github.com/hi-dhl/SyncKit</a></li>
+<li><a href="https://github.com/hi-dhl/SyncKit/releases">下载地址：https://github.com/hi-dhl/SyncKit/releases</a></li>
+</ul>
+<hr>
+<div align="center">
+    <table>
+        <tr>
+             <td><a href=" https://space.bilibili.com/498153238">哔哩哔哩</a></td>
+             <td><a href=" https://juejin.im/user/2594503168898744">掘金</a></td>
+             <td><a href=" https://hi-dhl.com">博客</td>
+             <td><a href=" https://github.com/hi-dhl">Github</a></td>
+         </tr>
+     </table>
+</div>
+
+<p><strong>近期必读热门文章</strong></p>
+<ul>
+<li><a href="https://mp.weixin.qq.com/s/K5oGsnOm9p7fi0BdBc7ZHQ">广播 goAsync 源码分析，为什么 Google 大佬都在使用它</a></li>
+<li><a href="https://mp.weixin.qq.com/s/oN4CTWCnEWSc2yf2BG6dew">国外大厂面试题， 7 个 Android Lifecycle 重要的知识点</a></li>
+<li><a href="https://mp.weixin.qq.com/s/t_E6kOU2jTJ82pcJ7ZkdMA">Android 13这些权限废弃，你的应用受影响了吗？</a></li>
+<li><a href="https://mp.weixin.qq.com/s/jRlrtnOg6Ww-C_Xb6719EA">Android 利器，我开发了云同步编译工具</a></li>
+<li><a href="https://mp.weixin.qq.com/s/ExxJMyYZP3sd9pnvdiEFAg">Twitter 上有趣的代码</a></li>
+<li><a href="https://mp.weixin.qq.com/s/QZ6zZ6GoNpB5MWGi31k-UA">谁动了我的内存，揭秘 OOM 崩溃下降 90% 的秘密</a></li>
+<li><a href="https://mp.weixin.qq.com/s/AgEr6GhylkUfG_zWE5LTOw">反射技巧让你的性能提升 N 倍</a></li>
+<li><a href="https://mp.weixin.qq.com/s/brNq5OxitQ7WhPbA9y5lrA">90%人不懂的泛型局限性，泛型擦除，星投影</a></li>
+<li><a href="https://mp.weixin.qq.com/s/TqX2cLJFBe-NtxyGdGeYow">90%的人都不知道的知识点，Kotlin 和 Java 的协变和逆变</a></li>
+<li><a href="https://mp.weixin.qq.com/s/Ah8Yau_UW07s6LnGjrG4hA">揭秘反射真的很耗时吗，射 10 万次耗时多久</a></li>
+<li><a href="https://mp.weixin.qq.com/s/NuqAYoUq_0OorM1rVHUEHA">Android 12 已来，你的 App 崩溃了吗？</a></li>
+<li><a href="https://mp.weixin.qq.com/s/fp1ZOmqAcEBv2f7ec1r-zw">Google 宣布废弃 LiveData.observe 方法</a></li>
+<li><a href="https://mp.weixin.qq.com/s/8dAbt1-mcCVLWLXKC-1_xw">影响性能的 Kotlin 代码（一）</a></li>
+<li><a href="https://mp.weixin.qq.com/s/sYj_-wqENr9Jaw1p8iP4Jg">揭秘 Kotlin 中的 == 和 ===</a></li>
+</ul>
+<p><strong>开源新项目</strong></p>
+<ul>
+<li><p>云同步编译工具（SyncKit），本地写代码，远程编译，欢迎前去查看 <a href="https://github.com/hi-dhl/SyncKit">SyncKit</a></p>
+</li>
+<li><p>KtKit 小巧而实用，用 Kotlin 语言编写的工具库，欢迎前去查看 <a href="https://github.com/hi-dhl/KtKit">KtKit</a></p>
+</li>
+<li><p>最全、最新的 AndroidX Jetpack 相关组件的实战项目以及相关组件原理分析文章，正在逐渐增加 Jetpack 新成员，仓库持续更新，欢迎前去查看 <a href="https://github.com/hi-dhl/AndroidX-Jetpack-Practice">AndroidX-Jetpack-Practice</a></p>
+</li>
+<li><p>LeetCode / 剑指 offer，包含多种解题思路、时间复杂度、空间复杂度分析，<a href="https://leetcode.hi-dhl.com">在线阅读</a></p>
+</li>
+</ul>
+</div><div><p style="height:15px"></p><ul class="page-copyright"><li><strong>本文作者：</strong>hi-dhl</li><li><strong>本文标题：</strong>某大厂如何利用系统漏洞，控制用户整个手机系统</li><li><strong>本文链接：</strong><a href="" title="{page.title}">https://hi-dhl.com/2023/04/09/Note/pingduoduo/</a></li><li><strong>版权声明：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://hi-dhl.com" title="{page.title}">hi-dhl</a></li></ul><p style="height:15px"></p></div><!--!--><h1 class="title is-4 is-size-4-mobile"></h1></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2023/04/09/Note/pingduoduo2/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">拼多多：我们被解散了，因写了恶意代码，操控用户的手机</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2022/12/31/Note/layoff/"><span class="level-item">2022 裁员风，席卷全球</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content template"><p align="center"><img src="http://cdn.51git.cn/2020-10-07-bytecode.png"></p><p>致力于分享一系列 Android 系统源码、逆向分析、算法、翻译、Jetpack 源码相关的文章，在技术的道路上一起前进</p><h3 class="title is-4">Android10 源码分析</h3><p>正在写一系列的 Android 10 源码分析的文章，了解系统源码，不仅有助于分析问题，在面试过程中，对我们也是非常有帮助的，如果你同我一样喜欢研究 Android 源码，可以关注我 GitHub 上的 <a href="https://github.com/hi-dhl/Android10-Source-Analysis">Android10-Source-Analysis</a>。</p><h3 class="title is-4">算法题库的归纳和总结</h3><p>由于 LeetCode 的题库庞大，每个分类都能筛选出数百道题，由于每个人的精力有限，不可能刷完所有题目，因此我按照经典类型题目去分类、和题目的难易程度去排序。</p><ul><li>数据结构： 数组、栈、队列、字符串、链表、树……</li><li>算法： 查找算法、搜索算法、位运算、排序、数学、……</li></ul><p>每道题目都会用 Java 和 kotlin 去实现，并且每道题目都有解题思路，如果你同我一样喜欢算法、LeetCode，可以关注我 GitHub 上的 LeetCode 题解：<a href="https://github.com/hi-dhl/Leetcode-Solutions-with-Java-And-Kotlin">Leetcode-Solutions-with-Java-And-Kotlin</a>。</p><h3 class="title is-4">精选国外的技术文章</h3><p>目前正在整理和翻译一系列精选国外的技术文章，不仅仅是翻译，很多优秀的英文技术文章提供了很好思路和方法，每篇文章都会有<strong>译者思考</strong>部分，对原文的更加深入的解读，可以关注我 GitHub 上的 <a href="https://github.com/hi-dhl/Technical-Article-Translation">Technical-Article-Translation</a>。</p><p></p></div></div><div class="card"><div class="card-content"><h3 class="title is-5">评论</h3><div class="content" id="valine-thread"></div><script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script><script src="https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js"></script><script>new Valine({
+            el: '#valine-thread' ,
+            notify: false,
+            verify: undefined,
+            appId: 'zfvr24HFhzQ5vtHkr4NQ1fmW-gzGzoHsz',
+            appKey: 'RChgr9mR005hgu4yiQ4WQU3O',
+            placeholder: '说点什么',
+            avatar: 'mm',
+            avatarForce: false,
+            meta: ["nick","mail","link"],
+            pageSize: 10,
+            visitor: false,
+            highlight: true,
+            recordIP: false
+        });</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1 is-sticky"><!--!--><div class="card widget"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content size-small"><p><time dateTime="2023-04-08T16:34:35.654Z">2023-04-09</time></p><p class="title is-6"><a class="link-muted" href="/2023/04/09/Note/pingduoduo2/">拼多多：我们被解散了，因写了恶意代码，操控用户的手机</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2023-04-08T16:29:45.649Z">2023-04-09</time></p><p class="title is-6"><a class="link-muted" href="/2023/04/09/Note/pingduoduo/">某大厂如何利用系统漏洞，控制用户整个手机系统</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2022-12-31T08:02:06.669Z">2022-12-31</time></p><p class="title is-6"><a class="link-muted" href="/2022/12/31/Note/layoff/">2022 裁员风，席卷全球</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2022-12-31T07:48:30.355Z">2022-12-31</time></p><p class="title is-6"><a class="link-muted" href="/2022/12/31/Note/sun/">小米：阳了，被裁了</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2022-12-31T07:45:50.074Z">2022-12-31</time></p><p class="title is-6"><a class="link-muted" href="/2022/12/31/android10/goAsync/">广播 goAsync 源码分析，为什么 Google 大佬都在使用它</a></p><p class="is-uppercase"></p></div></article></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile is-marginless" href="/categories/Android/"><span class="level-start"><span class="level-item">Android</span></span><span class="level-end"><span class="level-item tag">9</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Android-12/"><span class="level-start"><span class="level-item">Android 12</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Android-AndroidStudio/"><span class="level-start"><span class="level-item">Android,AndroidStudio</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Android10/"><span class="level-start"><span class="level-item">Android10</span></span><span class="level-end"><span class="level-item tag">8</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/AndroidStudio/"><span class="level-start"><span class="level-item">AndroidStudio</span></span><span class="level-end"><span class="level-item tag">6</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Jetpack/"><span class="level-start"><span class="level-item">Jetpack</span></span><span class="level-end"><span class="level-item tag">16</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Kotlin/"><span class="level-start"><span class="level-item">Kotlin</span></span><span class="level-end"><span class="level-item tag">27</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Linux/"><span class="level-start"><span class="level-item">Linux</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E5%B7%A5%E5%85%B7/"><span class="level-start"><span class="level-item">工具</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><span class="level-start"><span class="level-item">数据结构</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E6%9D%82%E8%B0%88/"><span class="level-start"><span class="level-item">杂谈</span></span><span class="level-end"><span class="level-item tag">8</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E7%AE%97%E6%B3%95%E5%8A%A8%E7%94%BB/"><span class="level-start"><span class="level-item">算法动画</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E7%B3%BB%E7%BB%9F/"><span class="level-start"><span class="level-item">系统</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/translated/"><span class="level-start"><span class="level-item">译文</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E8%AF%91%E6%96%87-AndroidStudio/"><span class="level-start"><span class="level-item">译文,AndroidStudio</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E8%AF%91%E6%96%87-Kotlin/"><span class="level-start"><span class="level-item">译文,Kotlin</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/Android/"><span class="tag">Android</span><span class="tag is-grey-lightest">11</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android-12/"><span class="tag">Android 12</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E5%8C%85%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-包管理系统</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-窗口管理系统</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-资源管理系统</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/AndroidStudio/"><span class="tag">AndroidStudio</span><span class="tag is-grey-lightest">8</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android%E6%BA%90%E7%A0%81/"><span class="tag">Android源码</span><span class="tag is-grey-lightest">8</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Compose/"><span class="tag">Compose</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Fragment/"><span class="tag">Fragment</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Java/"><span class="tag">Java</span><span class="tag is-grey-lightest">6</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Jetpack/"><span class="tag">Jetpack</span><span class="tag is-grey-lightest">21</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Koin/"><span class="tag">Koin</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Kotlin/"><span class="tag">Kotlin</span><span class="tag is-grey-lightest">32</span></a></div><div class="control"><a class="tags has-addons" href="/tags/LeetCode/"><span class="tag">LeetCode</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Linux/"><span class="tag">Linux</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/OOM/"><span class="tag">OOM</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Protobuf/"><span class="tag">Protobuf</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/RxJava/"><span class="tag">RxJava</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Shell/"><span class="tag">Shell</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/kotlin/"><span class="tag">kotlin</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%8A%A8%E7%94%BB/"><span class="tag">动画</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/"><span class="tag">多线程</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%B7%A5%E5%85%B7/"><span class="tag">工具</span><span class="tag is-grey-lightest">6</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/"><span class="tag">性能优化</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><span class="tag">数据结构</span><span class="tag is-grey-lightest">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%9D%82%E8%B0%88/"><span class="tag">杂谈</span><span class="tag is-grey-lightest">8</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%AE%97%E6%B3%95/"><span class="tag">算法</span><span class="tag is-grey-lightest">5</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%B3%BB%E7%BB%9F/"><span class="tag">系统</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%AF%91%E6%96%87/"><span class="tag">译文</span><span class="tag is-grey-lightest">11</span></a></div></div></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level-item"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img class="logo-img" src="/img/logo.png" alt="程序员DHL" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="程序员DHL" height="28"></a><p class="size-small"><span>&copy; 2023 程序员DHL</span>  <a href="http://beian.miit.gov.cn/" target="_blank">京ICP备18050211号-2</a>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p><p></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            site: {
+                url: 'https://www.hi-dhl.com',
+                external_link: {"enable":true,"exclude":[]}
+            },
+            article: {
+                highlight: {
+                    clipboard: false,
+                    fold: ''
+                }
+            }
+        };</script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><script src="https://s9.cnzz.com/z_stat.php?id=1278919895&amp;web_id=1278919895" async></script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><script src="/js/imaegoo/universe.js"></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>
