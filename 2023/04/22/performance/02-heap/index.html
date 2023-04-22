@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="generator" content="Hexo 4.2.1"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>微信黑科技 - 程序员DHL</title><meta description="这篇文章主要分享微信如何利用黑科技，减少 512MB 内存，降低 OOM 和 Native Crash 提升用户体验"><meta property="og:type" content="blog"><meta property="og:title" content="微信黑科技"><meta property="og:url" content="https://www.hi-dhl.com/2023/04/22/performance/02-heap/"><meta property="og:site_name" content="程序员DHL"><meta property="og:description" content="这篇文章主要分享微信如何利用黑科技，减少 512MB 内存，降低 OOM 和 Native Crash 提升用户体验"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://img.hi-dhl.com/technology_qr.png"><meta property="article:published_time" content="2023-04-22T11:30:23.520Z"><meta property="article:modified_time" content="2023-04-22T11:31:49.154Z"><meta property="article:author" content="程序员DHL"><meta property="article:tag" content="Android10"><meta property="article:tag" content="AndroidStudio"><meta property="article:tag" content="buildSrc"><meta property="article:tag" content="kotlin"><meta property="article:tag" content="run"><meta property="article:tag" content="with"><meta property="article:tag" content="let"><meta property="article:tag" content="also"><meta property="article:tag" content="apply"><meta property="article:tag" content="Jetpack"><meta property="article:tag" content="App Startup"><meta property="article:tag" content="Paging3"><meta property="article:tag" content="Hilt"><meta property="article:tag" content="Dagger"><meta property="article:tag" content="Koin"><meta property="article:tag" content="Jetpack"><meta property="article:tag" content="MVVM"><meta property="article:tag" content="Repository"><meta property="article:tag" content="Kotlin Flow"><meta property="article:tag" content="sealed"><meta property="article:tag" content="RemoteMediator"><meta property="article:tag" content="SealedClasses"><meta property="article:tag" content="SealedInterface"><meta property="article:tag" content="Equality"><meta property="article:tag" content="LiveData"><meta property="article:tag" content="valueclass"><meta property="article:tag" content="DataClass"><meta property="article:tag" content="Array"><meta property="article:tag" content="Iterable"><meta property="article:tag" content="Sequence"><meta property="article:tag" content="ContextReceivers"><meta property="article:tag" content="Reflect"><meta property="article:tag" content="Sequence"><meta property="article:tag" content="Iterable"><meta property="article:tag" content="generics"><meta property="article:tag" content="OOM"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="https://img.hi-dhl.com/technology_qr.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.hi-dhl.com/2023/04/22/performance/02-heap/"},"headline":"程序员DHL","image":["https://img.hi-dhl.com/technology_qr.png"],"datePublished":"2023-04-22T11:30:23.520Z","dateModified":"2023-04-22T11:31:49.154Z","author":{"@type":"Person","name":"程序员DHL"},"description":"这篇文章主要分享微信如何利用黑科技，减少 512MB 内存，降低 OOM 和 Native Crash 提升用户体验"}</script><link rel="canonical" href="https://www.hi-dhl.com/2023/04/22/performance/02-heap/"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" defer></script><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script></head><body class="is-2-column"><script type="text/javascript" src="/js/imaegoo/night.js"></script><canvas id="universe"></canvas><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img class="logo-img" src="/img/logo.png" alt="程序员DHL" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="程序员DHL" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">首页</a><a class="navbar-item" href="/categories">分类</a><a class="navbar-item" href="/categories/Jetpack">Jetpack</a><a class="navbar-item" href="/categories/Kotlin/">Kotlin</a><a class="navbar-item" href="/categories/Android10/">系统源码</a><a class="navbar-item" href="/categories/translated/">译文</a><a class="navbar-item" href="https://offer.hi-dhl.com">算法</a></div><div class="navbar-end"><a class="navbar-item night" id="night-nav" title="Night Mode" href="javascript:;"><i class="fas fa-moon" id="night-icon"></i></a><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/hi-dhl"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><div class="card-image"><span class="image is-7by3"><img class="thumbnail" src="https://img.hi-dhl.com/technology_qr.png" alt="微信黑科技"></span></div><article class="card-content article" role="article"><h1 class="title is-3 is-size-4-mobile"></h1><h1 class="title is-3 is-size-4-mobile">微信黑科技</h1><div class="article-meta size-small level is-mobile"><div class="level-left"><span class="mr-2"><i class="fa fa-calendar"></i></span><time class="level-item" dateTime="2023-04-22T11:30:23.520Z" title="2023-04-22T11:30:23.520Z">2023-04-22</time><span class="mr-2"> <i class="fa fa-folder"></i></span><span class="level-item"><a class="link-muted" href="/categories/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/">性能优化</a></span><span class="mr-2"> <i class="fa fa-tag"></i></span><span class="level-item"><a class="link-muted" href="/tags/Kotlin/">Kotlin</a><span> , </span><a class="link-muted" href="/tags/Java/">Java</a><span> , </span><a class="link-muted" href="/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/">性能优化</a><span> , </span><a class="link-muted" href="/tags/OOM/">OOM</a></span></div></div><div class="level-left article-meta size-small is-mobile"></div><div><p style="height:15px"></p><ul class="page-blockquote"><li>如果评论区没有及时回复，欢迎来公众号：ByteCode 咨询</li><li>公众号：ByteCode。致力于分享最新技术原创文章，涉及 Kotlin、Jetpack、算法、译文、系统源码相关的文章</li><li></li></ul><p style="height:15px"></p></div><div class="content"><blockquote>
+<p>hi 大家好，我是 DHL。就职于美团、快手、小米。公众号：ByteCode，专注有用、有趣的硬核原创内容，Kotlin、Jetpack、性能优化、系统源码、算法及数据结构、大厂面经。</p>
+</blockquote>
+<p>我一直认为技术是用来服务于用户，提升用户体验，而不是像 <a href="https://mp.weixin.qq.com/s/wdKBuEe5MZ6P3xoQfeDw7A">拼多多，写了恶意代码，操控用户的手机</a> ，利用技术做一些不好的事，今天这篇文章主要分享微信如何利用黑科技，减少 512MB 内存，降低 OOM 和 Native Crash 提升用户体验。</p>
+<p>在上一篇文章 <a href="https://mp.weixin.qq.com/s/QZ6zZ6GoNpB5MWGi31k-UA">谁动了我的内存，揭秘 OOM 崩溃下降 90% 的秘密</a> 中分享了内存相关的知识点，包含堆、虚拟内存、发生 OOM 的原因，以及 <strong>为什么虚拟内存不足主要发生在 32 位的设备上</strong>、<strong>导致虚拟内存不足的原因都有那些</strong>，目前都有哪些黑科技帮助我们去降低 OOM，有兴趣的小伙伴可以前往查看，从这篇文章开始细化每个知识点。</p>
+<p>随着业务的增长，32 位设备上虚拟内存不足问题会越来越突出，尤其是大型应用会更加明显。除了业务上的优化之后，还需要一些黑科技尽可能降低更多的内存，而今天这篇主要分析微信分享的「<strong>堆空间减半</strong>」的方案，最高可减少 512MB 内存，从而降低 OOM 和 Native Crash，在开始之前，我们需要介绍一下 <strong>堆</strong> 相关的知识点。</p>
+<p>根据 Android 源码中的解释，Java 堆的大小应该是根据 <code>RAM Size</code> 来设置的，这是一个经验值，厂商是可以更改的，如果手机 Root 之后，自己也可以改，<a href="https://android.googlesource.com/platform/frameworks/native/+/master/build">Google 源码的设置如下如下图所示</a>。<br/><br><a href="https://android.googlesource.com/platform/frameworks/native/+/master/build">https://android.googlesource.com/platform/frameworks/native/+/master/build</a></p>
+<p><img src="https://img.hi-dhl.com/202304161728546.png" alt=""></p>
+<table>
+<thead>
+<tr>
+<th>RAM (MB)-dalvik-heap. mk</th>
+<th>heapgrowthlimit (MB)</th>
+<th>heapsize (MB) 需要设置 android: largeHeap 为 true</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>512-dalvik-heap. mk</td>
+<td>48</td>
+<td>128</td>
+</tr>
+<tr>
+<td>1024-dalvik-heap. mk</td>
+<td>96</td>
+<td>256</td>
+</tr>
+<tr>
+<td>2048-dalvik-heap. mk</td>
+<td>192</td>
+<td>512</td>
+</tr>
+<tr>
+<td>4096-dalvik-heap. mk</td>
+<td>192</td>
+<td>512</td>
+</tr>
+<tr>
+<td>6144-dalvik-heap. mk</td>
+<td>256</td>
+<td>512</td>
+</tr>
+<tr>
+<td>无论 RAM 多大，到目前为止堆的最大上限都是 512MB</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>正如上面表格所示，在 <code>AndroidManifest.xml</code> 文件 <code>Application</code> 节点中设置 <code>android:largeHeap=&quot;true&quot;</code> 和不设置 <code>largeHeap</code> 获取到的最大堆的上限是不一样。</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;application</span><br><span class="line">    android:largeHeap=<span class="string">"true"</span>&gt;</span><br><span class="line"></span><br><span class="line">&lt;/application&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>为什么默认关闭 android:largeHeap</strong></p>
+<p>Java 堆用于分配 Java / Kotlin 创建的对象，由 GC 管理和回收，GC 回收时将 From Space 里的对象复制到 To Space，这两片区域分别为 <code>dalvik-main space</code> 和 <code>dalvik-main space 1</code>, 这两片区域的大小和 Java 堆大小一样，如下图所示。</p>
+<p><img src="https://img.hi-dhl.com/202304161728547.jpeg" alt=""></p>
+<p>图中我们只需要关注 size（虚拟内存） 即可，如果 Java 堆的上限是 512 MB，那么 <code>dalvik-main space（512 MB）</code> 和 <code>dalvik-main space 1（512 MB）</code> 共占用 1G 的虚拟内存。</p>
+<p>如果堆的上限越大，那么 <code>main space</code> 占用的虚拟内存就会越大，在 32 位设备上，用户空间可用虚拟内存只有 3G，但是如果堆上限是 512MB，那么 <code>main space</code> 总共占用 1G 虚拟内存，剩下只有 2G 可用，因此 Google 在默认情况下会关闭 <code>android:largeHeap</code> 选项，只有在有需要的时候，主动设置 <code>android:largeHeap = true</code>，尝试获取更大的堆内存。</p>
+<p>而 <code>main space</code> 占用虚拟内存的计算方式是不一样的。</p>
+<p><strong>Android 5. x ~ Android 7. x</strong></p>
+<ul>
+<li>如果设置 <code>android:largeHeap = true</code> 时，<code>main space size = dalvik.vm.heapsize</code>，如果 <code>heapsize</code> 是 512MB，那么两个 main space 共占用 1G 虚拟内存 </li>
+<li>如果不设置 <code>largeHeap</code>，那么 <code>main space size = dalvik.vm.heapgrowthlimit</code>，如果 <code>heapgrowthlimit</code> 是 256 MB，那么两个 main space 共占用 512 MB 虚拟内存</li>
+</ul>
+<p><strong>&gt;= Android 8. x</strong></p>
+<p>无论 AndroidManifest 是否设置 <code>android:largeHeap</code>，<code>main space size = dalvik.vm.heapsize  * 2</code>，如果 <code>dalvik.vm.heapsize</code> 是 512MB 那么 <code>main space</code> 占用 1G 的虚拟内存内存。</p>
+<p><code>main space</code> 在不同的系统分配方式是不一样的。</p>
+<ul>
+<li>在 <code>Android 5.x ~ Android 7.x</code> 中，系统分配两块 <code>main space</code>，它们占用虚拟内存的大小和堆的大小是一样的</li>
+<li>在 <code>&gt;= Android 8.x</code> 之后，只分配了一个 <code>main space</code>，但是它占用虚拟内存的大小是堆的 2 倍</li>
+</ul>
+<p>不同的系统上，它们的实现方式是不一样的，所以我们要采用不同的方法来释放 <code>main space</code> 占用的内存。</p>
+<h3 id="在-Android-5-x-Android-7-x"><a href="#在-Android-5-x-Android-7-x" class="headerlink" title="在 Android 5. x ~ Android 7. x"></a>在 Android 5. x ~ Android 7. x</h3><p>5.0 之后使用的是 ART 虚拟机，在  ART 虚拟机引入了，两种 <code>Compacting GC</code> 分为 <code>Semi-Space（SS）GC</code> （半空间压缩） 和 <code>Generational Semi-Space（GSS）GC</code> （分代半空间压缩）。 <code>GSS GC</code> 是 <code>SS GC</code> 的改进版本，作为 <code>background GC</code> 的默认实现方式。</p>
+<p>这两种 GC 的共同点，存在两片大小和堆大小一样的内存空间分别作为 <code>From Space</code> 和 <code>To Space</code>，这两片区域分别为 <code>dalvik-main space1</code> 和 <code>dalvik-main space2</code>。</p>
+<p><img src="https://img.hi-dhl.com/202304161728547.jpeg" alt=""></p>
+<p>上面的这两块区域对应的源码 <a href="https://cs.android.com/android/_/android/platform/art/+/5f0b71ab2f60f76b5f73402bd1fdd25bbc179b6c:runtime/gc/heap.cc">地址</a>。</br><br><a href="https://cs.android.com/android/_/android/platform/art/+/5f0b71ab2f60f76b5f73402bd1fdd25bbc179b6c:runtime/gc/heap.cc">https://cs.android.com/android/_/android/platform/art/+/5f0b71ab2f60f76b5f73402bd1fdd25bbc179b6c:runtime/gc/heap.cc</a></p>
+<p><img src="https://img.hi-dhl.com/202304161728549.jpeg" alt=""></p>
+<p>执行 <code>Compact / Moving GC</code> 的时候才会使用到这两片区域，在 GC 执行期间，将 From Space 分配的还存活的对象会依次拷贝到 To Space 中，在复制对象的过程中 From Space 中的碎片就会被消除，下次 GC 时重复这套逻辑，但是 GSS GC 还多了一个 <code>Promote Space</code>。</p>
+<p><code>Promote Space</code> 主要存储老年代的对象，老年代对象的存活性要比新生代的久，因此将它们拷贝到 <code>Promote Space</code> 中去，可以避免每次执行 GSS GC 时，都需要对它们进行无用的处理。</p>
+<p><strong>新生代和老年代采用的不同的算法：</strong></p>
+<ul>
+<li>新生代：复制算法。在两块 space 来回移动，高效且执行频繁，每次 GC 不需要挂起线程</li>
+<li>老年代：标记-压缩算法。会在 Mark 阶段是在挂起除当前线程之外的所有其它运行时线程，然后在 Compact 阶段才移动对象，Compact 方式是 Sliding Compaction，也就是在 Mark 之后就可以按顺序一个个对象 “滑动” 到空间的某一侧，移动的时候都是在一个空间内移动，不需要多一份空间</li>
+</ul>
+<h4 id="如何释放掉其中一个-main-space-占用的内存"><a href="#如何释放掉其中一个-main-space-占用的内存" class="headerlink" title="如何释放掉其中一个 main space 占用的内存"></a>如何释放掉其中一个 main space 占用的内存</h4><p>释放方案，可以参考腾讯开源的方案 <a href="https://github.com/Tencent/matrix/blob/master/matrix/matrix-android/matrix-hooks/src/main/cpp/memory/GCSemiSpaceTrimmer.cpp">Matrix</a>，总来的来说分为两步：</br><br><a href="https://github.com/Tencent/matrix/blob/master/matrix/matrix-android/matrix-hooks/src/main/cpp/memory/GCSemiSpaceTrimmer.cpp">https://github.com/Tencent/matrix/blob/master/matrix/matrix-android/matrix-hooks/src/main/cpp/memory/GCSemiSpaceTrimmer.cpp</a></p>
+<ul>
+<li>确定  <code>From Space</code> 和  <code>To Space</code> 的内存地址</li>
+<li>调用 <code>munmap</code> 函数释放掉其中一个 <code>Space</code> 所占用的内存</li>
+</ul>
+<p><strong>如何确定 From Space 和  To Space 的内存地址</strong></p>
+<p>我们需要读取 mpas 文件，然后搜索关键字  <code>main space</code> 和 <code>main space 1</code>，就可以知道 <code>main space</code> 和 <code>main space 1</code> 的内存地址。</p>
+<p>当我们知道 <code>space</code> 的内存地址之后，我们还需要确认当前正在使用的是那个 <code>space</code>，才能安全的调用 <code>munmap</code> 函数，释放掉另外一个没有使用的 <code>space</code>。</p>
+<p>matrix 的方案，创建一个基本类型的数组，然后通过 <code>GetPrimitiveArrayCritical</code> 方法获取它的地址，代码如下：</p>
+<p><img src="https://img.hi-dhl.com/202304161728550.jpeg" alt=""></p>
+<p>调用 <code>GetPrimitiveArrayCritical</code> 方法会返回对象的内存地址，如果地址在那块区域，当前的区域就是我们正在使用的区域，然后我们就可以安全的释放掉另外一个 space 了。</p>
+<p><img src="https://img.hi-dhl.com/202304161728551.jpeg" alt=""></p>
+<p><strong>释放掉其中一个 Space 会有问题吗？</strong></p>
+<p>如果我们直接释放掉其中一个 Space，在执行 <code>Compact / Moving GC</code> 的时候，需要将 From Space 分配的对象依次拷贝到 To Space 中，因为找不到  To Space，会引起 crash, 所以需要阻止 <code>Moving GC</code>。</p>
+<p>源码中也说明了调用 <code>GetPrimitiveArrayCritical</code> 方法可以阻止 Moving GC。</p>
+<p><img src="https://img.hi-dhl.com/202304161728552.jpeg" alt=""></p>
+<p><code>GetPrimitiveArrayCritical</code> 方法会调用  <a href="https://android.googlesource.com/platform/art/+/master/runtime/gc/heap.cc#956">IncrementDisableMovingGC</a> 方法阻止 <code>Moving GC</code>，对应的源码如下。<br/><br><a href="https://android">https://android</a>. googlesource. com/platform/art/+/master/runtime/gc/heap. cc #956</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">void</span> Heap::IncrementDisableMovingGC(Thread* self) &#123;</span><br><span class="line">  <span class="comment">// Need to do this holding the lock to prevent races where the GC is about to run / running when</span></span><br><span class="line">  <span class="comment">// we attempt to disable it.</span></span><br><span class="line">  <span class="function">ScopedThreadStateChange <span class="title">tsc</span><span class="params">(self, kWaitingForGcToComplete)</span></span>;</span><br><span class="line">  <span class="function">MutexLock <span class="title">mu</span><span class="params">(self, *gc_complete_lock_)</span></span>;</span><br><span class="line">  ++disable_moving_gc_count_;</span><br><span class="line">  <span class="keyword">if</span> (IsMovingGc(collector_type_running_)) &#123;</span><br><span class="line">    WaitForGcToCompleteLocked(kGcCauseDisableMovingGc, self);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>所以只需要调用 <code>GetPrimitiveArrayCritical</code> 方法，阻止 <code>Moving GC</code>，也就不需要用到另外一个空间了，因此可以安全的释放掉。</p>
+<p><strong>阻止 Compact / Moving GC 会有性能问题吗</strong></p>
+<p>按照微信给出的测试数据，在性能上没有明显的变化。</p>
+<p><img src="https://img.hi-dhl.com/202304161728553.jpeg" alt=""></p>
+<h3 id="OS-Version-gt-Android-8-x"><a href="#OS-Version-gt-Android-8-x" class="headerlink" title="OS Version &gt;= Android 8. x"></a>OS Version &gt;= Android 8. x</h3><p>8.0 引入了 <code>Concurrent Copying GC</code>（并发复制算法），堆空间也变成了 RegionSpace。RegionSpace 的算法并不是靠把已分配对象在两片空间之间来回倒腾来实现的，分析 smaps 文件，发现也只创建了一个 <code>main space</code>，但是它占用的虚拟内存是堆的 2 倍，所以 8.0 之前的方案释放另外一个 space 是无法使用的。</p>
+<p><strong>为什么没有创建 main space2</strong></p>
+<p>我们从源码看一下创建 <strong>main space2</strong> 的触发条件。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (foreground_collector_type_ == kCollectorTypeCC) &#123;</span><br><span class="line">    use_homogeneous_space_compaction_for_oom_ = <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">bool support_homogeneous_space_compaction =</span><br><span class="line">  background_collector_type_ == gc::kCollectorTypeHomogeneousSpaceCompact ||</span><br><span class="line">  use_homogeneous_space_compaction_for_oom_;</span><br><span class="line">  </span><br><span class="line"><span class="keyword">if</span> (support_homogeneous_space_compaction ||</span><br><span class="line">  background_collector_type_ == kCollectorTypeSS ||</span><br><span class="line">  foreground_collector_type_ == kCollectorTypeSS) &#123;</span><br><span class="line">  </span><br><span class="line">    <span class="function">ScopedTrace <span class="title">trace2</span><span class="params">(<span class="string">"Create main mem map 2"</span>)</span></span>;</span><br><span class="line">    main_mem_map_2 = MapAnonymousPreferredAddress(</span><br><span class="line">        kMemMapSpaceName[<span class="number">1</span>], main_mem_map_1.End(), capacity_, &amp;error_str);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>正如如源码所示，后台回收器类型 <code>kCollectorTypeHomogeneousSpaceCompact</code> 和 <code>kCollectorTypeCC</code> 才会创建 <code>main space2</code>。</p>
+<ul>
+<li><code>kCollectorTypeHomogeneousSpaceCompact</code>（同构空间压缩（HSC），用于后台回收器类型）</li>
+<li><code>kCollectorTypeCC</code> （<code>Compacting GC</code>） 分为两种类型<ul>
+<li><code>Semi-Space（SS）GC</code> （半空间压缩）</li>
+<li><code>Generational Semi-Space（GSS）GC</code> （分代半空间压缩），<code>GSS GC</code> 是 <code>SS GC</code> 的改进版本</li>
+</ul>
+</li>
+</ul>
+<p>而 Android 8.0 将 <code>Concurrent Copying GC</code> 作为默认方式，对应的回收器的类型是 <code>kCollectorTypeCCBackground</code>。</p>
+<p><img src="https://img.hi-dhl.com/202304161728554.jpeg" alt=""></p>
+<p><code>Concurrent Copying GC</code> 分为 <code>Pause</code>, <code>Copying</code>, <code>Reclaim</code> 三个阶段，以 <code>Region</code> 为单位进行 GC，大小为 256 KB。</p>
+<ul>
+<li>pause: 这个阶段耗时非常少，这里很重要的一块儿工作是确定需要进行 GC 的 region, 被选中的 region 称为 <code>source region</code></li>
+<li>Copying：这个阶段是整个 GC 中耗时最长的阶段。通过将 source region 中对象根据 root set 计算并标记为 reachable，然后将标记为 reachable 的对象拷贝到 <code>destination region</code></li>
+<li>Reclaim：在经过 Copying 阶段后，整个进程中就不再存在指向 source regions 的引用了，GC 就可以将这些 source region 的内存释放供以后使用了。</li>
+</ul>
+<p><code>Concurrent Copying GC</code> 使用了 <code>read barrier</code> 技术，来确保其它线程不会读到指向 <code>source region</code> 的对象，所以不会将 app 线程挂起，也不会阻止内存分配。</p>
+<p><strong>如何减少 main space 占用的内存</strong></p>
+<p>Adnroid 8.0 之后使用的阿里巴巴 Patrons 的方案，在虚拟内存占用超过一定阈值时调用 RegionSpace 中的 <code>ClampGrowthLimit</code> 方法来缩减 RegionSpace 的大小。</p>
+<p>但是 ClampGrowthLimit 只在 Android 9.0 以后才出现，8.0 是没有的，所以参考了 Android 9.0 的代码实现了一个 ClampGrowthLimit。</p>
+<p><img src="https://img.hi-dhl.com/202304161728555.jpeg" alt=""></p>
+<p>在 <a href="https://android.googlesource.com/platform/art/+/5f0b71ab2f60f76b5f73402bd1fdd25bbc179b6c/runtime/gc/space/region_space.cc#416">ClampGrowthLimit</a> 方法中，通过调用  <code>MemMap::SetSize</code> 方法来调整 RegionSpace 的大小。<br/><br><a href="https://android">https://android</a>. googlesource. com/platform/art/+/5f0b71ab2f60f76b5f73402bd1fdd25bbc179b6c/runtime/gc/space/region_space. cc #416</p>
+<p><img src="https://img.hi-dhl.com/202304161728556.jpeg" alt=""></p>
+<p><a href="https://android.googlesource.com/platform/art/+/android-9.0.0_r7/runtime/mem_map.cc#883">MemMap::SetSize</a> 方法的实现。<br/><br><a href="https://android">https://android</a>. googlesource. com/platform/art/+/android-9.0.0_r7/runtime/mem_map. cc #883</p>
+<p><img src="https://img.hi-dhl.com/202304161728557.jpeg" alt=""></p>
+<p><code>new_base_size_</code> 和 <code>base_size_</code> 不相等的情况下会执行 <code>munmap</code> 函数 , <code>munmap</code> 释放的大小为 <code>base_size_</code> 和 <code>new_base_size_</code> 的差值。</p>
+<br/>
+
+<p><strong>全文到这里就结束了，感谢你的阅读，坚持原创不易，欢迎在看、点赞、分享给身边的小伙伴，我会持续分享原创干货！！！</strong></p>
+<hr>
+<p>我开了一个云同步编译工具（SyncKit），主要用于本地写代码，同步到远程设备，在远程设备上进行编译，最后将编译的结果同步到本地，代码已经上传到 Github，欢迎前往仓库 <a href="https://github.com/hi-dhl/SyncKit">hi-dhl/SyncKit</a>  查看。</p>
+<ul>
+<li><a href="https://github.com/hi-dhl/SyncKit">仓库 SyncKit：https://github.com/hi-dhl/SyncKit</a></li>
+<li><a href="https://github.com/hi-dhl/SyncKit/releases">下载地址：https://github.com/hi-dhl/SyncKit/releases</a></li>
+</ul>
+<hr>
+<p><strong>Hi 大家好，我是 DHL，就职于 美团、快手、小米。公众号：ByteCode ，分享有用、有趣的硬核原创内容，Kotlin、Jetpack、性能优化、系统源码、算法及数据结构、动画、大厂面经，真诚推荐你关注我。</strong></p>
+<ul>
+<li><a href="https://mp.weixin.qq.com/mp/homepage?__biz=MzAwNDgwMzU4Mw==&hid=9&sn=e90937096f96a747c08e27ab7a79545c&scene=1&devicetype=android-30&version=28001c57&lang=zh_CN&nettype=WIFI&ascene=7&session_us=gh_d4a2dd00574d&wx_header=3">公众号：ByteCode</a></li>
+<li><a href="https://space.bilibili.com/498153238">哔哩哔哩</a>： <a href="https://space.bilibili.com/498153238">https://space.bilibili.com/498153238</a></li>
+<li><a href="https://juejin.im/user/2594503168898744">掘金</a>： <a href="https://juejin.im/user/2594503168898744">https://juejin.im/user/2594503168898744</a></li>
+<li><a href="https://hi-dhl.com">博客</a>： <a href="https://hi-dhl.com">https://hi-dhl.com</a></li>
+<li><a href="https://github.com/hi-dhl">Github</a>： <a href="https://github.com/hi-dhl">https://github.com/hi-dhl</a></li>
+</ul>
+<hr>
+<p><strong>最新文章</strong></p>
+<ul>
+<li><a href="https://mp.weixin.qq.com/s/oN4CTWCnEWSc2yf2BG6dew">国外大厂面试题， 7 个 Android Lifecycle 重要的知识点</a></li>
+<li><a href="https://mp.weixin.qq.com/s/t_E6kOU2jTJ82pcJ7ZkdMA">Android 13这些权限废弃，你的应用受影响了吗？</a></li>
+<li><a href="https://mp.weixin.qq.com/s/NuqAYoUq_0OorM1rVHUEHA">Android 12 已来，你的 App 崩溃了吗？</a></li>
+<li><a href="https://mp.weixin.qq.com/s/jRlrtnOg6Ww-C_Xb6719EA">Android 利器，我开发了云同步编译工具</a></li>
+<li><a href="https://mp.weixin.qq.com/s/ExxJMyYZP3sd9pnvdiEFAg">Twitter 上有趣的代码</a></li>
+<li><a href="https://mp.weixin.qq.com/s/QZ6zZ6GoNpB5MWGi31k-UA">谁动了我的内存，揭秘 OOM 崩溃下降 90% 的秘密</a></li>
+<li><a href="https://mp.weixin.qq.com/s/AgEr6GhylkUfG_zWE5LTOw">反射技巧让你的性能提升 N 倍</a></li>
+<li><a href="https://mp.weixin.qq.com/s/brNq5OxitQ7WhPbA9y5lrA">90%人不懂的泛型局限性，泛型擦除，星投影</a></li>
+<li><a href="https://mp.weixin.qq.com/s/Ah8Yau_UW07s6LnGjrG4hA">揭秘反射真的很耗时吗，射 10 万次耗时多久</a></li>
+<li><a href="https://mp.weixin.qq.com/s/fp1ZOmqAcEBv2f7ec1r-zw">Google 宣布废弃 LiveData.observe 方法</a></li>
+<li><a href="https://mp.weixin.qq.com/s/8dAbt1-mcCVLWLXKC-1_xw">影响性能的 Kotlin 代码（一）</a></li>
+<li><a href="https://mp.weixin.qq.com/s/sYj_-wqENr9Jaw1p8iP4Jg">揭秘 Kotlin 中的 == 和 ===</a></li>
+</ul>
+<p><strong>开源新项目</strong></p>
+<ul>
+<li><p>云同步编译工具（SyncKit），本地写代码，远程编译，欢迎前去查看 <a href="https://github.com/hi-dhl/SyncKit">SyncKit</a></p>
+</li>
+<li><p>KtKit 小巧而实用，用 Kotlin 语言编写的工具库，欢迎前去查看 <a href="https://github.com/hi-dhl/KtKit">KtKit</a></p>
+</li>
+<li><p>最全、最新的 AndroidX Jetpack 相关组件的实战项目以及相关组件原理分析文章，正在逐渐增加 Jetpack 新成员，仓库持续更新，欢迎前去查看 <a href="https://github.com/hi-dhl/AndroidX-Jetpack-Practice">AndroidX-Jetpack-Practice</a></p>
+</li>
+<li><p>LeetCode / 剑指 offer，包含多种解题思路、时间复杂度、空间复杂度分析，<a href="https://leetcode.hi-dhl.com">在线阅读</a></p>
+</li>
+</ul>
+</div><div><p style="height:15px"></p><ul class="page-copyright"><li><strong>本文作者：</strong>hi-dhl</li><li><strong>本文标题：</strong>微信黑科技</li><li><strong>本文链接：</strong><a href="" title="{page.title}">https://hi-dhl.com/2023/04/22/performance/02-heap/</a></li><li><strong>版权声明：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://hi-dhl.com" title="{page.title}">hi-dhl</a></li></ul><p style="height:15px"></p></div><!--!--><h1 class="title is-4 is-size-4-mobile"></h1></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2023/04/09/Note/pingduoduo2/"><span class="level-item">拼多多：我们被解散了，因写了恶意代码，操控用户的手机</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content template"><p align="center"><img src="http://cdn.51git.cn/2020-10-07-bytecode.png"></p><p>致力于分享一系列 Android 系统源码、逆向分析、算法、翻译、Jetpack 源码相关的文章，在技术的道路上一起前进</p><h3 class="title is-4">Android10 源码分析</h3><p>正在写一系列的 Android 10 源码分析的文章，了解系统源码，不仅有助于分析问题，在面试过程中，对我们也是非常有帮助的，如果你同我一样喜欢研究 Android 源码，可以关注我 GitHub 上的 <a href="https://github.com/hi-dhl/Android10-Source-Analysis">Android10-Source-Analysis</a>。</p><h3 class="title is-4">算法题库的归纳和总结</h3><p>由于 LeetCode 的题库庞大，每个分类都能筛选出数百道题，由于每个人的精力有限，不可能刷完所有题目，因此我按照经典类型题目去分类、和题目的难易程度去排序。</p><ul><li>数据结构： 数组、栈、队列、字符串、链表、树……</li><li>算法： 查找算法、搜索算法、位运算、排序、数学、……</li></ul><p>每道题目都会用 Java 和 kotlin 去实现，并且每道题目都有解题思路，如果你同我一样喜欢算法、LeetCode，可以关注我 GitHub 上的 LeetCode 题解：<a href="https://github.com/hi-dhl/Leetcode-Solutions-with-Java-And-Kotlin">Leetcode-Solutions-with-Java-And-Kotlin</a>。</p><h3 class="title is-4">精选国外的技术文章</h3><p>目前正在整理和翻译一系列精选国外的技术文章，不仅仅是翻译，很多优秀的英文技术文章提供了很好思路和方法，每篇文章都会有<strong>译者思考</strong>部分，对原文的更加深入的解读，可以关注我 GitHub 上的 <a href="https://github.com/hi-dhl/Technical-Article-Translation">Technical-Article-Translation</a>。</p><p></p></div></div><div class="card"><div class="card-content"><h3 class="title is-5">评论</h3><div class="content" id="valine-thread"></div><script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script><script src="https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js"></script><script>new Valine({
+            el: '#valine-thread' ,
+            notify: false,
+            verify: undefined,
+            appId: 'zfvr24HFhzQ5vtHkr4NQ1fmW-gzGzoHsz',
+            appKey: 'RChgr9mR005hgu4yiQ4WQU3O',
+            placeholder: '说点什么',
+            avatar: 'mm',
+            avatarForce: false,
+            meta: ["nick","mail","link"],
+            pageSize: 10,
+            visitor: false,
+            highlight: true,
+            recordIP: false
+        });</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1 is-sticky"><div class="card widget" id="toc" style="max-height: 500px;overflow: auto;"><div class="card-content"><div class="menu"><h3 class="menu-label">目录</h3><ul class="menu-list"><li><a class="is-flex" href="#在-Android-5-x-Android-7-x"><span>在 Android 5. x ~ Android 7. x</span></a><ul class="menu-list"><li><a class="is-flex" href="#如何释放掉其中一个-main-space-占用的内存"><span>如何释放掉其中一个 main space 占用的内存</span></a></li></ul></li><li><a class="is-flex" href="#OS-Version-gt-Android-8-x"><span>OS Version &gt;= Android 8. x</span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content size-small"><p><time dateTime="2023-04-22T11:30:23.520Z">2023-04-22</time></p><p class="title is-6"><a class="link-muted" href="/2023/04/22/performance/02-heap/">微信黑科技</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2023-04-08T16:34:35.654Z">2023-04-09</time></p><p class="title is-6"><a class="link-muted" href="/2023/04/09/Note/pingduoduo2/">拼多多：我们被解散了，因写了恶意代码，操控用户的手机</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2023-04-08T16:29:45.649Z">2023-04-09</time></p><p class="title is-6"><a class="link-muted" href="/2023/04/09/Note/pingduoduo/">某大厂如何利用系统漏洞，控制用户整个手机系统</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2022-12-31T08:02:06.669Z">2022-12-31</time></p><p class="title is-6"><a class="link-muted" href="/2022/12/31/Note/layoff/">2022 裁员风，席卷全球</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2022-12-31T07:48:30.355Z">2022-12-31</time></p><p class="title is-6"><a class="link-muted" href="/2022/12/31/Note/sun/">小米：阳了，被裁了</a></p><p class="is-uppercase"></p></div></article></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile is-marginless" href="/categories/Android/"><span class="level-start"><span class="level-item">Android</span></span><span class="level-end"><span class="level-item tag">9</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Android-12/"><span class="level-start"><span class="level-item">Android 12</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Android-AndroidStudio/"><span class="level-start"><span class="level-item">Android,AndroidStudio</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Android10/"><span class="level-start"><span class="level-item">Android10</span></span><span class="level-end"><span class="level-item tag">8</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/AndroidStudio/"><span class="level-start"><span class="level-item">AndroidStudio</span></span><span class="level-end"><span class="level-item tag">6</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Jetpack/"><span class="level-start"><span class="level-item">Jetpack</span></span><span class="level-end"><span class="level-item tag">16</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Kotlin/"><span class="level-start"><span class="level-item">Kotlin</span></span><span class="level-end"><span class="level-item tag">27</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Linux/"><span class="level-start"><span class="level-item">Linux</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E5%B7%A5%E5%85%B7/"><span class="level-start"><span class="level-item">工具</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/"><span class="level-start"><span class="level-item">性能优化</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><span class="level-start"><span class="level-item">数据结构</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E6%9D%82%E8%B0%88/"><span class="level-start"><span class="level-item">杂谈</span></span><span class="level-end"><span class="level-item tag">8</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E7%AE%97%E6%B3%95%E5%8A%A8%E7%94%BB/"><span class="level-start"><span class="level-item">算法动画</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E7%B3%BB%E7%BB%9F/"><span class="level-start"><span class="level-item">系统</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/translated/"><span class="level-start"><span class="level-item">译文</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E8%AF%91%E6%96%87-AndroidStudio/"><span class="level-start"><span class="level-item">译文,AndroidStudio</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/%E8%AF%91%E6%96%87-Kotlin/"><span class="level-start"><span class="level-item">译文,Kotlin</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/Android/"><span class="tag">Android</span><span class="tag is-grey-lightest">11</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android-12/"><span class="tag">Android 12</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E5%8C%85%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-包管理系统</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-窗口管理系统</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android10-%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><span class="tag">Android10-资源管理系统</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/AndroidStudio/"><span class="tag">AndroidStudio</span><span class="tag is-grey-lightest">8</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Android%E6%BA%90%E7%A0%81/"><span class="tag">Android源码</span><span class="tag is-grey-lightest">8</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Compose/"><span class="tag">Compose</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Fragment/"><span class="tag">Fragment</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Java/"><span class="tag">Java</span><span class="tag is-grey-lightest">7</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Jetpack/"><span class="tag">Jetpack</span><span class="tag is-grey-lightest">21</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Koin/"><span class="tag">Koin</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Kotlin/"><span class="tag">Kotlin</span><span class="tag is-grey-lightest">33</span></a></div><div class="control"><a class="tags has-addons" href="/tags/LeetCode/"><span class="tag">LeetCode</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Linux/"><span class="tag">Linux</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/OOM/"><span class="tag">OOM</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Protobuf/"><span class="tag">Protobuf</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/RxJava/"><span class="tag">RxJava</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Shell/"><span class="tag">Shell</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/kotlin/"><span class="tag">kotlin</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%8A%A8%E7%94%BB/"><span class="tag">动画</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/"><span class="tag">多线程</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%B7%A5%E5%85%B7/"><span class="tag">工具</span><span class="tag is-grey-lightest">6</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/"><span class="tag">性能优化</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><span class="tag">数据结构</span><span class="tag is-grey-lightest">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%9D%82%E8%B0%88/"><span class="tag">杂谈</span><span class="tag is-grey-lightest">8</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%AE%97%E6%B3%95/"><span class="tag">算法</span><span class="tag is-grey-lightest">5</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%B3%BB%E7%BB%9F/"><span class="tag">系统</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%AF%91%E6%96%87/"><span class="tag">译文</span><span class="tag is-grey-lightest">11</span></a></div></div></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level-item"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img class="logo-img" src="/img/logo.png" alt="程序员DHL" height="28"><img class="logo-img-dark" src="/img/logo.png" alt="程序员DHL" height="28"></a><p class="size-small"><span>&copy; 2023 程序员DHL</span>  <a href="http://beian.miit.gov.cn/" target="_blank">京ICP备18050211号-2</a>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p><p></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            site: {
+                url: 'https://www.hi-dhl.com',
+                external_link: {"enable":true,"exclude":[]}
+            },
+            article: {
+                highlight: {
+                    clipboard: false,
+                    fold: ''
+                }
+            }
+        };</script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><script src="https://s9.cnzz.com/z_stat.php?id=1278919895&amp;web_id=1278919895" async></script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><script src="/js/imaegoo/universe.js"></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>
